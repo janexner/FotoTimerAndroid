@@ -17,6 +17,7 @@ import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModel
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModelFactory
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimerresearch2.databinding.ActivityNewProcessBinding
+import com.exner.tools.fototimerresearch2.sound.SoundStuff
 import com.exner.tools.fototimerresearch2.ui.models.FotoTimerProcessArrayAdapter
 import com.google.android.material.switchmaterial.SwitchMaterial
 import kotlinx.serialization.json.Json
@@ -102,11 +103,11 @@ class NewEditProcessActivity : AppCompatActivity() {
             val processTime: Long = binding.editProcessTime.text.toString().toLongOrNull() ?: processTimeDefault
             val intervalTime: Long = binding.editIntervalTime.text.toString().toLongOrNull() ?: intervalTimeDefault
             val hasSoundStart = binding.switchSoundStart.isChecked
-            val soundStartId: Long = 0 // TODO("Not yet implemented")
+            val soundStartId: Long = SoundStuff.SOUND_ID_PROCESS_START
             val hasSoundEnd = binding.switchSoundEnd.isChecked
-            val soundEndId: Long = 0 // TODO("Not yet implemented")
+            val soundEndId: Long = SoundStuff.SOUND_ID_PROCESS_END
             val hasSoundInterval = binding.switchSoundInterval.isChecked
-            val soundIntervalId: Long = 0 // TODO("Not yet implemented")
+            val soundIntervalId: Long = SoundStuff.SOUND_ID_INTERVAL
             val hasSoundMetronome = binding.switchSoundMetronome.isChecked
             val hasLeadIn = binding.switchLeadIn.isChecked
             val leadInSeconds = binding.editLeadInTime.text.toString().toIntOrNull() ?: leadInTimeDefault
@@ -135,7 +136,7 @@ class NewEditProcessActivity : AppCompatActivity() {
             val jsonRepresentation =
                 Json.encodeToString(FotoTimerProcess.serializer(), fotoTimerProcess)
             replyIntent.putExtra(EXTRA_REPLY, jsonRepresentation)
-            setResult(Activity.RESULT_OK, replyIntent)
+            setResult(RESULT_OK, replyIntent)
 
             finish()
         }
