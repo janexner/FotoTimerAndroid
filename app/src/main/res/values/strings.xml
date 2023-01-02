@@ -1,3 +1,28 @@
 <resources>
-    <string name="app_name">FotoTimer Research 2</string>
+    <string name="app_name">Foto Timer</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <string name="add_process">Add Process</string>
+    <string name="hint_name">Name…</string>
+    <string name="button_save">Save</string>
+    <string name="empty_not_saved">Process not saved</string>
+    <string name="process_saved">Process added or updated</string>
+
+    // new/edit screen fields and such
+    <string name="lbl_processName">Process Name</string>
+    <string name="lbl_processTime">Process Time</string>
+    <string name="hint_process_time">30</string>
+    <string name="hint_interval_time">10</string>
+    <string name="lbl_intervalTime">Interval Time</string>
+    <string name="lbl_has_sound_start">Start Sound</string>
+    <string name="lbl_has_sound_end">End Sound</string>
+    <string name="lbl_has_sound_interval">Interval Sound</string>
+    <string name="lbl_has_sound_metronome">Metronome Sound</string>
+    <string name="lbl_has_lead_in">Lead-in</string>
+    <string name="lbl_lead_in_time">Lead-in Time</string>
+    <string name="lbl_has_chain">Auto-start Next Process</string>
+    <string name="lbl_goto_id">Next Process</string>
+    <string name="lbl_goto_pause_time">Pause Before Next Process</string>
+    <string name="lbl_chain_pause_time">Pause Before Next Process</string>
+    <string name="select_a_sound">Select a Sound</string>
 </resources>
