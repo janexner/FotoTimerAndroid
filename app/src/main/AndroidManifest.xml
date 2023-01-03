@@ -3,13 +3,22 @@
 
     <application
         android:name=".FotoTimerApplication"
-        android:theme="@style/Theme.MaterialComponents.Light.DarkActionBar"
         android:allowBackup="true"
+        android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:enableOnBackInvokedCallback="true"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MaterialComponents.Light.DarkActionBar">
+        <activity
+            android:name=".ProcessOverviewActivity"
+            android:exported="false"
+            android:label="@string/title_activity_process_overview"
+            android:theme="@style/NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".NewEditProcessActivity"
             android:exported="false">
