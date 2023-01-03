@@ -27,4 +27,5 @@
     <string name="select_a_sound">Select a Sound</string>
 
     <string name="title_activity_process_overview">Process Overview</string>
+    <string name="button_start">Start</string>
 </resources>
