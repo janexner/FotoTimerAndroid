@@ -1,8 +1,11 @@
 package com.exner.tools.fototimerresearch2
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +13,8 @@ import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModel
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModelFactory
 
 class ProcessOverviewActivity : AppCompatActivity() {
+
+    private var processID: Long = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,13 +25,18 @@ class ProcessOverviewActivity : AppCompatActivity() {
         // find which process whe should show
         val arguments =
             requireNotNull(intent?.extras) { "The ProcessOverviewActivity must be called with a process ID so it knows which process to show!" }
-        var processID: Long
         with(arguments) {
             processID = getLong("PROCESS_ID")
         }
 
         // initialise the Activity
         populateUiFromProcessId(processID)
+
+        // the "start" button needs a listener!
+        val startButton = findViewById<Button>(R.id.overviewProcessStart)
+        startButton.setOnClickListener {
+            startProcessById(processID)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -41,11 +51,13 @@ class ProcessOverviewActivity : AppCompatActivity() {
                 return true
             }
             R.id.menu_item_edit_process -> {
-                // TODO
+                val intent = Intent(this, NewEditProcessActivity::class.java)
+                intent.putExtra("PROCESS_ID", processID)
+                startActivity(intent)
                 return true
             }
             R.id.menu_item_start_process -> {
-                // TODO
+                startProcessById(processID)
                 return true
             }
         }
@@ -65,8 +77,12 @@ class ProcessOverviewActivity : AppCompatActivity() {
         // make the UI
         val nameView = findViewById<TextView>(R.id.overviewProcessNameView)
         nameView.text = process.name
-
         val processTimeView = findViewById<TextView>(R.id.overviewProcessTimeView)
         processTimeView.text = process.processTime.toString()
+    }
+
+    private fun startProcessById(processID: Long) {
+        Log.i("jexner", "Starting process $processID...")
+        // TODO
     }
 }

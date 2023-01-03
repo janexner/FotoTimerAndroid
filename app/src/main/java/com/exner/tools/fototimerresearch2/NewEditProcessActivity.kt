@@ -1,17 +1,12 @@
 package com.exner.tools.fototimerresearch2
 
-import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.core.view.get
+import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModel
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModelFactory
@@ -19,7 +14,6 @@ import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimerresearch2.databinding.ActivityNewProcessBinding
 import com.exner.tools.fototimerresearch2.sound.SoundStuff
 import com.exner.tools.fototimerresearch2.ui.models.FotoTimerProcessArrayAdapter
-import com.google.android.material.switchmaterial.SwitchMaterial
 import kotlinx.serialization.json.Json
 
 class NewEditProcessActivity : AppCompatActivity() {
@@ -63,7 +57,7 @@ class NewEditProcessActivity : AppCompatActivity() {
         binding.editGotoPauseTime.setText(sharedPreferences.getString("preference_pause_time", "5"))
 
         // new or edit?
-        val processId = intent.getLongExtra("processId", -1)
+        val processId = intent.getLongExtra("PROCESS_ID", -1)
         if (processId >= 0) {
             // a valid process, so this is edit, not new!
             val process = fotoTimerProcessViewModel.getProcessById(processId)
