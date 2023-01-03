@@ -1,6 +1,5 @@
 package com.exner.tools.fototimerresearch2.data.persistence
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -16,7 +15,7 @@ interface FotoTimerProcessDAO {
     fun getAllAlphabeticallyOrdered(): Flow<List<FotoTimerProcess>>
 
     @Query("SELECT * FROM fototimerprocess WHERE uid=:id")
-    fun getFotoTimerProcess(id : Long): FotoTimerProcess?
+    suspend fun getFotoTimerProcess(id : Long): FotoTimerProcess?
 
     @Insert
     suspend fun insert(fotoTimerProcess: FotoTimerProcess)

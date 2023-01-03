@@ -1,35 +1,44 @@
 package com.exner.tools.fototimerresearch2
 
 import android.os.Bundle
+import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import com.exner.tools.fototimerresearch2.databinding.ActivityProcessOverviewBinding
+import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModel
+import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModelFactory
 
 class ProcessOverviewActivity : AppCompatActivity() {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityProcessOverviewBinding
+    private var processID: Long = 0
+
+    private val fotoTimerProcessViewModel: FotoTimerProcessViewModel by viewModels {
+        FotoTimerProcessViewModelFactory((application as FotoTimerApplication).repository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_process_overview)
 
-        binding = ActivityProcessOverviewBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        actionBar?.setTitle(R.string.title_activity_process_overview)
+        actionBar?.setDisplayHomeAsUpEnabled(true)
 
-        setSupportActionBar(binding.toolbar)
+        // find which process whe should show
+        val arguments =
+            requireNotNull(intent?.extras) { "The ProcessOverviewActivity must be called with a process ID so it knows which process to show!" }
+        with(arguments) {
+            processID = getLong("PROCESS_ID")
+        }
+        // retrieve said process
+        val process =
+            requireNotNull(fotoTimerProcessViewModel.getProcessById(processID)) { "The process ID passed is not valid" }
 
-        val navController = findNavController(R.id.nav_host_fragment_content_process_overview)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
-
+        val nameView = findViewById<TextView>(R.id.overviewProcessNameView)
+        nameView.text = process.name
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_process_overview)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
+        onBackPressed()
+        return true
     }
+
 }

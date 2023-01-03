@@ -1,6 +1,5 @@
 package com.exner.tools.fototimerresearch2.ui.models
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +9,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.exner.tools.fototimerresearch2.R
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
+
+/*
+ * See https://guides.codepath.com/android/using-the-recyclerview for some hints how this was done
+ */
 
 class FotoTimerProcessListAdapter :
     ListAdapter<FotoTimerProcess, FotoTimerProcessListAdapter.ProcessViewHolder>(
@@ -36,19 +39,6 @@ class FotoTimerProcessListAdapter :
             val timeString =
                 fotoTimerProcess.processTime.toString() + "/" + fotoTimerProcess.intervalTime.toString()
             processTimeView.text = timeString
-        }
-
-        init {
-            itemView.setOnClickListener { view ->
-                Log.i("jexner", "Click detected on $view, finding uid...")
-                val idView = view.findViewById<TextView>(R.id.processIdView)
-                val uid = idView.text.toString().toLongOrNull()
-                Log.i("jexner", "Looks like the process tapped was $uid...")
-                // now go to ProcessOverviewActivity
-//                val intent = Intent(context, ProcessOverviewActivity::class.java)
-//                intent.putExtra("PROCESS_ID", uid)
-//                startActivity(context, intent, null)
-            }
         }
 
         companion object {

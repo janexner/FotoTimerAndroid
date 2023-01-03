@@ -3,8 +3,10 @@ package com.exner.tools.fototimerresearch2
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -16,6 +18,7 @@ import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModel
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModelFactory
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimerresearch2.settings.SettingsActivity
+import com.exner.tools.fototimerresearch2.ui.helpers.ItemClickSupport
 import com.exner.tools.fototimerresearch2.ui.models.FotoTimerProcessListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.serialization.json.Json
@@ -45,6 +48,18 @@ class MainActivity : AppCompatActivity() {
             // Update the cached copy of the words in the adapter.
             process?.let { adapter.submitList(it) }
         })
+
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener{ _, position, v ->
+            Log.i("jexner", "Got $position, and $v")
+            val processIdView = v.findViewById<TextView>(R.id.processIdView)
+            val uid = processIdView.text.toString().toLongOrNull() ?: -1
+            Log.i("jexner", "Launching POA for process ID $uid...")
+            if (uid >= 0) {
+                val intent = Intent(this, ProcessOverviewActivity::class.java)
+                intent.putExtra("PROCESS_ID", uid)
+                startActivity(intent)
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
