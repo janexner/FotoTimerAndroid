@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProcessOverviewActivity">
+    tools:context=".ui.process.ProcessOverviewActivity">
 
     <TextView
         android:id="@+id/overviewProcessNameView"
@@ -32,15 +32,32 @@
         app:layout_constraintTop_toBottomOf="@id/overviewProcessNameView"
         app:layout_constraintLeft_toRightOf="@id/overviewTimeLineStart" />
 
-    <Button
+    <TextView
+        android:id="@+id/overviewTimeLineMid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=", interval time "
+        app:layout_constraintTop_toBottomOf="@id/overviewProcessNameView"
+        app:layout_constraintLeft_toRightOf="@id/overviewProcessTimeView" />
+
+    <TextView
+        android:id="@+id/overviewIntervalTimeView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/overviewProcessNameView"
+        app:layout_constraintLeft_toRightOf="@id/overviewTimeLineMid"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/overviewProcessStart"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:background="?attr/colorPrimary"
         android:gravity="center"
         android:text="@string/button_start"
         android:textSize="@dimen/huge_text_size"
         android:textStyle="bold"
+        android:layout_margin="@dimen/normal_padding"
+        app:cornerRadius="@dimen/normal_padding"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />

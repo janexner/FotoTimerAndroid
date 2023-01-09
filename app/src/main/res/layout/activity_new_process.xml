@@ -202,13 +202,12 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/switch_chain_pause" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_save"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
         android:text="@string/button_save"
-        android:textColor="?attr/colorOnPrimary"
+        app:cornerRadius="@dimen/normal_padding"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />

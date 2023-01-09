@@ -1,4 +1,4 @@
-package com.exner.tools.fototimerresearch2
+package com.exner.tools.fototimerresearch2.ui.process
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,6 +9,9 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.exner.tools.fototimerresearch2.FotoTimerApplication
+import com.exner.tools.fototimerresearch2.NewEditProcessActivity
+import com.exner.tools.fototimerresearch2.R
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModel
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModelFactory
 
@@ -79,6 +82,8 @@ class ProcessOverviewActivity : AppCompatActivity() {
         nameView.text = process.name
         val processTimeView = findViewById<TextView>(R.id.overviewProcessTimeView)
         processTimeView.text = process.processTime.toString()
+        val intervalTimeView = findViewById<TextView>(R.id.overviewIntervalTimeView)
+        intervalTimeView.text = process.intervalTime.toString()
     }
 
     private fun startProcessById(processID: Long) {
