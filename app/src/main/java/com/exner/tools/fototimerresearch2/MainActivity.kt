@@ -11,17 +11,14 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavDestination
-import androidx.navigation.NavHostController
+import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModel
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModelFactory
-import com.exner.tools.fototimerresearch2.ui.FotoTimerProcessList
-import com.exner.tools.fototimerresearch2.ui.ProcessList
-import com.exner.tools.fototimerresearch2.ui.Settings
+import com.exner.tools.fototimerresearch2.ui.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -48,7 +45,25 @@ class MainActivity : AppCompatActivity() {
                             modifier = Modifier.padding(innerPadding)
                         ) {
                             composable(route = ProcessList.route) {
-                                FotoTimerProcessList(fotoTimerProcessViewModel)
+                                FotoTimerProcessList(
+                                    fotoTimerProcessViewModel,
+                                    onNavigateToProcessDetails = {
+                                        navController.navigate(
+                                            "${ProcessDetails.route}/${it}"
+                                        )
+                                    }
+                                )
+                            }
+                            composable(
+                                route = "${ProcessDetails.route}/{processId}",
+                                arguments = listOf(navArgument("processId") {
+                                    type = NavType.StringType
+                                })
+                            ) { backStackEntry ->
+                                val processId = backStackEntry.arguments?.getString("processId")
+                                if (null != processId) {
+                                    FotoTimerProcessDetails(fotoTimerProcessViewModel, processId)
+                                }
                             }
                             composable(route = Settings.route) {
                                 Settings()
@@ -82,8 +97,10 @@ class MainActivity : AppCompatActivity() {
         CenterAlignedTopAppBar(
             title = { Text(text = currentTitle) },
             navigationIcon = {
-                IconButton(onClick = { navController.navigateUp() }) {
-                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
+                if (!inProcessList) {
+                    IconButton(onClick = { navController.navigateUp() }) {
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
+                    }
                 }
             },
             actions = {
@@ -93,8 +110,8 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 IconButton(onClick = {
-                    if (!inSettings) {
-                        navController.navigate(Settings.route)
+                    navController.navigate(Settings.route) {
+                        launchSingleTop = true
                     }
                 }) {
                     Icon(
