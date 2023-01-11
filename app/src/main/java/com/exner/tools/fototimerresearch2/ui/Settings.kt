@@ -16,7 +16,7 @@ import androidx.preference.PreferenceManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Settings() {
+fun Settings(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val sharedSettings = PreferenceManager.getDefaultSharedPreferences(context)
 

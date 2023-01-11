@@ -18,10 +18,11 @@ import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModel
 @Composable
 fun FotoTimerProcessList(
     fotoTimerProcessViewModel: FotoTimerProcessViewModel,
-    onNavigateToProcessDetails: (processId: Long) -> Unit
+    onNavigateToProcessDetails: (processId: Long) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val ftpList by fotoTimerProcessViewModel.allProcesses.observeAsState()
-    LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp))
+    LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = modifier)
     {
         ftpList?.let {
             items(count = it.size) { fotoTimerProcess ->

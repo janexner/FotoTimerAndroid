@@ -17,7 +17,11 @@ import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
 lateinit var process: FotoTimerProcess
 
 @Composable
-fun FotoTimerProcessEdit(fotoTimerProcessViewModel: FotoTimerProcessViewModel, processId: String?) {
+fun FotoTimerProcessEdit(
+    fotoTimerProcessViewModel: FotoTimerProcessViewModel,
+    processId: String?,
+    modifier: Modifier = Modifier
+) {
 
     val uid = processId?.toLong() ?: -1
     val ftProcess: FotoTimerProcess
