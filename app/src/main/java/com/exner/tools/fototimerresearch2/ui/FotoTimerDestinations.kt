@@ -1,6 +1,7 @@
 package com.exner.tools.fototimerresearch2.ui
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
@@ -22,6 +23,12 @@ object ProcessDetails : FotoTimerDestinations {
     override val icon = Icons.Filled.Star
     override val route = "process"
     override val contentDescription = "Process Details"
+}
+
+object ProcessEdit : FotoTimerDestinations {
+    override val icon = Icons.Filled.Edit
+    override val route = "edit"
+    override val contentDescription = "Edit Process"
 }
 
 object Settings : FotoTimerDestinations {

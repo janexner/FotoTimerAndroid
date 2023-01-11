@@ -80,16 +80,18 @@ class MainActivity : AppCompatActivity() {
     fun FotoTimerTopBar(navController: NavHostController, currentDestination: NavDestination?) {
         var currentTitle = "Foto Timer"
         var inProcessList = false
-        var inSettings = false
+        var inProcessDetails = false
 
         // some state checking - probably lame
         if (currentDestination != null) {
             if (currentDestination.route == ProcessList.route) {
                 inProcessList = true
             }
+            if (currentDestination.route!!.startsWith(ProcessDetails.route)) {
+                inProcessDetails = true
+            }
             if (currentDestination.route == Settings.route) {
                 currentTitle = "Settings"
-                inSettings = true
             }
         }
 
@@ -105,8 +107,22 @@ class MainActivity : AppCompatActivity() {
             },
             actions = {
                 if (inProcessList) {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = {
+                        navController.navigate(ProcessEdit.route)
+                    }) {
                         Icon(imageVector = Icons.Filled.Add, contentDescription = "Add Process")
+                    }
+                } else if (inProcessDetails) {
+                    val processId =
+                        navController.currentBackStackEntry?.arguments?.getString("processId")
+                    if (null != processId) {
+                        val editRoute = ProcessEdit.route + "/${processId}"
+                        IconButton(onClick = { navController.navigate(editRoute) }) {
+                            Icon(
+                                imageVector = ProcessEdit.icon,
+                                contentDescription = ProcessEdit.contentDescription
+                            )
+                        }
                     }
                 }
                 IconButton(onClick = {
