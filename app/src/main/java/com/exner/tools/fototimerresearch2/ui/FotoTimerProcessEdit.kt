@@ -24,7 +24,6 @@ fun FotoTimerProcessEdit(
 ) {
 
     val uid = processId?.toLong() ?: -1
-    val ftProcess: FotoTimerProcess
     var tmpProcess: FotoTimerProcess? = null
 
     // read the process, if it exists
@@ -33,12 +32,12 @@ fun FotoTimerProcessEdit(
     }
     // do we need to build one?
     if (null != tmpProcess) {
-        ftProcess = tmpProcess
+        process = tmpProcess
     } else {
         // build one
         val context = LocalContext.current
         val sharedSettings = PreferenceManager.getDefaultSharedPreferences(context)
-        ftProcess = FotoTimerProcess(
+        process = FotoTimerProcess(
             "New Process",
             sharedSettings.getLong("preference_process_time", 30L),
             sharedSettings.getLong("preference_interval_time", 10L),
@@ -58,12 +57,12 @@ fun FotoTimerProcessEdit(
         )
     }
     // while we're here, let's get the name of the next process, if any
-    val tmpGotoProcess = ftProcess.gotoId?.let { fotoTimerProcessViewModel.getProcessById(it) }
+    val tmpGotoProcess = process.gotoId?.let { fotoTimerProcessViewModel.getProcessById(it) }
 
     // OK, now display the thing for editing
     Column(modifier = Modifier.fillMaxSize()) {
-        Text(text = ftProcess.name)
-        Text(text = "${ftProcess.processTime} / ${ftProcess.intervalTime}")
+        Text(text = process.name)
+        Text(text = "${process.processTime} / ${process.intervalTime}")
         Text(text = "Then goes on to ${tmpGotoProcess?.name}")
         Spacer(modifier = Modifier.fillMaxSize())
         Button(onClick = { /*TODO*/ }) {
