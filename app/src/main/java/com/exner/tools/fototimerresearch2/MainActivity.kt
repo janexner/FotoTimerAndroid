@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,6 +19,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModel
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModelFactory
+import com.exner.tools.fototimerresearch2.data.model.FotoTimerSingleProcessViewModel
 import com.exner.tools.fototimerresearch2.ui.*
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 
@@ -30,6 +32,9 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val spViewModel: FotoTimerSingleProcessViewModel =
+            ViewModelProvider(this).get(FotoTimerSingleProcessViewModel::class.java)
 
         setContent {
             FotoTimerTheme {
@@ -65,6 +70,20 @@ class MainActivity : ComponentActivity() {
                                 if (null != processId) {
                                     FotoTimerProcessDetails(fotoTimerProcessViewModel, processId)
                                 }
+                            }
+                            composable(
+                                route = "${ProcessEdit.route}?processId={processId}",
+                                arguments = listOf(navArgument("processId") {
+                                    type = NavType.StringType;
+                                    nullable = true
+                                })
+                            ) { backStackEntry ->
+                                val processId = backStackEntry.arguments?.getString("processId")
+                                FotoTimerProcessEdit(
+                                    fotoTimerProcessViewModel = fotoTimerProcessViewModel,
+                                    spViewModel = spViewModel,
+                                    processId = processId
+                                )
                             }
                             composable(route = Settings.route) {
                                 Settings()
@@ -117,7 +136,7 @@ class MainActivity : ComponentActivity() {
                     val processId =
                         navController.currentBackStackEntry?.arguments?.getString("processId")
                     if (null != processId) {
-                        val editRoute = ProcessEdit.route + "/${processId}"
+                        val editRoute = ProcessEdit.route + "?processId=${processId}"
                         IconButton(onClick = { navController.navigate(editRoute) }) {
                             Icon(
                                 imageVector = ProcessEdit.icon,
