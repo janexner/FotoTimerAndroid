@@ -4,9 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -36,13 +34,12 @@ fun FotoTimerProcessList(
                             .fillMaxWidth()
                             .padding(8.dp)
                     ) {
-                        Text(
-                            text = ftProcess.name,
-                            style = MaterialTheme.typography.headlineMedium
+                        HeaderText(
+                            text = ftProcess.name
                         )
                         Row() {
-                            Text(text = "${ftProcess.processTime}/${ftProcess.intervalTime}")
-                            Text(text = " -> ${ftProcess.gotoId}")
+                            BodyText(text = "${ftProcess.processTime}/${ftProcess.intervalTime}")
+                            BodyText(text = " -> ${ftProcess.gotoId}")
                         }
                     }
                 }

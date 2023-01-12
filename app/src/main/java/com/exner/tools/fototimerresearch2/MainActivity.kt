@@ -1,9 +1,9 @@
 package com.exner.tools.fototimerresearch2
 
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -19,8 +19,9 @@ import androidx.navigation.compose.rememberNavController
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModel
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModelFactory
 import com.exner.tools.fototimerresearch2.ui.*
+import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
 
     private val fotoTimerProcessViewModel: FotoTimerProcessViewModel by viewModels {
         FotoTimerProcessViewModelFactory((application as FotoTimerApplication).repository)
@@ -31,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            MaterialTheme {
+            FotoTimerTheme {
                 val navController = rememberNavController()
                 val currentBackStack by navController.currentBackStackEntryAsState()
                 val currentDestination = currentBackStack?.destination

@@ -13,6 +13,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.preference.PreferenceManager
+import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,18 +27,15 @@ fun Settings(modifier: Modifier = Modifier) {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        Text(
+        HeaderText(
             text = "UI",
-            modifier = Modifier.fillMaxWidth(),
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.secondary
+            modifier = Modifier.fillMaxWidth()
         )
         Row(modifier = Modifier.fillMaxWidth()) {
             Box(modifier = Modifier.alignByBaseline()) {
-                Text(
+                BodyText(
                     text = "Night mode",
-                    modifier = Modifier.align(Alignment.CenterStart),
-                    style = MaterialTheme.typography.bodyLarge
+                    modifier = Modifier.align(Alignment.CenterStart)
                 )
                 Spacer(modifier = Modifier.fillMaxWidth())
                 Switch(
@@ -49,10 +47,8 @@ fun Settings(modifier: Modifier = Modifier) {
                 )
             }
         }
-        Text(
-            text = "Times",
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.secondary
+        HeaderText(
+            text = "Times"
         )
         var processTimeText by remember {
             mutableStateOf(
@@ -156,8 +152,10 @@ fun Settings(modifier: Modifier = Modifier) {
     // - interval
 }
 
-@Preview(showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 fun SettingsPreview() {
-    Settings()
+    FotoTimerTheme {
+        Settings()
+    }
 }
