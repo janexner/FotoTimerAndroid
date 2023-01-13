@@ -103,17 +103,19 @@ fun ProcessAudioData(
                     .align(Alignment.CenterVertically),
             )
             Column() {
-                var soundStatement = "Will play sound at "
-                if (hasSoundStart && hasSoundEnd) {
-                    soundStatement += "start and end of process."
-                } else if (hasSoundStart) {
-                    soundStatement += "start of process."
-                } else if (hasSoundEnd) {
-                    soundStatement += "end of process."
+                if (hasSoundStart || hasSoundEnd || hasSoundInterval) {
+                    var soundStatement = "Will play sound at "
+                    if (hasSoundStart && hasSoundEnd) {
+                        soundStatement += "start and end of process."
+                    } else if (hasSoundStart) {
+                        soundStatement += "start of process."
+                    } else if (hasSoundEnd) {
+                        soundStatement += "end of process."
+                    }
+                    BodyText(
+                        text = soundStatement
+                    )
                 }
-                BodyText(
-                    text = soundStatement
-                )
                 if (hasSoundInterval) {
                     BodyText(
                         text = "Will play sound at each interval."

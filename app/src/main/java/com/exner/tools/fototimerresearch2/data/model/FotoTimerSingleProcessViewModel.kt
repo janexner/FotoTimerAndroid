@@ -8,8 +8,8 @@ import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
 
 class FotoTimerSingleProcessViewModel() : ViewModel() {
     var name: String by mutableStateOf("Process Name")
-    var processTime: Long by mutableStateOf(30L)
-    var intervalTime: Long by mutableStateOf(10L)
+    var processTime: String by mutableStateOf("30")
+    var intervalTime: String by mutableStateOf("10")
     var hasSoundStart: Boolean by mutableStateOf(true)
     var soundStartId: Long? by mutableStateOf(1L)
     var hasSoundEnd: Boolean by mutableStateOf(true)
@@ -18,18 +18,18 @@ class FotoTimerSingleProcessViewModel() : ViewModel() {
     var soundIntervalId: Long? by mutableStateOf(3L)
     var hasSoundMetronome: Boolean by mutableStateOf(true)
     var hasLeadIn: Boolean by mutableStateOf(true)
-    var leadInSeconds: Int? by mutableStateOf(5)
+    var leadInSeconds: String by mutableStateOf("5")
     var hasAutoChain: Boolean by mutableStateOf(true)
     var hasPauseBeforeChain: Boolean? by mutableStateOf(true)
-    var pauseTime: Int? by mutableStateOf(3)
+    var pauseTime: String by mutableStateOf("3")
     var gotoId: Long? by mutableStateOf(null)
     var uid: Long by mutableStateOf(-1L)
         private set
 
     fun setVarsFromProcess(initialProcess: FotoTimerProcess) {
         name = initialProcess.name
-        processTime = initialProcess.processTime
-        intervalTime = initialProcess.intervalTime
+        processTime = initialProcess.processTime.toString()
+        intervalTime = initialProcess.intervalTime.toString()
         hasSoundStart = initialProcess.hasSoundStart
         soundStartId = initialProcess.soundStartId
         hasSoundEnd = initialProcess.hasSoundEnd
@@ -38,10 +38,10 @@ class FotoTimerSingleProcessViewModel() : ViewModel() {
         soundIntervalId = initialProcess.soundIntervalId
         hasSoundMetronome = initialProcess.hasSoundMetronome
         hasLeadIn = initialProcess.hasLeadIn
-        leadInSeconds = initialProcess.leadInSeconds
+        leadInSeconds = initialProcess.leadInSeconds.toString()
         hasAutoChain = initialProcess.hasAutoChain
         hasPauseBeforeChain = initialProcess.hasPauseBeforeChain
-        pauseTime = initialProcess.pauseTime
+        pauseTime = initialProcess.pauseTime.toString()
         gotoId = initialProcess.gotoId
         uid = initialProcess.uid
     }

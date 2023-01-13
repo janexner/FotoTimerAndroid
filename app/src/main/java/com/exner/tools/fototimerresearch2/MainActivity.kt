@@ -74,14 +74,14 @@ class MainActivity : ComponentActivity() {
                             composable(
                                 route = "${ProcessEdit.route}?processId={processId}",
                                 arguments = listOf(navArgument("processId") {
-                                    type = NavType.StringType;
+                                    type = NavType.StringType
                                     nullable = true
                                 })
                             ) { backStackEntry ->
                                 val processId = backStackEntry.arguments?.getString("processId")
                                 FotoTimerProcessEdit(
                                     fotoTimerProcessViewModel = fotoTimerProcessViewModel,
-                                    spViewModel = spViewModel,
+                                    singleprocessViewModel = spViewModel,
                                     processId = processId
                                 )
                             }

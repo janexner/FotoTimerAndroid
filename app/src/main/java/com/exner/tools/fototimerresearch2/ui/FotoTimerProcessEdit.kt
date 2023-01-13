@@ -1,28 +1,34 @@
 package com.exner.tools.fototimerresearch2.ui
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.preference.PreferenceManager
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModel
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerSingleProcessViewModel
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
+import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 
 lateinit var spViewModel: FotoTimerSingleProcessViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FotoTimerProcessEdit(
     fotoTimerProcessViewModel: FotoTimerProcessViewModel,
-    spViewModel: FotoTimerSingleProcessViewModel,
+    singleprocessViewModel: FotoTimerSingleProcessViewModel,
     processId: String?,
     modifier: Modifier = Modifier
 ) {
+    spViewModel = singleprocessViewModel
 
     // read the process, if it exists
     val uid = processId?.toLong() ?: -1
@@ -43,13 +49,13 @@ fun FotoTimerProcessEdit(
             2,
             false,
             3,
-            false,
-            false,
-            sharedSettings.getInt("preference_lead_in_time", 5),
-            false,
-            false,
-            sharedSettings.getInt("preference_pause_time", 0),
-            -1L
+            hasSoundMetronome = false,
+            hasLeadIn = false,
+            leadInSeconds = sharedSettings.getInt("preference_lead_in_time", 5),
+            hasAutoChain = false,
+            hasPauseBeforeChain = false,
+            pauseTime = sharedSettings.getInt("preference_pause_time", 0),
+            gotoId = -1L
         )
     }
     // let's use that fancy ViewModel
@@ -62,27 +68,187 @@ fun FotoTimerProcessEdit(
 
     // OK, at this point we have a process, either existing, or fresh.
     // Now display the thing for editing
-    Column(modifier = Modifier.fillMaxSize()) {
+    FotoTimerProcessEditor(spViewModel)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FotoTimerProcessEditor(processViewModel: FotoTimerSingleProcessViewModel) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(8.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
         // top - fields
         TextField(
-            value = spViewModel.name,
-            onValueChange = { spViewModel.name = it },
-            label = {
-                Text(
-                    text = "Process name"
-                )
-            },
+            value = processViewModel.name,
+            onValueChange = { processViewModel.name = it },
+            label = { Text(text = "Process name") },
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
+        HeaderText(text = "Times")
+        TextField(
+            value = processViewModel.processTime,
+            onValueChange = { processViewModel.processTime = it },
+            label = { Text(text = "Process time (total)") },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
+        )
+        TextField(
+            value = processViewModel.intervalTime,
+            onValueChange = { processViewModel.intervalTime = it },
+            label = { Text(text = "Interval time") },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
+        )
+        HeaderText(text = "Audio")
+        Text(
+            text = "Play sounds:",
+            modifier = Modifier.fillMaxWidth()
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(72.dp)
+        ) {
+            Text(text = "At start", modifier = Modifier.align(Alignment.TopStart))
+            Text(
+                text = "each interval",
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
+            Text(
+                text = "at the end",
+                modifier = Modifier.align(Alignment.TopEnd)
+            )
+            Switch(
+                checked = processViewModel.hasSoundStart,
+                onCheckedChange = { processViewModel.hasSoundStart = it },
+                modifier = Modifier.align(Alignment.BottomStart)
+            )
+            Switch(
+                checked = processViewModel.hasSoundInterval,
+                onCheckedChange = { processViewModel.hasSoundInterval = it },
+                modifier = Modifier.align(Alignment.BottomCenter)
+            )
+            Switch(
+                checked = processViewModel.hasSoundEnd,
+                onCheckedChange = { processViewModel.hasSoundEnd = it },
+                modifier = Modifier.align(Alignment.BottomEnd)
+            )
+        }
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                text = "Play a sound every second ('metronome')",
+                modifier = Modifier.align(Alignment.CenterStart)
+            )
+            Switch(
+                checked = processViewModel.hasSoundMetronome,
+                onCheckedChange = { processViewModel.hasSoundMetronome = it },
+                modifier = Modifier.align(Alignment.CenterEnd)
+            )
+        }
+        HeaderText(text = "Before the process")
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                text = "Lead-in before process",
+                modifier = Modifier.align(Alignment.CenterStart)
+            )
+            Switch(
+                checked = processViewModel.hasLeadIn,
+                onCheckedChange = { processViewModel.hasLeadIn = it },
+                modifier = Modifier.align(Alignment.CenterEnd)
+            )
+        }
+        if (processViewModel.hasLeadIn) {
+            TextField(
+                value = processViewModel.leadInSeconds,
+                label = { Text(text = "Lead-in (seconds)") },
+                onValueChange = { processViewModel.leadInSeconds = it },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+        }
+        HeaderText(text = "After the process")
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                text = "Automatically start another process",
+                modifier = Modifier.align(Alignment.CenterStart)
+            )
+            Switch(
+                checked = processViewModel.hasAutoChain,
+                onCheckedChange = { processViewModel.hasAutoChain = it },
+                modifier = Modifier.align(Alignment.CenterEnd)
+            )
+        }
+        if (processViewModel.hasAutoChain) {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Button(onClick = { /*TODO*/ }) {
+                    Text(text = "Select next Process")
+                }
+            }
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "Pause before going to the next process",
+                    modifier = Modifier.align(Alignment.CenterStart)
+                )
+                Switch(
+                    checked = processViewModel.hasPauseBeforeChain ?: false,
+                    onCheckedChange = { processViewModel.hasPauseBeforeChain = it },
+                    modifier = Modifier.align(Alignment.CenterEnd)
+                )
+            }
+            if (true == processViewModel.hasPauseBeforeChain) {
+                TextField(
+                    value = processViewModel.pauseTime,
+                    label = { Text(text = "Pause (seconds)") },
+                    onValueChange = { processViewModel.pauseTime = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                )
+            }
+        }
         // middle and bottom - filler and save button
-        Spacer(modifier = Modifier.fillMaxSize())
+        Spacer(modifier = Modifier.weight(0.5f))
         Button(onClick = { /*TODO*/ }) {
             Text(
                 text = "Save Process",
                 style = MaterialTheme.typography.headlineSmall,
+                textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FTEPreview() {
+    spViewModel.setVarsFromProcess(
+        FotoTimerProcess(
+            "Sample Process",
+            30L,
+            10L,
+            true,
+            1,
+            true,
+            2,
+            true,
+            3,
+            hasSoundMetronome = true,
+            hasLeadIn = true,
+            leadInSeconds = 5,
+            hasAutoChain = true,
+            hasPauseBeforeChain = true,
+            pauseTime = 3,
+            gotoId = 3L,
+        )
+    )
+    FotoTimerTheme {
+        FotoTimerProcessEditor(processViewModel = spViewModel)
     }
 }
