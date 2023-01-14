@@ -77,9 +77,17 @@ fun FotoTimerProcessEditor(
     processIdsAndNames: List<FotoTimerProcessIdAndName>?
 ) {
     var nextProcessName: String by remember { mutableStateOf("") }
-    if (("" == nextProcessName) && (null != processViewModel.gotoId) && (-1L != processViewModel.gotoId)) {
-        nextProcessName = "Test"
-        // TODO loop through and assign the right name
+    if ((null != processViewModel.gotoId) && (-1L != processViewModel.gotoId)) {
+        // loop through and assign the right name
+        processIdsAndNames?.forEach {
+            if (it.uid == processViewModel.gotoId) {
+                nextProcessName = it.name
+            }
+        }
+        // if gotoId not found, set it to -1
+        if ("" == nextProcessName) {
+            processViewModel.gotoId = -1
+        }
     }
 
     Column(
@@ -194,27 +202,32 @@ fun FotoTimerProcessEditor(
             )
         }
         if (processViewModel.hasAutoChain) {
-            Box(modifier = Modifier.fillMaxWidth()) {
-                val selectionOpen: MutableState<Boolean> = remember { mutableStateOf(false) }
-                TextButton(onClick = { selectionOpen.value = true }) {
-                    if ((null != processViewModel.gotoId) && (0 <= processViewModel.gotoId!!)) {
-                        Text(text = "Next Process: $nextProcessName (change)")
-                    } else {
-                        Text(text = "Select next Process")
-                    }
-                }
-                DropdownMenu(
-                    expanded = selectionOpen.value,
-                    onDismissRequest = { selectionOpen.value = false }
-                ) {
+            var expanded by remember { mutableStateOf(false) }
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = {expanded = !expanded}) {
+                TextField(
+                    // The `menuAnchor` modifier must be passed to the text field for correctness.
+                    modifier = Modifier.menuAnchor().fillMaxWidth(),
+                    readOnly = true,
+                    value = nextProcessName,
+                    placeholder = { Text("Select next Process") },
+                    onValueChange = {},
+                    label = { Text("Next Process") },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                )
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }) {
                     processIdsAndNames?.forEach { idAndName ->
                         DropdownMenuItem(
-                            text = { Text(text = idAndName.name) }, 
+                            text = { Text(text = idAndName.name) },
                             onClick = {
                                 processViewModel.gotoId = idAndName.uid
                                 nextProcessName = idAndName.name
-                                selectionOpen.value = false
-                            }
+                                expanded = false
+                            },
+                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                         )
                     }
                 }
