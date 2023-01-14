@@ -2,6 +2,7 @@ package com.exner.tools.fototimerresearch2.data.model
 
 import androidx.lifecycle.*
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
+import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcessIdAndName
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcessRepository
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -16,6 +17,9 @@ class FotoTimerProcessViewModel(private val repository: FotoTimerProcessReposito
         repository.allProcesses.asLiveData()
 
     fun getProcessById(id: Long): FotoTimerProcess? = runBlocking { repository.loadProcessById(id) }
+
+    fun getIdsAndNamesOfAllProcesses(): List<FotoTimerProcessIdAndName>? =
+        runBlocking { repository.loadIdsAndNamesForAllProcesses() }
 
     /**
      * Launching a new coroutine to insert the data in a non-blocking way

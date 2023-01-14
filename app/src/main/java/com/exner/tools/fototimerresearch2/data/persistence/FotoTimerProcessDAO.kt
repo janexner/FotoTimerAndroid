@@ -14,6 +14,9 @@ interface FotoTimerProcessDAO {
     @Query("SELECT * FROM fototimerprocess ORDER BY name ASC")
     fun getAllAlphabeticallyOrdered(): Flow<List<FotoTimerProcess>>
 
+    @Query("SELECT uid, name FROM fototimerprocess ORDER BY name ASC")
+    suspend fun getIdsAndNamesOfAllProcesses(): List<FotoTimerProcessIdAndName>
+
     @Query("SELECT * FROM fototimerprocess WHERE uid=:id")
     suspend fun getFotoTimerProcess(id : Long): FotoTimerProcess?
 

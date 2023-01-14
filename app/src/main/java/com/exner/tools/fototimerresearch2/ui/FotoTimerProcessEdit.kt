@@ -5,7 +5,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -17,6 +17,7 @@ import androidx.preference.PreferenceManager
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModel
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerSingleProcessViewModel
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
+import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcessIdAndName
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 
 lateinit var spViewModel: FotoTimerSingleProcessViewModel
@@ -61,19 +62,26 @@ fun FotoTimerProcessEdit(
     // let's use that fancy ViewModel
     spViewModel.setVarsFromProcess(tmpProcess)
 
-    // while we're here, let's get the name of the next process, if any
-    val tmpGotoProcess = tmpProcess.gotoId?.let { fotoTimerProcessViewModel.getProcessById(it) }
-    // and the list of all available processes for goto
-    // TODO
+    // while we're here, let's get the list of all available processes for goto
+    val processIdsAndNames = fotoTimerProcessViewModel.getIdsAndNamesOfAllProcesses()
 
     // OK, at this point we have a process, either existing, or fresh.
     // Now display the thing for editing
-    FotoTimerProcessEditor(spViewModel)
+    FotoTimerProcessEditor(spViewModel, processIdsAndNames)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FotoTimerProcessEditor(processViewModel: FotoTimerSingleProcessViewModel) {
+fun FotoTimerProcessEditor(
+    processViewModel: FotoTimerSingleProcessViewModel,
+    processIdsAndNames: List<FotoTimerProcessIdAndName>?
+) {
+    var nextProcessName: String by remember { mutableStateOf("") }
+    if (("" == nextProcessName) && (null != processViewModel.gotoId) && (-1L != processViewModel.gotoId)) {
+        nextProcessName = "Test"
+        // TODO loop through and assign the right name
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -187,8 +195,28 @@ fun FotoTimerProcessEditor(processViewModel: FotoTimerSingleProcessViewModel) {
         }
         if (processViewModel.hasAutoChain) {
             Box(modifier = Modifier.fillMaxWidth()) {
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Select next Process")
+                val selectionOpen: MutableState<Boolean> = remember { mutableStateOf(false) }
+                TextButton(onClick = { selectionOpen.value = true }) {
+                    if ((null != processViewModel.gotoId) && (0 <= processViewModel.gotoId!!)) {
+                        Text(text = "Next Process: $nextProcessName (change)")
+                    } else {
+                        Text(text = "Select next Process")
+                    }
+                }
+                DropdownMenu(
+                    expanded = selectionOpen.value,
+                    onDismissRequest = { selectionOpen.value = false }
+                ) {
+                    processIdsAndNames?.forEach { idAndName ->
+                        DropdownMenuItem(
+                            text = { Text(text = idAndName.name) }, 
+                            onClick = {
+                                processViewModel.gotoId = idAndName.uid
+                                nextProcessName = idAndName.name
+                                selectionOpen.value = false
+                            }
+                        )
+                    }
                 }
             }
             Box(modifier = Modifier.fillMaxWidth()) {
@@ -248,7 +276,16 @@ fun FTEPreview() {
             gotoId = 3L,
         )
     )
+    val p1 = FotoTimerProcessIdAndName(1, "Process 1")
+    val p2 = FotoTimerProcessIdAndName(2, "Process 2")
+    val processIdsAndNames: MutableList<FotoTimerProcessIdAndName> =
+        mutableListOf()
+    processIdsAndNames.add(p1)
+    processIdsAndNames.add(p2)
     FotoTimerTheme {
-        FotoTimerProcessEditor(processViewModel = spViewModel)
+        FotoTimerProcessEditor(
+            processViewModel = spViewModel,
+            processIdsAndNames = processIdsAndNames
+        )
     }
 }

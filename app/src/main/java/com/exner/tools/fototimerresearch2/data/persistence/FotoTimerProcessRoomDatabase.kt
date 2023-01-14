@@ -69,7 +69,7 @@ public abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
                     false,
                     false,
                     0,
-                    0
+                    -1L
                 )
             fotoTimerProcessDao.insert(fotoTimerProcess)
             fotoTimerProcess =
@@ -89,7 +89,7 @@ public abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
                     false,
                     false,
                     0,
-                    0
+                    -1L
                 )
             fotoTimerProcessDao.insert(fotoTimerProcess)
         }

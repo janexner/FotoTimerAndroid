@@ -1,7 +1,6 @@
 package com.exner.tools.fototimerresearch2.data.persistence
 
 import androidx.annotation.WorkerThread
-import androidx.lifecycle.LiveData
 import kotlinx.coroutines.flow.Flow
 
 // Declares the DAO as a private property in the constructor. Pass in the DAO
@@ -16,6 +15,11 @@ class FotoTimerProcessRepository(private val fotoTimerProcessDAO: FotoTimerProce
     @WorkerThread
     suspend fun loadProcessById(id: Long): FotoTimerProcess? {
         return fotoTimerProcessDAO.getFotoTimerProcess(id)
+    }
+
+    @WorkerThread
+    suspend fun loadIdsAndNamesForAllProcesses(): List<FotoTimerProcessIdAndName>? {
+        return fotoTimerProcessDAO.getIdsAndNamesOfAllProcesses()
     }
 
     // By default Room runs suspend queries off the main thread, therefore, we don't need to
