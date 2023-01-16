@@ -17,6 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.preference.PreferenceManager
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModel
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModelFactory
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerSingleProcessViewModel
@@ -36,8 +37,14 @@ class MainActivity : ComponentActivity() {
         val spViewModel: FotoTimerSingleProcessViewModel =
             ViewModelProvider(this).get(FotoTimerSingleProcessViewModel::class.java)
 
+        // are we in forced dark mode?
+        val sharedSettings = PreferenceManager.getDefaultSharedPreferences(this)
+        val forceNightMode = sharedSettings.getBoolean("preference_night_mode", false)
+
         setContent {
-            FotoTimerTheme {
+            FotoTimerTheme(
+                darkTheme = forceNightMode
+            ) {
                 val navController = rememberNavController()
                 val currentBackStack by navController.currentBackStackEntryAsState()
                 val currentDestination = currentBackStack?.destination

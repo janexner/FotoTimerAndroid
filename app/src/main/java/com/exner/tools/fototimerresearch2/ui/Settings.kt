@@ -32,17 +32,18 @@ fun Settings(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth()
         )
         Row(modifier = Modifier.fillMaxWidth()) {
-            Box(modifier = Modifier.alignByBaseline()) {
+            Box(modifier = Modifier.fillMaxWidth()) {
                 BodyText(
-                    text = "Night mode",
+                    text = "Night mode (needs a restart)",
                     modifier = Modifier.align(Alignment.CenterStart)
                 )
-                Spacer(modifier = Modifier.fillMaxWidth())
+                var night by remember { mutableStateOf(sharedSettings.getBoolean("preference_night_mode", false)) }
                 Switch(
-                    checked = sharedSettings.getBoolean("preference_night_mode", false),
+                    checked = night,
                     modifier = Modifier.align(Alignment.CenterEnd),
                     onCheckedChange = {
-
+                        sharedSettings.edit().putBoolean("preference_night_mode", it).apply()
+                        night = !night
                     }
                 )
             }
