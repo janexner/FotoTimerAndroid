@@ -1,11 +1,8 @@
 package com.exner.tools.fototimerresearch2.ui
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -81,6 +78,7 @@ fun ProcessName(name: String, modifier: Modifier = Modifier) {
     HeaderText(text = name)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProcessAudioData(
     hasSoundStart: Boolean,
@@ -89,72 +87,60 @@ fun ProcessAudioData(
     hasSoundMetronome: Boolean,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(0.dp, 0.dp, 0.dp, 8.dp)
-    ) {
-        if (hasSoundStart || hasSoundEnd || hasSoundInterval || hasSoundMetronome) {
-            Icon(
-                painterResource(id = R.drawable.ic_baseline_music_note_24),
-                contentDescription = "Process Sounds",
-                modifier = Modifier
-                    .padding(8.dp)
-                    .align(Alignment.CenterVertically),
-            )
-            Column() {
-                if (hasSoundStart || hasSoundEnd || hasSoundInterval) {
-                    var soundStatement = "Will play sound at "
-                    if (hasSoundStart && hasSoundEnd) {
-                        soundStatement += "start and end of process."
-                    } else if (hasSoundStart) {
-                        soundStatement += "start of process."
-                    } else if (hasSoundEnd) {
-                        soundStatement += "end of process."
-                    }
-                    BodyText(
-                        text = soundStatement
-                    )
-                }
-                if (hasSoundInterval) {
-                    BodyText(
-                        text = "Will play sound at each interval."
-                    )
-                }
-                if (hasSoundMetronome) {
-                    BodyText(text = "Will tick every second ('metronome').")
-                }
+    if (hasSoundStart || hasSoundEnd || hasSoundInterval || hasSoundMetronome) {
+        var soundStatement = ""
+        var space = ""
+        if (hasSoundStart || hasSoundEnd || hasSoundInterval) {
+            var soundStatement = "Will play sound at "
+            if (hasSoundStart && hasSoundEnd) {
+                soundStatement += "start and end of process."
+            } else if (hasSoundStart) {
+                soundStatement += "start of process."
+            } else if (hasSoundEnd) {
+                soundStatement += "end of process."
             }
+            space = " "
         }
+        if (hasSoundInterval) {
+            soundStatement += space + "Will play sound at each interval."
+            space = " "
+        }
+        if (hasSoundMetronome) {
+            soundStatement += space + "Will tick every second ('metronome')."
+        }
+        ListItem(
+            headlineText = { Text(text = "Sound") },
+            supportingText = { Text(text = soundStatement) },
+            leadingContent = {
+                Icon(
+                    painterResource(id = R.drawable.ic_baseline_music_note_24),
+                    contentDescription = "Process Sounds",
+                )
+            }
+        )
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProcessTimerData(
     processTime: Long,
     intervalTime: Long,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(0.dp, 0.dp, 0.dp, 8.dp)
-    ) {
-        Icon(
-            painterResource(id = R.drawable.ic_baseline_timer_24),
-            contentDescription = "Process Times",
-            modifier = Modifier
-                .padding(8.dp)
-                .align(Alignment.CenterVertically)
-        )
-        Column() {
-            BodyText(
-                text = "The process runs for $processTime seconds, with an interval every $intervalTime seconds"
+    ListItem(
+        headlineText = { Text(text = "Time") },
+        supportingText = { Text(text = "The process runs for $processTime seconds, with an interval every $intervalTime seconds") },
+        leadingContent = {
+            Icon(
+                painterResource(id = R.drawable.ic_baseline_timer_24),
+                contentDescription = "Process Times",
             )
         }
-    }
+    )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProcessLeadInAndChainData(
     hasLeadIn: Boolean,
@@ -167,43 +153,32 @@ fun ProcessLeadInAndChainData(
     modifier: Modifier = Modifier
 ) {
     if (hasLeadIn && (null != leadInSeconds)) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(0.dp, 0.dp, 0.dp, 8.dp)
-        ) {
-            Icon(
-                painterResource(id = R.drawable.ic_baseline_start_24),
-                contentDescription = "Process Start",
-                modifier = Modifier
-                    .padding(8.dp)
-                    .align(Alignment.CenterVertically)
-            )
-            Column() {
-                BodyText(text = "Before the process starts, there will be a count down for $leadInSeconds seconds.")
+        ListItem(
+            headlineText = { Text(text = "Before") },
+            supportingText = { Text(text = "Before the process starts, there will be a $leadInSeconds second count down.") },
+            leadingContent = {
+                Icon(
+                    painterResource(id = R.drawable.ic_baseline_start_24),
+                    contentDescription = "Process Start",
+                )
             }
-        }
+        )
     }
     if (hasAutoChain && (null != gotoId) && (-1L < gotoId) && (null != nextName)) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(0.dp, 0.dp, 0.dp, 8.dp)
-        ) {
-            Icon(
-                painterResource(id = R.drawable.ic_baseline_navigate_next_24),
-                contentDescription = "Process End",
-                modifier = Modifier
-                    .padding(8.dp)
-                    .align(Alignment.CenterVertically)
-            )
-            Column() {
-                BodyText(text = "When the process is done, it will automatically lead into the next process: '$nextName'.")
-                if (true == hasPauseBeforeChain && (null != pauseTime) && (0 < pauseTime)) {
-                    BodyText(text = "There will be a pause of $pauseTime seconds before '$nextName' starts.")
-                }
-            }
+        var doneText = "When the process is done, it will automatically lead into the next process: '$nextName'."
+        if (true == hasPauseBeforeChain && (null != pauseTime) && (0 < pauseTime)) {
+            doneText += " There will be a pause of $pauseTime seconds before '$nextName' starts."
         }
+        ListItem(
+            headlineText = { Text(text = "After") },
+            supportingText = { Text(text = doneText) },
+            leadingContent = {
+                Icon(
+                    painterResource(id = R.drawable.ic_baseline_navigate_next_24),
+                    contentDescription = "Process End",
+                )
+            }
+        )
     }
 }
 
