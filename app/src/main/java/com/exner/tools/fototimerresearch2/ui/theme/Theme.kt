@@ -36,5 +36,8 @@ fun FotoTimerTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
-    MaterialTheme(colorScheme = colorScheme, content = content)
+    MaterialTheme(
+        colorScheme = colorScheme,
+        content = content
+    )
 }

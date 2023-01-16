@@ -27,6 +27,8 @@ class FotoTimerProcessViewModel(private val repository: FotoTimerProcessReposito
     fun insert(fotoTimerProcess: FotoTimerProcess) =
         viewModelScope.launch { repository.insert(fotoTimerProcess) }
 
+    fun update(fotoTimerProcess: FotoTimerProcess) =
+        viewModelScope.launch { repository.update(fotoTimerProcess) }
 }
 
 class FotoTimerProcessViewModelFactory(private val repository: FotoTimerProcessRepository) :

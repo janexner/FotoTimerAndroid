@@ -45,4 +45,26 @@ class FotoTimerSingleProcessViewModel() : ViewModel() {
         gotoId = initialProcess.gotoId
         uid = initialProcess.uid
     }
+
+    fun getAsFotoTimerProcess(): FotoTimerProcess {
+        return FotoTimerProcess(
+            name = name,
+            processTime = processTime.toLongOrNull() ?: 30L,
+            intervalTime = intervalTime.toLongOrNull() ?: 10L,
+            hasSoundStart = hasSoundStart,
+            soundStartId = soundStartId,
+            hasSoundEnd = hasSoundEnd,
+            soundEndId = soundEndId,
+            hasSoundInterval = hasSoundInterval,
+            soundIntervalId = soundIntervalId,
+            hasSoundMetronome = hasSoundMetronome,
+            hasLeadIn = hasLeadIn,
+            leadInSeconds = leadInSeconds.toIntOrNull() ?: 5,
+            hasAutoChain = hasAutoChain,
+            hasPauseBeforeChain = hasPauseBeforeChain,
+            pauseTime = pauseTime.toIntOrNull() ?: 3,
+            gotoId = gotoId,
+            uid = uid,
+        )
+    }
 }

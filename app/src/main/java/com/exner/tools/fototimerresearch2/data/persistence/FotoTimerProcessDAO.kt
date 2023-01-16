@@ -1,9 +1,6 @@
 package com.exner.tools.fototimerresearch2.data.persistence
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -22,6 +19,9 @@ interface FotoTimerProcessDAO {
 
     @Insert
     suspend fun insert(fotoTimerProcess: FotoTimerProcess)
+
+    @Update
+    suspend fun update(fotoTimerProcess: FotoTimerProcess)
 
     @Delete
     suspend fun delete(fotoTimerProcess: FotoTimerProcess)

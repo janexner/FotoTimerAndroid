@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Database(
-    entities = arrayOf(FotoTimerProcess::class),
+    entities = [FotoTimerProcess::class],
     version = 2,
     exportSchema = false
 )
@@ -45,29 +45,29 @@ public abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
             super.onCreate(db)
             INSTANCE?.let { database ->
                 scope.launch {
-                    populateDatabase(database.processDAO())
+                    populateDatabaseWithSampleProcesses(database.processDAO())
                 }
             }
         }
 
-        suspend fun populateDatabase(fotoTimerProcessDao: FotoTimerProcessDAO) {
+        suspend fun populateDatabaseWithSampleProcesses(fotoTimerProcessDao: FotoTimerProcessDAO) {
             // Add sample words.
             var fotoTimerProcess =
                 FotoTimerProcess(
                     "Test Process 1",
                     30,
                     10,
-                    false,
+                    true,
                     0,
-                    hasSoundEnd = false,
+                    hasSoundEnd = true,
                     0,
-                    hasSoundInterval = false,
+                    hasSoundInterval = true,
                     0,
                     hasSoundMetronome = false,
                     hasLeadIn = false,
                     0,
-                    false,
-                    false,
+                    hasAutoChain = false,
+                    hasPauseBeforeChain = false,
                     0,
                     -1L
                 )
@@ -86,8 +86,8 @@ public abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
                     hasSoundMetronome = true,
                     hasLeadIn = false,
                     0,
-                    false,
-                    false,
+                    hasAutoChain = false,
+                    hasPauseBeforeChain = false,
                     0,
                     -1L
                 )

@@ -20,6 +20,7 @@ import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcessIdAndName
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 
+lateinit var ftpViewModel: FotoTimerProcessViewModel
 lateinit var spViewModel: FotoTimerSingleProcessViewModel
 
 @Composable
@@ -27,8 +28,10 @@ fun FotoTimerProcessEdit(
     fotoTimerProcessViewModel: FotoTimerProcessViewModel,
     singleprocessViewModel: FotoTimerSingleProcessViewModel,
     processId: String?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSaveClicked: (Unit) -> Boolean
 ) {
+    ftpViewModel = fotoTimerProcessViewModel
     spViewModel = singleprocessViewModel
 
     // read the process, if it exists
@@ -67,14 +70,15 @@ fun FotoTimerProcessEdit(
 
     // OK, at this point we have a process, either existing, or fresh.
     // Now display the thing for editing
-    FotoTimerProcessEditor(spViewModel, processIdsAndNames)
+    FotoTimerProcessEditor(spViewModel, processIdsAndNames, onSaveClicked)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FotoTimerProcessEditor(
     processViewModel: FotoTimerSingleProcessViewModel,
-    processIdsAndNames: List<FotoTimerProcessIdAndName>?
+    processIdsAndNames: List<FotoTimerProcessIdAndName>?,
+    onSaveClicked: (Unit) -> Boolean
 ) {
     var nextProcessName: String by remember { mutableStateOf("") }
     if ((null != processViewModel.gotoId) && (-1L != processViewModel.gotoId)) {
@@ -205,10 +209,12 @@ fun FotoTimerProcessEditor(
             var expanded by remember { mutableStateOf(false) }
             ExposedDropdownMenuBox(
                 expanded = expanded,
-                onExpandedChange = {expanded = !expanded}) {
+                onExpandedChange = { expanded = !expanded }) {
                 TextField(
                     // The `menuAnchor` modifier must be passed to the text field for correctness.
-                    modifier = Modifier.menuAnchor().fillMaxWidth(),
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth(),
                     readOnly = true,
                     value = nextProcessName,
                     placeholder = { Text("Select next Process") },
@@ -255,7 +261,16 @@ fun FotoTimerProcessEditor(
         }
         // middle and bottom - filler and save button
         Spacer(modifier = Modifier.weight(0.5f))
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = {
+            val process = spViewModel.getAsFotoTimerProcess()
+            if (0L == process.uid) {
+                ftpViewModel.insert(process)
+            } else {
+                ftpViewModel.update(process)
+            }
+            // navigate back
+            onSaveClicked(Unit)
+        }) {
             Text(
                 text = "Save Process",
                 style = MaterialTheme.typography.headlineSmall,
@@ -299,6 +314,6 @@ fun FTEPreview() {
         FotoTimerProcessEditor(
             processViewModel = spViewModel,
             processIdsAndNames = processIdsAndNames
-        )
+        ) { true }
     }
 }

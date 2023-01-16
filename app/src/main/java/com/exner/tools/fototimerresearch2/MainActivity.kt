@@ -82,7 +82,8 @@ class MainActivity : ComponentActivity() {
                                 FotoTimerProcessEdit(
                                     fotoTimerProcessViewModel = fotoTimerProcessViewModel,
                                     singleprocessViewModel = spViewModel,
-                                    processId = processId
+                                    processId = processId,
+                                    onSaveClicked = { navController.popBackStack() }
                                 )
                             }
                             composable(route = Settings.route) {

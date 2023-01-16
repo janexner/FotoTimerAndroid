@@ -30,4 +30,8 @@ class FotoTimerProcessRepository(private val fotoTimerProcessDAO: FotoTimerProce
     suspend fun insert(fotoTimerProcess: FotoTimerProcess) {
         fotoTimerProcessDAO.insert(fotoTimerProcess)
     }
+
+    suspend fun update(fotoTimerProcess: FotoTimerProcess) {
+        fotoTimerProcessDAO.update(fotoTimerProcess)
+    }
 }

@@ -109,8 +109,8 @@ fun ProcessAudioData(
             soundStatement += space + "Will tick every second ('metronome')."
         }
         ListItem(
-            headlineText = { Text(text = "Sound") },
-            supportingText = { Text(text = soundStatement) },
+            headlineText = { SmallBodyText(text = "Sounds") },
+            supportingText = { BodyText(text = soundStatement) },
             leadingContent = {
                 Icon(
                     painterResource(id = R.drawable.ic_baseline_music_note_24),
@@ -129,8 +129,8 @@ fun ProcessTimerData(
     modifier: Modifier = Modifier
 ) {
     ListItem(
-        headlineText = { Text(text = "Time") },
-        supportingText = { Text(text = "The process runs for $processTime seconds, with an interval every $intervalTime seconds") },
+        headlineText = { SmallBodyText(text = "Times") },
+        supportingText = { BodyText(text = "The process runs for $processTime seconds, with an interval every $intervalTime seconds") },
         leadingContent = {
             Icon(
                 painterResource(id = R.drawable.ic_baseline_timer_24),
@@ -154,8 +154,8 @@ fun ProcessLeadInAndChainData(
 ) {
     if (hasLeadIn && (null != leadInSeconds)) {
         ListItem(
-            headlineText = { Text(text = "Before") },
-            supportingText = { Text(text = "Before the process starts, there will be a $leadInSeconds second count down.") },
+            headlineText = { SmallBodyText(text = "Before") },
+            supportingText = { BodyText(text = "Before the process starts, there will be a $leadInSeconds second count down.") },
             leadingContent = {
                 Icon(
                     painterResource(id = R.drawable.ic_baseline_start_24),
@@ -170,8 +170,8 @@ fun ProcessLeadInAndChainData(
             doneText += " There will be a pause of $pauseTime seconds before '$nextName' starts."
         }
         ListItem(
-            headlineText = { Text(text = "After") },
-            supportingText = { Text(text = doneText) },
+            headlineText = { SmallBodyText(text = "After") },
+            supportingText = { BodyText(text = doneText) },
             leadingContent = {
                 Icon(
                     painterResource(id = R.drawable.ic_baseline_navigate_next_24),

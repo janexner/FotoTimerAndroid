@@ -29,6 +29,14 @@ fun BodyText(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
+fun SmallBodyText(text: String, modifier: Modifier = Modifier) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.bodySmall
+    )
+}
+
+@Composable
 fun ProcessStartButton(modifier: Modifier = Modifier) {
     FilledTonalButton(
         onClick = { /*TODO*/ }, modifier = Modifier
