@@ -20,10 +20,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
-import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModel
-import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModelFactory
-import com.exner.tools.fototimerresearch2.data.model.FotoTimerRunningProcessViewModel
-import com.exner.tools.fototimerresearch2.data.model.FotoTimerSingleProcessViewModel
+import com.exner.tools.fototimerresearch2.data.model.*
 import com.exner.tools.fototimerresearch2.ui.*
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 
@@ -114,13 +111,13 @@ class MainActivity : ComponentActivity() {
                                     val process =
                                         fotoTimerProcessViewModel.getProcessById(processId)
                                     if (null != process) {
-                                        Log.i("jexner Main", "Creating FTRPVM for processId $processId...")
-                                        val fotoTimerRunningProcessViewModel =
-                                            FotoTimerRunningProcessViewModel(process)
+                                        Log.i("jexner Main", "Creating/retrieving FTRPVM for processId $processId...")
+                                        val ftrpViewModel: FotoTimerRunningProcessViewModel by viewModels {
+                                            FotoTimerRunningProcessViewModelFactory(process)
+                                        }
+                                        ftrpViewModel.resetCounters()
                                         Log.i("jexner Main", "Creating Composable for Runner...")
-                                        FotoTimerRunningProcess(fotoTimerRunningProcessViewModel)
-                                        Log.i("jexner Main", "Starting Runner...")
-                                        fotoTimerRunningProcessViewModel.startRunner()
+                                        FotoTimerRunningProcess(ftrpViewModel)
                                     }
                                 }
                             }

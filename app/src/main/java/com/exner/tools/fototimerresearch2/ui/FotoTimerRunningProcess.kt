@@ -10,24 +10,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerRunningProcessViewModel
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 
 @Composable
 fun FotoTimerRunningProcess(
-    runningProcessViewModel: FotoTimerRunningProcessViewModel = viewModel(),
-    modifier: Modifier = Modifier
+    runningProcessViewModel: FotoTimerRunningProcessViewModel,
+    modifier: Modifier = Modifier,
 ) {
     // show
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().padding(8.dp)) {
         HeaderText(text = runningProcessViewModel.processName)
         Divider(modifier = Modifier.padding(8.dp))
         // show time
         val processElapsedTime = runningProcessViewModel.elapsedProcessTime
         BigTimerText(
-            seconds = processElapsedTime,
+            milliSeconds = processElapsedTime,
             modifier = Modifier.fillMaxWidth()
         )
         // show additional information (next process(es))
@@ -53,6 +52,7 @@ fun FotoTimerRunningProcess(
 fun FTRPreview() {
     FotoTimerTheme {
         FotoTimerRunningProcess(
+            runningProcessViewModel =
             FotoTimerRunningProcessViewModel(
                 process = FotoTimerProcess(
                     "Sample Process",

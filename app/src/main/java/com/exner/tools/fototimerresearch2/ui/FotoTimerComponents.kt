@@ -36,8 +36,9 @@ fun SmallBodyText(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun BigTimerText(seconds: Long, modifier: Modifier = Modifier) {
+fun BigTimerText(milliSeconds: Long, modifier: Modifier = Modifier) {
     // convert seconds to "00:00" style string
+    val seconds = milliSeconds / 1000L
     var output = (seconds / 60).toInt().toString().padStart(2, '0')
     output += ":"
     output += (seconds % 60).toInt().toString().padStart(2, '0')
@@ -53,6 +54,6 @@ fun BigTimerText(seconds: Long, modifier: Modifier = Modifier) {
 @Composable
 fun BTTTest() {
     FotoTimerTheme() {
-        BigTimerText(seconds = 75)
+        BigTimerText(milliSeconds = 75000)
     }
 }
