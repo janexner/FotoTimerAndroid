@@ -115,7 +115,6 @@ class MainActivity : ComponentActivity() {
                                         val ftrpViewModel: FotoTimerRunningProcessViewModel by viewModels {
                                             FotoTimerRunningProcessViewModelFactory(process)
                                         }
-                                        ftrpViewModel.resetCounters()
                                         Log.i("jexner Main", "Creating Composable for Runner...")
                                         FotoTimerRunningProcess(ftrpViewModel)
                                     }

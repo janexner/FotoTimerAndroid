@@ -14,6 +14,7 @@ import kotlinx.coroutines.*
 @OptIn(ExperimentalCoroutinesApi::class)
 class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : ViewModel() {
     private var startTime: Long = SystemClock.elapsedRealtime()
+    private var stopTime = startTime + (1000L * process.processTime)
     private var keepRunning: Boolean = true
 
     // state vars
@@ -23,7 +24,6 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
 
     init {
         val updateProcess: UpdateProcess = UpdateProcess()
-        val stopTime = startTime + (1000L * process.processTime)
         Log.i("jexner FTRPVM", "Launching in vm scope...")
         viewModelScope.launch {
             while (keepRunning && (stopTime - SystemClock.elapsedRealtime()) > 0) {
@@ -47,6 +47,11 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        Log.i("jexner FTRPVM", "Clearing (destroying)...")
+    }
+
     inner class UpdateProcess : Runnable {
         override fun run() {
             val now = SystemClock.elapsedRealtime()
@@ -67,6 +72,7 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
     fun resetCounters() {
         Log.i("jexner RunningProcessViewModel", "Resetting...")
         startTime = SystemClock.elapsedRealtime()
+        stopTime = startTime + (1000L * process.processTime)
         keepRunning = true
         processName = process.name
         elapsedProcessTime = 0
