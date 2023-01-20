@@ -1,6 +1,7 @@
 package com.exner.tools.fototimerresearch2.ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,7 +17,8 @@ import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 fun FotoTimerProcessDetails(
     fotoTimerProcessViewModel: FotoTimerProcessViewModel,
     processId: String,
-    modifier: Modifier = Modifier
+    onStartButtonClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
 
     val uid = processId.toLong()
@@ -29,7 +31,7 @@ fun FotoTimerProcessDetails(
         if (null != nextProcess) {
             nextName = nextProcess.name
         }
-        ExistingProcessDetails(ftProcess, nextName)
+        ExistingProcessDetails(ftProcess, nextName, onStartButtonClick)
     } else {
         HeaderText(text = "This process does not exist!")
     }
@@ -39,6 +41,7 @@ fun FotoTimerProcessDetails(
 fun ExistingProcessDetails(
     process: FotoTimerProcess,
     nextName: String?,
+    onStartButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = Modifier.padding(8.dp)) {
@@ -68,7 +71,13 @@ fun ExistingProcessDetails(
         Spacer(modifier = Modifier.weight(0.5f))
         // bottom - start button
         Surface(modifier = Modifier.weight(0.2f)) {
-            ProcessStartButton()
+            FilledTonalButton(
+                onClick =  onStartButtonClick,
+                modifier = Modifier.fillMaxSize(),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Text(text = "Start", style = MaterialTheme.typography.headlineLarge)
+            }
         }
     }
 }
@@ -206,6 +215,7 @@ fun FTPPreview() {
                 gotoId = 3L,
             ),
             nextName = "Next Sample",
+            onStartButtonClick = {},
             modifier = Modifier.fillMaxHeight()
         )
     }

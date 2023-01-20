@@ -1,6 +1,7 @@
 package com.exner.tools.fototimerresearch2
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -20,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModel
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModelFactory
+import com.exner.tools.fototimerresearch2.data.model.FotoTimerRunningProcessViewModel
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerSingleProcessViewModel
 import com.exner.tools.fototimerresearch2.ui.*
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
@@ -75,7 +78,15 @@ class MainActivity : ComponentActivity() {
                             ) { backStackEntry ->
                                 val processId = backStackEntry.arguments?.getString("processId")
                                 if (null != processId) {
-                                    FotoTimerProcessDetails(fotoTimerProcessViewModel, processId)
+                                    FotoTimerProcessDetails(
+                                        fotoTimerProcessViewModel,
+                                        processId,
+                                        onStartButtonClick = {
+                                            navController.navigate(
+                                                route = "${RunningProcess.route}/${processId}"
+                                            )
+                                        }
+                                    )
                                 }
                             }
                             composable(
@@ -95,6 +106,23 @@ class MainActivity : ComponentActivity() {
                             }
                             composable(route = Settings.route) {
                                 Settings()
+                            }
+                            composable(route = "${RunningProcess.route}/{processId}") { backStackEntry ->
+                                val processId =
+                                    backStackEntry.arguments?.getString("processId")?.toLongOrNull()
+                                if (null != processId) {
+                                    val process =
+                                        fotoTimerProcessViewModel.getProcessById(processId)
+                                    if (null != process) {
+                                        Log.i("jexner Main", "Creating FTRPVM for processId $processId...")
+                                        val fotoTimerRunningProcessViewModel =
+                                            FotoTimerRunningProcessViewModel(process)
+                                        Log.i("jexner Main", "Creating Composable for Runner...")
+                                        FotoTimerRunningProcess(fotoTimerRunningProcessViewModel)
+                                        Log.i("jexner Main", "Starting Runner...")
+                                        fotoTimerRunningProcessViewModel.startRunner()
+                                    }
+                                }
                             }
                         }
                     }
@@ -134,6 +162,21 @@ class MainActivity : ComponentActivity() {
                 }
             },
             actions = {
+                IconButton(onClick = {
+                    val tProcess = fotoTimerProcessViewModel.getProcessById(1L)
+                    if (null != tProcess) {
+                        val ftpViewModel = FotoTimerRunningProcessViewModel(tProcess)
+                        val t = Thread {
+                            Log.i("jexner Main", "Sleeping 60s...")
+                            Thread.sleep(60000L)
+                            Log.i("jexner Main", "Slept well, now cancelling Runner...")
+                            ftpViewModel.cancelRunner()
+                        }
+                        t.start()
+                    }
+                }) {
+                    Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = "DEBUG: Run Process 1")
+                }
                 if (inProcessList) {
                     IconButton(onClick = {
                         navController.navigate(ProcessEdit.route)

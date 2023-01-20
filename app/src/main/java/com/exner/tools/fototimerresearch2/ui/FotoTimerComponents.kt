@@ -1,14 +1,13 @@
 package com.exner.tools.fototimerresearch2.ui
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
+import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 
 @Composable
 fun HeaderText(text: String, modifier: Modifier = Modifier) {
@@ -37,13 +36,23 @@ fun SmallBodyText(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ProcessStartButton(modifier: Modifier = Modifier) {
-    FilledTonalButton(
-        onClick = { /*TODO*/ }, modifier = Modifier
-            .fillMaxSize(),
-        shape = RoundedCornerShape(16.dp)
-    ) {
-        Text(text = "Start", style = MaterialTheme.typography.headlineMedium)
-    }
+fun BigTimerText(seconds: Long, modifier: Modifier = Modifier) {
+    // convert seconds to "00:00" style string
+    var output = (seconds / 60).toInt().toString().padStart(2, '0')
+    output += ":"
+    output += (seconds % 60).toInt().toString().padStart(2, '0')
+
+    Text(
+        text = output,
+        style = MaterialTheme.typography.headlineLarge,
+        fontSize = 60.sp
+    )
 }
 
+@Preview
+@Composable
+fun BTTTest() {
+    FotoTimerTheme() {
+        BigTimerText(seconds = 75)
+    }
+}
