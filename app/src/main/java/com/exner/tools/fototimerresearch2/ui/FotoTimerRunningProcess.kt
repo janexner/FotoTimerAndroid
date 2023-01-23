@@ -30,7 +30,9 @@ fun FotoTimerRunningProcess(
         val processElapsedTime = runningProcessViewModel.elapsedProcessTime
         BigTimerText(
             milliSeconds = processElapsedTime,
-            modifier = Modifier.fillMaxWidth().align(Alignment.End)
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.End)
         )
         Text(
             text = "Process Time (total ${runningProcessViewModel.processTime})",
@@ -39,15 +41,20 @@ fun FotoTimerRunningProcess(
                 .align(Alignment.End),
             style = MaterialTheme.typography.bodyLarge
         )
-        Spacer(modifier = Modifier.weight(0.01f))
+        Spacer(modifier = Modifier.weight(0.001f))
         val intervalElapsedTime = runningProcessViewModel.elapsedIntervalTime
-        BigTimerText(
+        MediumTimerAndIntervalText(
             milliSeconds = intervalElapsedTime,
-            modifier = Modifier.fillMaxWidth().align(Alignment.End)
+            intervalText = "${runningProcessViewModel.currentIntervalIndex + 1} of ${runningProcessViewModel.numberOfIntervals}",
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.End)
         )
         Text(
             text = "Interval Time (total ${runningProcessViewModel.intervalTime})",
-            modifier = Modifier.fillMaxWidth().align(Alignment.End),
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.End),
             style = MaterialTheme.typography.bodyLarge
         )
         // show additional information (next process(es))
@@ -58,7 +65,8 @@ fun FotoTimerRunningProcess(
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.5f)
+                .fillMaxHeight(0.5f),
+            enabled = runningProcessViewModel.keepRunning
         ) {
             Text(
                 text = "Cancel",

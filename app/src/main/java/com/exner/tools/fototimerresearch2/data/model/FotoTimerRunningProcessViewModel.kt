@@ -15,7 +15,10 @@ import kotlinx.coroutines.*
 class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : ViewModel() {
     private var startTime: Long = SystemClock.elapsedRealtime()
     private var stopTime = startTime + (1000L * process.processTime) + 1
-    private var keepRunning: Boolean = true
+    private var startSoundHasPlayed = false
+    var numberOfIntervals =
+        Math.ceil(process.processTime.toDouble() / process.intervalTime.toDouble()).toLong()
+    private var indexOfLastPlayedIntervalSound = 0L
 
     // state vars
     var processName by mutableStateOf(process.name)
@@ -26,6 +29,10 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
     var intervalTime by mutableStateOf(process.intervalTime)
         private set
     var elapsedIntervalTime by mutableStateOf(0L)
+    var currentIntervalIndex by mutableStateOf(0L)
+        private set
+    var keepRunning by mutableStateOf(true)
+        private set
 
     init {
         val updateProcess: UpdateProcess = UpdateProcess()
@@ -49,6 +56,14 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
             }
             val totalElapsedTime = SystemClock.elapsedRealtime() - startTime
             Log.i("jexner Timer", "done. Elapsed $totalElapsedTime.")
+            // one more update, for visual satisfaction
+            setElapsedProcessTimeCustom(process.processTime * 1000L)
+            setElapsedIntervalTimeCustom(process.intervalTime * 1000L)
+            setCurrentIntervalIndexCustom(
+                Math.ceil(process.intervalTime.toDouble() / process.processTime.toDouble())
+                    .toLong() + 1
+            )
+            setKeepRunningCustom(false)
         }
     }
 
@@ -59,10 +74,28 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
 
     inner class UpdateProcess : Runnable {
         override fun run() {
+            // calculate times and rounds
             val now = SystemClock.elapsedRealtime()
-            setElapsedProcessTimeCustom(now - startTime)
-            // TODO more stuff to do here, like interval times, and sounds
-            setElapsedIntervallTimeCustom((now - startTime) % (1000L * intervalTime))
+            val currentProcessTime = now - startTime
+            val currentIntervalTime = currentProcessTime % (1000L * intervalTime)
+            currentIntervalIndex = currentProcessTime / (1000L * intervalTime)
+            // update times
+            setElapsedProcessTimeCustom(currentProcessTime)
+            setElapsedIntervalTimeCustom(currentIntervalTime)
+            // play any sounds?
+            if (!startSoundHasPlayed) {
+                startSoundHasPlayed = true
+                // play process start sound
+                if (process.hasSoundStart) {
+                    // TODO
+                }
+            }
+            if (currentIntervalIndex > indexOfLastPlayedIntervalSound) {
+                indexOfLastPlayedIntervalSound = currentIntervalIndex
+                if (process.hasSoundInterval) {
+                    // TODO
+                }
+            }
             Log.i("jexner Runnable", "running... elapsed $elapsedProcessTime")
         }
     }
@@ -71,8 +104,16 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
         elapsedProcessTime = newTime
     }
 
-    fun setElapsedIntervallTimeCustom(newTime: Long) {
+    fun setElapsedIntervalTimeCustom(newTime: Long) {
         elapsedIntervalTime = newTime
+    }
+
+    fun setCurrentIntervalIndexCustom(newIndex: Long) {
+        currentIntervalIndex = newIndex
+    }
+
+    fun setKeepRunningCustom(newKeepRunnin: Boolean) {
+        keepRunning = newKeepRunnin
     }
 
     fun cancelRunner() {

@@ -1,5 +1,8 @@
 package com.exner.tools.fototimerresearch2.ui
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -50,10 +53,38 @@ fun BigTimerText(milliSeconds: Long, modifier: Modifier = Modifier) {
     )
 }
 
+@Composable
+fun MediumTimerAndIntervalText(milliSeconds: Long, intervalText: String, modifier: Modifier = Modifier) {
+    // convert seconds to "00:00" style string
+    val seconds = milliSeconds / 1000L
+    var output = (seconds / 60).toInt().toString().padStart(2, '0')
+    output += ":"
+    output += (seconds % 60).toInt().toString().padStart(2, '0')
+
+    Row(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = output,
+            style = MaterialTheme.typography.headlineLarge,
+            fontSize = 68.sp,
+            modifier = Modifier.alignByBaseline()
+        )
+        Spacer(modifier = Modifier.weight(0.05f))
+        Text(
+            text = intervalText,
+            style = MaterialTheme.typography.headlineLarge,
+            fontSize = 68.sp,
+            modifier = Modifier.alignByBaseline()
+        )
+    }
+}
+
 @Preview
 @Composable
 fun BTTTest() {
     FotoTimerTheme() {
-        BigTimerText(milliSeconds = 75000)
+        Column() {
+            BigTimerText(milliSeconds = 75000)
+            MediumTimerAndIntervalText(milliSeconds = 10000, intervalText = "1 of 3")
+        }
     }
 }
