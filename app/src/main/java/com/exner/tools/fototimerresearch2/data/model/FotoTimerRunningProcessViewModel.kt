@@ -68,15 +68,6 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
         Log.i("jexner RunningProcessViewModel", "Cancel Runner requested.")
         keepRunning = false
     }
-
-    fun resetCounters() {
-        Log.i("jexner RunningProcessViewModel", "Resetting...")
-        startTime = SystemClock.elapsedRealtime()
-        stopTime = startTime + (1000L * process.processTime)
-        keepRunning = true
-        processName = process.name
-        elapsedProcessTime = 0
-    }
 }
 
 class FotoTimerRunningProcessViewModelFactory(private val process: FotoTimerProcess) : ViewModelProvider.NewInstanceFactory() {

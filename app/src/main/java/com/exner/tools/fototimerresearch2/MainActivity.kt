@@ -9,16 +9,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.*
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.*
 import androidx.preference.PreferenceManager
 import com.exner.tools.fototimerresearch2.data.model.*
 import com.exner.tools.fototimerresearch2.ui.*
@@ -57,6 +53,7 @@ class MainActivity : ComponentActivity() {
                             startDestination = ProcessList.route,
                             modifier = Modifier.padding(innerPadding)
                         ) {
+                            // Home / Process List
                             composable(route = ProcessList.route) {
                                 FotoTimerProcessList(
                                     fotoTimerProcessViewModel,
@@ -67,6 +64,7 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             }
+                            // Show Process details
                             composable(
                                 route = "${ProcessDetails.route}/{processId}",
                                 arguments = listOf(navArgument("processId") {
@@ -86,6 +84,7 @@ class MainActivity : ComponentActivity() {
                                     )
                                 }
                             }
+                            // Edit Process
                             composable(
                                 route = "${ProcessEdit.route}?processId={processId}",
                                 arguments = listOf(navArgument("processId") {
@@ -101,25 +100,12 @@ class MainActivity : ComponentActivity() {
                                     onSaveClicked = { navController.popBackStack() }
                                 )
                             }
+                            // Open Settings screen
                             composable(route = Settings.route) {
                                 Settings()
                             }
-                            composable(route = "${RunningProcess.route}/{processId}") { backStackEntry ->
-                                val processId =
-                                    backStackEntry.arguments?.getString("processId")?.toLongOrNull()
-                                if (null != processId) {
-                                    val process =
-                                        fotoTimerProcessViewModel.getProcessById(processId)
-                                    if (null != process) {
-                                        Log.i("jexner Main", "Creating/retrieving FTRPVM for processId $processId...")
-                                        val ftrpViewModel: FotoTimerRunningProcessViewModel by viewModels {
-                                            FotoTimerRunningProcessViewModelFactory(process)
-                                        }
-                                        Log.i("jexner Main", "Creating Composable for Runner...")
-                                        FotoTimerRunningProcess(ftrpViewModel)
-                                    }
-                                }
-                            }
+                            // Run Process nested graph
+                            runningGraph(navController)
                         }
                     }
                 )
@@ -158,21 +144,6 @@ class MainActivity : ComponentActivity() {
                 }
             },
             actions = {
-                IconButton(onClick = {
-                    val tProcess = fotoTimerProcessViewModel.getProcessById(1L)
-                    if (null != tProcess) {
-                        val ftpViewModel = FotoTimerRunningProcessViewModel(tProcess)
-                        val t = Thread {
-                            Log.i("jexner Main", "Sleeping 60s...")
-                            Thread.sleep(60000L)
-                            Log.i("jexner Main", "Slept well, now cancelling Runner...")
-                            ftpViewModel.cancelRunner()
-                        }
-                        t.start()
-                    }
-                }) {
-                    Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = "DEBUG: Run Process 1")
-                }
                 if (inProcessList) {
                     IconButton(onClick = {
                         navController.navigate(ProcessEdit.route)
@@ -204,5 +175,52 @@ class MainActivity : ComponentActivity() {
                 }
             }
         )
+    }
+
+    private fun NavGraphBuilder.runningGraph(navController: NavController) {
+        navigation(
+            startDestination = "runnerScreen/{processId}",
+            route = "${RunningProcess.route}/{processId}",
+            arguments = listOf(navArgument("processId") { defaultValue = "-1" })
+        ) {
+            composable(
+                route = "runnerScreen/{processId}",
+                arguments = listOf(navArgument("processId") {})
+            ) { backStackEntry ->
+                val processId =
+                    backStackEntry.arguments?.getString("processId")?.toLongOrNull()
+                if (null != processId && processId >= 0) {
+                    val process =
+                        fotoTimerProcessViewModel.getProcessById(processId)
+                    if (null != process) {
+                        Log.i(
+                            "jexner Main",
+                            "Creating/retrieving FTRPVM for processId $processId..."
+                        )
+                        val backStackEntry = remember {
+                            navController.currentDestination?.route?.let {
+                                Log.i("jexner nested", "Current route $it")
+                                navController.getBackStackEntry(
+                                    it
+                                )
+                            }
+                        }
+                        val ftrpViewModel = backStackEntry?.let {
+                            Log.i("jexner nested", "Creating/retrieving FTRPVM for $processId...")
+                            ViewModelProvider(
+                                it.viewModelStore,
+                                FotoTimerRunningProcessViewModelFactory(process)
+                            ).get(FotoTimerRunningProcessViewModel::class.java)
+                        }
+                        if (null != ftrpViewModel) {
+                            Log.i("jexner Main", "Creating Composable for Runner...")
+                            FotoTimerRunningProcess(ftrpViewModel)
+                        }
+                    }
+                } else {
+                    Log.w("jexner Runner", "Cannot run process with id $processId!")
+                }
+            }
+        }
     }
 }
