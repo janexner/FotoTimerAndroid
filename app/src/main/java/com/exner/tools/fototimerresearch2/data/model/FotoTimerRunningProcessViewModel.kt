@@ -14,13 +14,18 @@ import kotlinx.coroutines.*
 @OptIn(ExperimentalCoroutinesApi::class)
 class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : ViewModel() {
     private var startTime: Long = SystemClock.elapsedRealtime()
-    private var stopTime = startTime + (1000L * process.processTime)
+    private var stopTime = startTime + (1000L * process.processTime) + 1
     private var keepRunning: Boolean = true
 
     // state vars
     var processName by mutableStateOf(process.name)
         private set
+    var processTime by mutableStateOf(process.processTime)
+        private set
     var elapsedProcessTime by mutableStateOf(0L)
+    var intervalTime by mutableStateOf(process.intervalTime)
+        private set
+    var elapsedIntervalTime by mutableStateOf(0L)
 
     init {
         val updateProcess: UpdateProcess = UpdateProcess()
@@ -56,6 +61,8 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
         override fun run() {
             val now = SystemClock.elapsedRealtime()
             setElapsedProcessTimeCustom(now - startTime)
+            // TODO more stuff to do here, like interval times, and sounds
+            setElapsedIntervallTimeCustom((now - startTime) % (1000L * intervalTime))
             Log.i("jexner Runnable", "running... elapsed $elapsedProcessTime")
         }
     }
@@ -64,17 +71,25 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
         elapsedProcessTime = newTime
     }
 
+    fun setElapsedIntervallTimeCustom(newTime: Long) {
+        elapsedIntervalTime = newTime
+    }
+
     fun cancelRunner() {
-        Log.i("jexner RunningProcessViewModel", "Cancel Runner requested.")
+        Log.i("jexner FTRPVM", "Cancel Runner requested.")
         keepRunning = false
     }
 }
 
-class FotoTimerRunningProcessViewModelFactory(private val process: FotoTimerProcess) : ViewModelProvider.NewInstanceFactory() {
+class FotoTimerRunningProcessViewModelFactory(private val process: FotoTimerProcess) :
+    ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
         if (modelClass.isAssignableFrom(FotoTimerRunningProcessViewModel::class.java)) {
-            Log.i("jexner RunningProcessViewModelFactory", "Returning FTRPVM for process ${process.uid}...")
+            Log.i(
+                "jexner RunningProcessViewModelFactory",
+                "Returning FTRPVM for process ${process.uid}..."
+            )
             return FotoTimerRunningProcessViewModel(process) as T
         }
 

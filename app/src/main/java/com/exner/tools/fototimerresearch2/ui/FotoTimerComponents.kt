@@ -46,7 +46,7 @@ fun BigTimerText(milliSeconds: Long, modifier: Modifier = Modifier) {
     Text(
         text = output,
         style = MaterialTheme.typography.headlineLarge,
-        fontSize = 60.sp
+        fontSize = 120.sp
     )
 }
 

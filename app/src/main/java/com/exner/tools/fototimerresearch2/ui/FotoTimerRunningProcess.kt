@@ -7,6 +7,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -20,24 +21,44 @@ fun FotoTimerRunningProcess(
     modifier: Modifier = Modifier,
 ) {
     // show
-    Column(modifier = Modifier.fillMaxSize().padding(8.dp)) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(8.dp)) {
         HeaderText(text = runningProcessViewModel.processName)
         Divider(modifier = Modifier.padding(8.dp))
         // show time
         val processElapsedTime = runningProcessViewModel.elapsedProcessTime
         BigTimerText(
             milliSeconds = processElapsedTime,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().align(Alignment.End)
+        )
+        Text(
+            text = "Process Time (total ${runningProcessViewModel.processTime})",
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.End),
+            style = MaterialTheme.typography.bodyLarge
+        )
+        Spacer(modifier = Modifier.weight(0.01f))
+        val intervalElapsedTime = runningProcessViewModel.elapsedIntervalTime
+        BigTimerText(
+            milliSeconds = intervalElapsedTime,
+            modifier = Modifier.fillMaxWidth().align(Alignment.End)
+        )
+        Text(
+            text = "Interval Time (total ${runningProcessViewModel.intervalTime})",
+            modifier = Modifier.fillMaxWidth().align(Alignment.End),
+            style = MaterialTheme.typography.bodyLarge
         )
         // show additional information (next process(es))
-        Spacer(modifier = Modifier.weight(0.5f))
+        Spacer(modifier = Modifier.weight(0.01f))
         // show huge cancel button
         Button(
             onClick = { runningProcessViewModel.cancelRunner() },
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.3f)
+                .fillMaxHeight(0.5f)
         ) {
             Text(
                 text = "Cancel",
