@@ -37,8 +37,6 @@ class MainActivity : ComponentActivity() {
         val sharedSettings = PreferenceManager.getDefaultSharedPreferences(this)
         val forceNightMode = sharedSettings.getBoolean("preference_night_mode", false)
 
-        val scale = resources.configuration.fontScale
-
         setContent {
             FotoTimerTheme(
                 darkTheme = forceNightMode
