@@ -37,6 +37,7 @@ fun FotoTimerProcessDetails(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExistingProcessDetails(
     process: FotoTimerProcess,
@@ -48,6 +49,18 @@ fun ExistingProcessDetails(
         // top - process information
         ProcessName(process.name)
         Divider(modifier = Modifier.padding(8.dp))
+        if (process.keepsScreenOn) {
+            ListItem(
+                headlineText = { SmallBodyText(text = "UI") },
+                supportingText = { BodyText(text = "Keeps screen on") },
+                leadingContent = {
+                    Icon(
+                        painterResource(id = R.drawable.baseline_light_mode_24),
+                        contentDescription = "UI",
+                    )
+                }
+            )
+        }
         ProcessAudioData(
             process.hasSoundStart,
             process.hasSoundEnd,
@@ -72,7 +85,7 @@ fun ExistingProcessDetails(
         // bottom - start button
         Surface(modifier = Modifier.weight(0.2f)) {
             FilledTonalButton(
-                onClick =  onStartButtonClick,
+                onClick = onStartButtonClick,
                 modifier = Modifier.fillMaxSize(),
                 shape = RoundedCornerShape(16.dp)
             ) {
@@ -174,7 +187,8 @@ fun ProcessLeadInAndChainData(
         )
     }
     if (hasAutoChain && (null != gotoId) && (-1L < gotoId) && (null != nextName)) {
-        var doneText = "When the process is done, it will automatically lead into the next process: '$nextName'."
+        var doneText =
+            "When the process is done, it will automatically lead into the next process: '$nextName'."
         if (true == hasPauseBeforeChain && (null != pauseTime) && (0 < pauseTime)) {
             doneText += " There will be a pause of $pauseTime seconds before '$nextName' starts."
         }
@@ -213,6 +227,7 @@ fun FTPPreview() {
                 hasPauseBeforeChain = true,
                 pauseTime = 3,
                 gotoId = 3L,
+                keepsScreenOn = true
             ),
             nextName = "Next Sample",
             onStartButtonClick = {},

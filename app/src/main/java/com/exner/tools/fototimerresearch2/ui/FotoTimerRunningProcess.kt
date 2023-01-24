@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.preference.PreferenceManager
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerRunningProcessViewModel
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
@@ -24,9 +23,7 @@ fun FotoTimerRunningProcess(
 ) {
     // this screen should stay visible, maybe
     val context = LocalContext.current
-    if (PreferenceManager.getDefaultSharedPreferences(context)
-            .getBoolean("preference_screen_on", true)
-    ) {
+    if (runningProcessViewModel.keepsScreenOn) {
         KeepScreenOn()
     }
     // show
@@ -111,6 +108,7 @@ fun FTRPreview() {
                     hasPauseBeforeChain = true,
                     pauseTime = 3,
                     gotoId = 3L,
+                    keepsScreenOn = true
                 )
             ),
             modifier = Modifier.fillMaxHeight()

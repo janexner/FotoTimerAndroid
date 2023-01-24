@@ -30,5 +30,7 @@ data class FotoTimerProcess (
     @ColumnInfo(name = "pause_time") val pauseTime: Int?,
     @ColumnInfo(name = "goto_id") val gotoId: Long?,
 
+    @ColumnInfo(name = "keeps_screen_on") val keepsScreenOn: Boolean = true,
+
     @PrimaryKey(autoGenerate = true) val uid: Long = 0
 )

@@ -26,13 +26,13 @@ lateinit var spViewModel: FotoTimerSingleProcessViewModel
 @Composable
 fun FotoTimerProcessEdit(
     fotoTimerProcessViewModel: FotoTimerProcessViewModel,
-    singleprocessViewModel: FotoTimerSingleProcessViewModel,
+    singleProcessViewModel: FotoTimerSingleProcessViewModel,
     processId: String?,
     modifier: Modifier = Modifier,
     onSaveClicked: (Unit) -> Boolean
 ) {
     ftpViewModel = fotoTimerProcessViewModel
-    spViewModel = singleprocessViewModel
+    spViewModel = singleProcessViewModel
 
     // read the process, if it exists
     val uid = processId?.toLong() ?: -1
@@ -59,7 +59,8 @@ fun FotoTimerProcessEdit(
             hasAutoChain = false,
             hasPauseBeforeChain = false,
             pauseTime = sharedSettings.getInt("preference_pause_time", 0),
-            gotoId = -1L
+            gotoId = -1L,
+            keepsScreenOn = sharedSettings.getBoolean("preference_screen_on", true)
         )
     }
     // let's use that fancy ViewModel
@@ -126,7 +127,18 @@ fun FotoTimerProcessEditor(
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth()
         )
-        HeaderText(text = "Audio")
+        HeaderText(text = "During the process")
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                text = "Keep the screen on",
+                modifier = Modifier.align(Alignment.CenterStart)
+            )
+            Switch(
+                checked = processViewModel.keepsScreenOn,
+                onCheckedChange = { processViewModel.keepsScreenOn = it },
+                modifier = Modifier.align(Alignment.CenterEnd)
+            )
+        }
         Text(
             text = "Play sounds:",
             modifier = Modifier.fillMaxWidth()
@@ -302,6 +314,7 @@ fun FTEPreview() {
             hasPauseBeforeChain = true,
             pauseTime = 3,
             gotoId = 3L,
+            keepsScreenOn = true,
         )
     )
     val p1 = FotoTimerProcessIdAndName(1, "Process 1")

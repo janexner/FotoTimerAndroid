@@ -4,13 +4,14 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Database(
     entities = [FotoTimerProcess::class],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 public abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
@@ -21,6 +22,12 @@ public abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: FotoTimerProcessRoomDatabase? = null;
 
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE FotoTimerProcess ADD COLUMN keeps_screen_on INTEGER NOT NULL DEFAULT TRUE;")
+            }
+        }
+
         fun getDatabase(context: Context, scope: CoroutineScope): FotoTimerProcessRoomDatabase {
             // check that INSTANCE is not null, then return it.
             // Otherwise, create it first
@@ -29,7 +36,7 @@ public abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
                     context.applicationContext,
                     FotoTimerProcessRoomDatabase::class.java,
                     "foto_timer_process_database"
-                ).addCallback(ProcessDatabaseCallback(scope)).build()
+                ).addCallback(ProcessDatabaseCallback(scope)).addMigrations(MIGRATION_2_3).build()
                 INSTANCE = instance
                 // return instance
                 instance
@@ -69,7 +76,8 @@ public abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
                     hasAutoChain = false,
                     hasPauseBeforeChain = false,
                     0,
-                    -1L
+                    -1L,
+                    keepsScreenOn = false
                 )
             fotoTimerProcessDao.insert(fotoTimerProcess)
             fotoTimerProcess =
@@ -89,7 +97,8 @@ public abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
                     hasAutoChain = false,
                     hasPauseBeforeChain = false,
                     0,
-                    -1L
+                    -1L,
+                    keepsScreenOn = true
                 )
             fotoTimerProcessDao.insert(fotoTimerProcess)
         }

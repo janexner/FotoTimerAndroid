@@ -19,6 +19,7 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
     var numberOfIntervals =
         Math.ceil(process.processTime.toDouble() / process.intervalTime.toDouble()).toLong()
     private var indexOfLastPlayedIntervalSound = 0L
+    var keepsScreenOn = process.keepsScreenOn
 
     // state vars
     var processName by mutableStateOf(process.name)

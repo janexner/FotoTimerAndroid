@@ -51,7 +51,7 @@ fun Settings(modifier: Modifier = Modifier) {
         Row(modifier = Modifier.fillMaxWidth()) {
             Box(modifier = Modifier.fillMaxWidth()) {
                 BodyText(
-                    text = "Keep Screen on while counting",
+                    text = "Keep Screen on while counting by default",
                     modifier = Modifier.align(Alignment.CenterStart)
                 )
                 var keepScreenOn by remember { mutableStateOf(sharedSettings.getBoolean("preference_screen_on", true)) }

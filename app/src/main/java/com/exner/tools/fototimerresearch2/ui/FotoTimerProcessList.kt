@@ -30,9 +30,16 @@ fun FotoTimerProcessList(
                     modifier = Modifier
                         .clickable { onNavigateToProcessDetails(ftProcess.uid) }
                 ) {
+                    var supText = "${ftProcess.processTime}/${ftProcess.intervalTime}"
+                    if (ftProcess.keepsScreenOn) {
+                        supText += " keeps screen on"
+                    }
+                    if (ftProcess.hasAutoChain && null != ftProcess.gotoId && ftProcess.gotoId >= 0) {
+                        supText += " then ${ftProcess.gotoId}"
+                    }
                     ListItem(
                         headlineText = { HeaderText(text = ftProcess.name) },
-                        supportingText = { BodyText(text = "${ftProcess.processTime}/${ftProcess.intervalTime} -> ${ftProcess.gotoId}") }
+                        supportingText = { BodyText(text = supText) }
                     )
                 }
             }

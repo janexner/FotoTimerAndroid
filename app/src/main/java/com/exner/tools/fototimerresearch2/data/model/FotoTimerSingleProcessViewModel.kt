@@ -23,6 +23,7 @@ class FotoTimerSingleProcessViewModel() : ViewModel() {
     var hasPauseBeforeChain: Boolean? by mutableStateOf(true)
     var pauseTime: String by mutableStateOf("3")
     var gotoId: Long? by mutableStateOf(null)
+    var keepsScreenOn: Boolean by mutableStateOf(true)
     var uid: Long by mutableStateOf(-1L)
         private set
 
@@ -43,6 +44,7 @@ class FotoTimerSingleProcessViewModel() : ViewModel() {
         hasPauseBeforeChain = initialProcess.hasPauseBeforeChain
         pauseTime = initialProcess.pauseTime.toString()
         gotoId = initialProcess.gotoId
+        keepsScreenOn = initialProcess.keepsScreenOn
         uid = initialProcess.uid
     }
 
@@ -64,6 +66,7 @@ class FotoTimerSingleProcessViewModel() : ViewModel() {
             hasPauseBeforeChain = hasPauseBeforeChain,
             pauseTime = pauseTime.toIntOrNull() ?: 3,
             gotoId = gotoId,
+            keepsScreenOn = keepsScreenOn,
             uid = uid,
         )
     }

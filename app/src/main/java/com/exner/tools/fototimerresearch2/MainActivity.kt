@@ -95,7 +95,7 @@ class MainActivity : ComponentActivity() {
                                 val processId = backStackEntry.arguments?.getString("processId")
                                 FotoTimerProcessEdit(
                                     fotoTimerProcessViewModel = fotoTimerProcessViewModel,
-                                    singleprocessViewModel = spViewModel,
+                                    singleProcessViewModel = spViewModel,
                                     processId = processId,
                                     onSaveClicked = { navController.popBackStack() }
                                 )
