@@ -39,7 +39,7 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
         private set
 
     init {
-        val updateProcess: UpdateProcess = UpdateProcess()
+        val updateProcess = UpdateProcess()
         Log.i("jexner FTRPVM", "Launching in vm scope...")
         viewModelScope.launch {
             while (keepRunning && (stopTime - SystemClock.elapsedRealtime()) > 0) {
@@ -52,7 +52,7 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
                             Thread.sleep(w)
                         }
                     } catch (e: InterruptedException) {
-                        // TODO
+                        Log.w("jexner FTRPVM", "Exception while waiting 1s: ${e.localizedMessage}")
                     }
                 } else {
                     Log.i("jexner Timer", "We're late, no waiting!")
@@ -116,8 +116,8 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
         currentIntervalIndex = newIndex
     }
 
-    private fun setKeepRunningCustom(newKeepRunnin: Boolean) {
-        keepRunning = newKeepRunnin
+    private fun setKeepRunningCustom(newKeepRunning: Boolean) {
+        keepRunning = newKeepRunning
     }
 
     fun cancelRunner() {
@@ -126,6 +126,7 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
     }
 }
 
+@Suppress("UNCHECKED_CAST")
 class FotoTimerRunningProcessViewModelFactory(private val process: FotoTimerProcess) :
     ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
