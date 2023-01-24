@@ -48,6 +48,23 @@ fun Settings(modifier: Modifier = Modifier) {
                 )
             }
         }
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                BodyText(
+                    text = "Keep Screen on while counting",
+                    modifier = Modifier.align(Alignment.CenterStart)
+                )
+                var keepScreenOn by remember { mutableStateOf(sharedSettings.getBoolean("preference_screen_on", true)) }
+                Switch(
+                    checked = keepScreenOn,
+                    modifier = Modifier.align(Alignment.CenterEnd),
+                    onCheckedChange = {
+                        sharedSettings.edit().putBoolean("preference_screen_on", it).apply()
+                        keepScreenOn = !keepScreenOn
+                    }
+                )
+            }
+        }
         HeaderText(
             text = "Times"
         )

@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -87,6 +89,17 @@ fun Dp.toTextDp(): TextUnit = textSp(density = LocalDensity.current)
 
 private fun Dp.textSp(density: Density): TextUnit = with(density) {
     this@textSp.toSp()
+}
+
+@Composable
+fun KeepScreenOn() {
+    val currentView = LocalView.current
+    DisposableEffect(Unit) {
+        currentView.keepScreenOn = true
+        onDispose {
+            currentView.keepScreenOn = false
+        }
+    }
 }
 
 @Preview(fontScale = 1.5f)
