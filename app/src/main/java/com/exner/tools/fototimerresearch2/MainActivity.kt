@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val spViewModel: FotoTimerSingleProcessViewModel =
+        @Suppress("ReplaceGetOrSet", "ReplaceGetOrSet") val spViewModel: FotoTimerSingleProcessViewModel =
             ViewModelProvider(this).get(FotoTimerSingleProcessViewModel::class.java)
 
         // are we in forced dark mode?

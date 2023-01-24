@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
 
-class FotoTimerSingleProcessViewModel() : ViewModel() {
+class FotoTimerSingleProcessViewModel : ViewModel() {
     var name: String by mutableStateOf("Process Name")
     var processTime: String by mutableStateOf("30")
     var intervalTime: String by mutableStateOf("10")

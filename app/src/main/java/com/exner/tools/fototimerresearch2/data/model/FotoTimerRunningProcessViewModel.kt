@@ -9,15 +9,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Runnable
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.math.ceil
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : ViewModel() {
     private var startTime: Long = SystemClock.elapsedRealtime()
     private var stopTime = startTime + (1000L * process.processTime) + 1
     private var startSoundHasPlayed = false
     var numberOfIntervals =
-        Math.ceil(process.processTime.toDouble() / process.intervalTime.toDouble()).toLong()
+        ceil(process.processTime.toDouble() / process.intervalTime.toDouble()).toLong()
     private var indexOfLastPlayedIntervalSound = 0L
     var keepsScreenOn = process.keepsScreenOn
 
@@ -61,7 +64,7 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
             setElapsedProcessTimeCustom(process.processTime * 1000L)
             setElapsedIntervalTimeCustom(process.intervalTime * 1000L)
             setCurrentIntervalIndexCustom(
-                Math.ceil(process.intervalTime.toDouble() / process.processTime.toDouble())
+                ceil(process.intervalTime.toDouble() / process.processTime.toDouble())
                     .toLong() + 1
             )
             setKeepRunningCustom(false)
@@ -109,11 +112,11 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
         elapsedIntervalTime = newTime
     }
 
-    fun setCurrentIntervalIndexCustom(newIndex: Long) {
+    private fun setCurrentIntervalIndexCustom(newIndex: Long) {
         currentIntervalIndex = newIndex
     }
 
-    fun setKeepRunningCustom(newKeepRunnin: Boolean) {
+    private fun setKeepRunningCustom(newKeepRunnin: Boolean) {
         keepRunning = newKeepRunnin
     }
 

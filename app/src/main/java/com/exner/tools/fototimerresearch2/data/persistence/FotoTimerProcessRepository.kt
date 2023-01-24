@@ -18,7 +18,7 @@ class FotoTimerProcessRepository(private val fotoTimerProcessDAO: FotoTimerProce
     }
 
     @WorkerThread
-    suspend fun loadIdsAndNamesForAllProcesses(): List<FotoTimerProcessIdAndName>? {
+    suspend fun loadIdsAndNamesForAllProcesses(): List<FotoTimerProcessIdAndName> {
         return fotoTimerProcessDAO.getIdsAndNamesOfAllProcesses()
     }
 

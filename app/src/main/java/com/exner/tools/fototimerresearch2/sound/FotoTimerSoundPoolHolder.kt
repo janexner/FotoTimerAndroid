@@ -18,7 +18,7 @@ class FotoTimerSoundPoolHolder(context: Context) {
         soundMap[SoundStuff.SOUND_ID_LEAD_IN] = 0
     }
 
-    public fun playSound(soundId: Long) {
+    fun playSound(soundId: Long) {
         val soundPoolId = soundMap[soundId]
         if (0 != soundPoolId) {
             // invalid!

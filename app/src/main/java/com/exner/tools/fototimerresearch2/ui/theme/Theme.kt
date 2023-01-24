@@ -3,7 +3,10 @@ package com.exner.tools.fototimerresearch2.ui.theme
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
@@ -28,7 +31,7 @@ fun FotoTimerTheme(
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    var currentDarkTheme by remember { mutableStateOf(darkTheme) }
+    val currentDarkTheme by remember { mutableStateOf(darkTheme) }
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
