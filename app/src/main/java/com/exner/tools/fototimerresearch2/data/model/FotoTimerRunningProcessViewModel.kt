@@ -42,26 +42,21 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
 
     init {
         val updateProcess = UpdateProcess()
-        Log.i("jexner FTRPVM", "Launching in vm scope...")
         viewModelScope.launch {
             while (keepRunning && (stopTime - SystemClock.elapsedRealtime()) > 0) {
                 updateProcess.run()
                 val w = 999L - ((SystemClock.elapsedRealtime() - startTime) % 1000L)
                 if (0 < w) {
-                    Log.i("jexner Timer", "Going to wait for $w millis")
                     try {
                         withContext(Dispatchers.IO) {
                             Thread.sleep(w)
                         }
                     } catch (e: InterruptedException) {
-                        Log.w("jexner FTRPVM", "Exception while waiting 1s: ${e.localizedMessage}")
+                        Log.d("jexner FTRPVM", "Exception while waiting 1s: ${e.localizedMessage}")
                     }
-                } else {
-                    Log.i("jexner Timer", "We're late, no waiting!")
                 }
             }
             val totalElapsedTime = SystemClock.elapsedRealtime() - startTime
-            Log.i("jexner Timer", "done. Elapsed $totalElapsedTime.")
             // one more update, for visual satisfaction
             setElapsedProcessTimeCustom(process.processTime * 1000L)
             setElapsedIntervalTimeCustom(process.intervalTime * 1000L)
@@ -75,11 +70,6 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
             }
             setKeepRunningCustom(false)
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        Log.i("jexner FTRPVM", "Clearing (destroying)...")
     }
 
     inner class UpdateProcess : Runnable {
@@ -127,7 +117,6 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
     }
 
     fun cancelRunner() {
-        Log.i("jexner FTRPVM", "Cancel Runner requested.")
         keepRunning = false
     }
 }
@@ -138,10 +127,6 @@ class FotoTimerRunningProcessViewModelFactory(private val process: FotoTimerProc
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
         if (modelClass.isAssignableFrom(FotoTimerRunningProcessViewModel::class.java)) {
-            Log.i(
-                "jexner RunningProcessViewModelFactory",
-                "Returning FTRPVM for process ${process.uid}..."
-            )
             return FotoTimerRunningProcessViewModel(process) as T
         }
 

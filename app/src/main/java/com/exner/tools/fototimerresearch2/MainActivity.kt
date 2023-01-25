@@ -1,7 +1,6 @@
 package com.exner.tools.fototimerresearch2
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -219,33 +218,13 @@ class MainActivity : ComponentActivity() {
                     val process =
                         fotoTimerProcessViewModel.getProcessById(processId)
                     if (null != process) {
-                        Log.i(
-                            "jexner Main",
-                            "Creating/retrieving FTRPVM for processId $processId..."
-                        )
-                        val ftBackStackEntry = remember {
-                            navController.currentDestination?.route?.let {
-                                Log.i("jexner nested", "Current route $it")
-                                navController.getBackStackEntry(
-                                    it
-                                )
-                            }
-                        }
-                        Log.d("jexner Testing", "Is backStackEntry == it? $backStackEntry, $ftBackStackEntry")
-                        val ftrpViewModel = ftBackStackEntry?.let {
-                            Log.i("jexner nested", "Creating/retrieving FTRPVM for $processId...")
-                            ViewModelProvider(
-                                it.viewModelStore,
-                                FotoTimerRunningProcessViewModelFactory(process)
-                            ).get(FotoTimerRunningProcessViewModel::class.java)
-                        }
-                        if (null != ftrpViewModel) {
-                            Log.i("jexner Main", "Creating Composable for Runner...")
-                            FotoTimerRunningProcess(ftrpViewModel)
-                        }
+                        @Suppress("ReplaceGetOrSet")
+                        val ftrpViewModel = ViewModelProvider(
+                            backStackEntry.viewModelStore,
+                            FotoTimerRunningProcessViewModelFactory(process)
+                        ).get(FotoTimerRunningProcessViewModel::class.java)
+                        FotoTimerRunningProcess(ftrpViewModel)
                     }
-                } else {
-                    Log.w("jexner Runner", "Cannot run process with id $processId!")
                 }
             }
         }
