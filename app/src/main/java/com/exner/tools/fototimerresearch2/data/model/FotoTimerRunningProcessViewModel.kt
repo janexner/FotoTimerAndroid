@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
+import com.exner.tools.fototimerresearch2.sound.FotoTimerSoundPoolHolder
+import com.exner.tools.fototimerresearch2.sound.SoundStuff
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.launch
@@ -67,6 +69,10 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
                 ceil(process.intervalTime.toDouble() / process.processTime.toDouble())
                     .toLong() + 1
             )
+            // if there is an end sound, and this was not a cancellation, play end sound
+            if (process.hasSoundEnd && keepRunning) {
+                FotoTimerSoundPoolHolder.playSound(SoundStuff.SOUND_ID_PROCESS_END)
+            }
             setKeepRunningCustom(false)
         }
     }
@@ -91,13 +97,13 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
                 startSoundHasPlayed = true
                 // play process start sound
                 if (process.hasSoundStart) {
-                    // TODO
+                    FotoTimerSoundPoolHolder.playSound(SoundStuff.SOUND_ID_PROCESS_START)
                 }
             }
             if (currentIntervalIndex > indexOfLastPlayedIntervalSound) {
                 indexOfLastPlayedIntervalSound = currentIntervalIndex
                 if (process.hasSoundInterval) {
-                    // TODO
+                    FotoTimerSoundPoolHolder.playSound(SoundStuff.SOUND_ID_INTERVAL)
                 }
             }
             Log.i("jexner Runnable", "running... elapsed $elapsedProcessTime")

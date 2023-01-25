@@ -17,6 +17,7 @@ import androidx.navigation.*
 import androidx.navigation.compose.*
 import androidx.preference.PreferenceManager
 import com.exner.tools.fototimerresearch2.data.model.*
+import com.exner.tools.fototimerresearch2.sound.FotoTimerSoundPoolHolder
 import com.exner.tools.fototimerresearch2.ui.*
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 
@@ -30,8 +31,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        @Suppress("ReplaceGetOrSet", "ReplaceGetOrSet") val spViewModel: FotoTimerSingleProcessViewModel =
+        @Suppress("ReplaceGetOrSet")
+        val spViewModel: FotoTimerSingleProcessViewModel =
             ViewModelProvider(this).get(FotoTimerSingleProcessViewModel::class.java)
+
+        // load sounds
+        FotoTimerSoundPoolHolder.loadSounds(this)
 
         // are we in forced dark mode?
         val sharedSettings = PreferenceManager.getDefaultSharedPreferences(this)
