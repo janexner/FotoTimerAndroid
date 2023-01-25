@@ -20,6 +20,7 @@ import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 fun Settings(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val sharedSettings = PreferenceManager.getDefaultSharedPreferences(context)
+    var expertMode by remember { mutableStateOf(sharedSettings.getBoolean("preference_expert_mode", false)) }
 
     Column(
         modifier = Modifier
@@ -65,101 +66,145 @@ fun Settings(modifier: Modifier = Modifier) {
                 )
             }
         }
-        HeaderText(
-            text = "Times"
-        )
-        var processTimeText by remember {
-            mutableStateOf(
-                (sharedSettings.getLong(
-                    "preference_process_time",
-                    30L
-                )).toString()
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                BodyText(
+                    text = "Expert mode (more options everywhere)",
+                    modifier = Modifier.align(Alignment.CenterStart)
+                )
+                Switch(
+                    checked = expertMode,
+                    modifier = Modifier.align(Alignment.CenterEnd),
+                    onCheckedChange = {
+                        sharedSettings.edit().putBoolean("preference_expert_mode", it).apply()
+                        expertMode = !expertMode
+                    }
+                )
+            }
+        }
+        if (expertMode) {
+            HeaderText(
+                text = "Times"
+            )
+            var processTimeText by remember {
+                mutableStateOf(
+                    (sharedSettings.getLong(
+                        "preference_process_time",
+                        30L
+                    )).toString()
+                )
+            }
+            TextField(
+                value = processTimeText,
+                label = { Text(text = "Default Process time") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                onValueChange = {
+                    processTimeText = it
+                    sharedSettings.edit()
+                        .putLong("preference_process_time", processTimeText.toLongOrNull() ?: 0L)
+                        .apply()
+                },
+                placeholder = { Text(text = "30") },
+                textStyle = MaterialTheme.typography.bodyLarge
+            )
+            var intervalTimeText by remember {
+                mutableStateOf(
+                    (sharedSettings.getLong(
+                        "preference_interval_time",
+                        10L
+                    )).toString()
+                )
+            }
+            TextField(
+                value = intervalTimeText,
+                label = { Text(text = "Default Interval time") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                onValueChange = {
+                    intervalTimeText = it
+                    sharedSettings.edit()
+                        .putLong("preference_interval_time", intervalTimeText.toLongOrNull() ?: 0L)
+                        .apply()
+                },
+                placeholder = { Text(text = "10") },
+                textStyle = MaterialTheme.typography.bodyLarge
+            )
+            var leadInTimeText by remember {
+                mutableStateOf(
+                    (sharedSettings.getLong(
+                        "preference_lead_in_time",
+                        0L
+                    )).toString()
+                )
+            }
+            TextField(
+                value = leadInTimeText,
+                label = { Text(text = "Default Lead-in time") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                onValueChange = {
+                    leadInTimeText = it
+                    sharedSettings.edit()
+                        .putLong("preference_lead_in_time", leadInTimeText.toLongOrNull() ?: 0L)
+                        .apply()
+                },
+                placeholder = { Text(text = "0") },
+                textStyle = MaterialTheme.typography.bodyLarge
+            )
+            var pauseTimeText by remember {
+                mutableStateOf(
+                    (sharedSettings.getLong(
+                        "preference_pause_time",
+                        5L
+                    )).toString()
+                )
+            }
+            TextField(
+                value = pauseTimeText,
+                label = { Text(text = "Default Pause time") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                onValueChange = {
+                    pauseTimeText = it
+                    sharedSettings.edit()
+                        .putLong("preference_pause_time", pauseTimeText.toLongOrNull() ?: 0L)
+                        .apply()
+                },
+                placeholder = { Text(text = "5") },
+                textStyle = MaterialTheme.typography.bodyLarge
+            )
+            HeaderText(
+                text = "Sound"
+            )
+            var preBeepsText by remember {
+                mutableStateOf(
+                    (sharedSettings.getInt(
+                        "preference_pre_beeps",
+                        4
+                    )).toString()
+                )
+            }
+            TextField(
+                value = preBeepsText,
+                label = { Text(text = "Pre-beeps (small beeps before the interval)") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                onValueChange = {
+                    preBeepsText = it
+                    sharedSettings.edit()
+                        .putInt("preference_pre_beeps", preBeepsText.toIntOrNull() ?: 0)
+                        .apply()
+                },
+                placeholder = { Text(text = "30") },
+                textStyle = MaterialTheme.typography.bodyLarge
             )
         }
-        TextField(
-            value = processTimeText,
-            label = { Text(text = "Default Process time") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            onValueChange = {
-                processTimeText = it
-                sharedSettings.edit()
-                    .putLong("preference_process_time", processTimeText.toLongOrNull() ?: 0L)
-                    .apply()
-            },
-            placeholder = { Text(text = "30") },
-            textStyle = MaterialTheme.typography.bodyLarge
-        )
-        var intervalTimeText by remember {
-            mutableStateOf(
-                (sharedSettings.getLong(
-                    "preference_interval_time",
-                    10L
-                )).toString()
-            )
-        }
-        TextField(
-            value = intervalTimeText,
-            label = { Text(text = "Default Interval time") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            onValueChange = {
-                intervalTimeText = it
-                sharedSettings.edit()
-                    .putLong("preference_interval_time", intervalTimeText.toLongOrNull() ?: 0L)
-                    .apply()
-            },
-            placeholder = { Text(text = "10") },
-            textStyle = MaterialTheme.typography.bodyLarge
-        )
-        var leadInTimeText by remember {
-            mutableStateOf(
-                (sharedSettings.getLong(
-                    "preference_lead_in_time",
-                    0L
-                )).toString()
-            )
-        }
-        TextField(
-            value = leadInTimeText,
-            label = { Text(text = "Default Lead-in time") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            onValueChange = {
-                leadInTimeText = it
-                sharedSettings.edit()
-                    .putLong("preference_lead_in_time", leadInTimeText.toLongOrNull() ?: 0L)
-                    .apply()
-            },
-            placeholder = { Text(text = "0") },
-            textStyle = MaterialTheme.typography.bodyLarge
-        )
-        var pauseTimeText by remember {
-            mutableStateOf(
-                (sharedSettings.getLong(
-                    "preference_pause_time",
-                    5L
-                )).toString()
-            )
-        }
-        TextField(
-            value = pauseTimeText,
-            label = { Text(text = "Default Pause time") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            onValueChange = {
-                pauseTimeText = it
-                sharedSettings.edit()
-                    .putLong("preference_pause_time", pauseTimeText.toLongOrNull() ?: 0L)
-                    .apply()
-            },
-            placeholder = { Text(text = "5") },
-            textStyle = MaterialTheme.typography.bodyLarge
-        )
     }
     // invisible preferences TODO
     // metronome sound
