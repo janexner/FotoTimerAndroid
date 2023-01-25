@@ -10,8 +10,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.*
 import androidx.navigation.compose.*
@@ -27,7 +31,7 @@ class MainActivity : ComponentActivity() {
         FotoTimerProcessViewModelFactory((application as FotoTimerApplication).repository)
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -43,6 +47,7 @@ class MainActivity : ComponentActivity() {
         val forceNightMode = sharedSettings.getBoolean("preference_night_mode", false)
 
         setContent {
+            val windowSizeClass = calculateWindowSizeClass(this)
             FotoTimerTheme(
                 darkTheme = forceNightMode
             ) {
@@ -78,15 +83,31 @@ class MainActivity : ComponentActivity() {
                             ) { backStackEntry ->
                                 val processId = backStackEntry.arguments?.getString("processId")
                                 if (null != processId) {
-                                    FotoTimerProcessDetails(
-                                        fotoTimerProcessViewModel,
-                                        processId,
-                                        onStartButtonClick = {
-                                            navController.navigate(
-                                                route = "${RunningProcess.route}/${processId}"
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        if (windowSizeClass.widthSizeClass > WindowWidthSizeClass.Compact) {
+                                            FotoTimerProcessList(
+                                                fotoTimerProcessViewModel,
+                                                onNavigateToProcessDetails = {
+                                                    navController.navigate(
+                                                        "${ProcessDetails.route}/${it}"
+                                                    )
+                                                },
+                                                modifier = Modifier.width(350.dp),
+                                                selectedProcessId = processId.toLongOrNull()
                                             )
                                         }
-                                    )
+                                        FotoTimerProcessDetails(
+                                            fotoTimerProcessViewModel,
+                                            processId,
+                                            onStartButtonClick = {
+                                                navController.navigate(
+                                                    route = "${RunningProcess.route}/${processId}"
+                                                )
+                                            }
+                                        )
+                                    }
                                 }
                             }
                             // Edit Process
@@ -202,7 +223,7 @@ class MainActivity : ComponentActivity() {
                             "jexner Main",
                             "Creating/retrieving FTRPVM for processId $processId..."
                         )
-                        val backStackEntry = remember {
+                        val ftBackStackEntry = remember {
                             navController.currentDestination?.route?.let {
                                 Log.i("jexner nested", "Current route $it")
                                 navController.getBackStackEntry(
@@ -210,7 +231,8 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                         }
-                        val ftrpViewModel = backStackEntry?.let {
+                        Log.d("jexner Testing", "Is backStackEntry == it? $backStackEntry, $ftBackStackEntry")
+                        val ftrpViewModel = ftBackStackEntry?.let {
                             Log.i("jexner nested", "Creating/retrieving FTRPVM for $processId...")
                             ViewModelProvider(
                                 it.viewModelStore,

@@ -4,6 +4,8 @@ plugins {
     id 'kotlin-kapt'
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.20'
     id 'org.jetbrains.kotlin.android'
+
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -34,7 +36,10 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            debuggable false
+        }
+        debug {
+            debuggable true
         }
     }
     compileOptions {
@@ -116,4 +121,5 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
 
+    implementation platform('com.google.firebase:firebase-bom:31.2.0')
 }

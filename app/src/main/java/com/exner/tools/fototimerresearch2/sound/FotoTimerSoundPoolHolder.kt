@@ -6,7 +6,7 @@ import android.util.Log
 import com.exner.tools.fototimerresearch2.R
 
 object FotoTimerSoundPoolHolder {
-    var soundPool: SoundPool = SoundPool.Builder().build()
+    private var soundPool: SoundPool = SoundPool.Builder().build()
     private val soundMap: MutableMap<Long, Int> = HashMap()
     private var isReady: Boolean = false
 
