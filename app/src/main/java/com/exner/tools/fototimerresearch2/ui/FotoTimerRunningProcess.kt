@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.exner.tools.fototimerresearch2.data.model.FotoTimerCounterState
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerRunningProcessViewModel
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
@@ -37,7 +38,7 @@ fun FotoTimerRunningProcess(
         // show time
         val processElapsedTime = runningProcessViewModel.elapsedProcessTime
         BigTimerText(
-            milliSeconds = processElapsedTime,
+            duration = processElapsedTime,
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.End)
@@ -52,8 +53,8 @@ fun FotoTimerRunningProcess(
         Spacer(modifier = Modifier.weight(0.001f))
         val intervalElapsedTime = runningProcessViewModel.elapsedIntervalTime
         MediumTimerAndIntervalText(
-            milliSeconds = intervalElapsedTime,
-            intervalText = "${runningProcessViewModel.currentIntervalIndex + 1} of ${runningProcessViewModel.numberOfIntervals}",
+            duration = intervalElapsedTime,
+            intervalText = "${runningProcessViewModel.counterState.roundNumber} of ${runningProcessViewModel.numberOfIntervals}",
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.End)
@@ -74,7 +75,7 @@ fun FotoTimerRunningProcess(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(0.5f),
-            enabled = runningProcessViewModel.keepRunning
+            enabled = runningProcessViewModel.counterState.state == FotoTimerCounterState.COUNTING
         ) {
             Text(
                 text = "Cancel",

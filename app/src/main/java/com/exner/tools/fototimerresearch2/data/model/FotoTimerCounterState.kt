@@ -1,6 +1,7 @@
 package com.exner.tools.fototimerresearch2.data.model
 
 import android.os.SystemClock
+import kotlin.time.Duration
 
 object FotoTimerCounterState {
     val CANCELLED = 0
@@ -26,12 +27,12 @@ class FotoTimerCounterStateHolder {
 //    var posInChain = 0
 //    var stopReason = 0;
 
-    fun initAtStartOfProcess(processTime: Long, intervalTime: Long, processId: Long) {
+    fun initAtStartOfProcess(processTime: Duration, intervalTime: Duration, processId: Long) {
         state = FotoTimerCounterState.COUNTING
         countbase = SystemClock.elapsedRealtime()
         roundNumber = 1
-        nextFinish = countbase + 1000L * processTime
-        nextRound = countbase + 1000L * intervalTime
+        nextFinish = countbase + processTime.inWholeMilliseconds
+        nextRound = countbase + intervalTime.inWholeMilliseconds
         nextDisplay = countbase + 100L
         startProcessId = processId
     }

@@ -15,6 +15,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun HeaderText(text: String, modifier: Modifier = Modifier) {
@@ -85,12 +87,11 @@ fun TextFieldForTimes(
 }
 
 @Composable
-fun BigTimerText(milliSeconds: Long, modifier: Modifier = Modifier) {
+fun BigTimerText(duration: Duration, modifier: Modifier = Modifier) {
     // convert seconds to "00:00" style string
-    val seconds = milliSeconds / 1000L
-    var output = (seconds / 60).toInt().toString().padStart(2, '0')
-    output += ":"
-    output += (seconds % 60).toInt().toString().padStart(2, '0')
+    val output = duration.toComponents { hours, minutes, seconds, _ ->
+        String.format("%02d:%02d:%02d", hours, minutes, seconds)
+    }
 
     Text(
         text = output,
@@ -101,15 +102,14 @@ fun BigTimerText(milliSeconds: Long, modifier: Modifier = Modifier) {
 
 @Composable
 fun MediumTimerAndIntervalText(
-    milliSeconds: Long,
+    duration: Duration,
     intervalText: String,
     modifier: Modifier = Modifier
 ) {
     // convert seconds to "00:00" style string
-    val seconds = milliSeconds / 1000L
-    var output = (seconds / 60).toInt().toString().padStart(2, '0')
-    output += ":"
-    output += (seconds % 60).toInt().toString().padStart(2, '0')
+    val output = duration.toComponents { hours, minutes, seconds, _ ->
+        String.format("%02d:%02d:%02d", hours, minutes, seconds)
+    }
 
     Row(modifier = Modifier.fillMaxWidth()) {
         Text(
@@ -151,8 +151,8 @@ fun KeepScreenOn() {
 fun BTTTest() {
     FotoTimerTheme() {
         Column() {
-            BigTimerText(milliSeconds = 75000)
-            MediumTimerAndIntervalText(milliSeconds = 10000, intervalText = "1 of 3")
+            BigTimerText(duration = 75.seconds)
+            MediumTimerAndIntervalText(duration = 10.seconds, intervalText = "1 of 3")
         }
     }
 }
@@ -162,8 +162,8 @@ fun BTTTest() {
 fun BTTNormalTest() {
     FotoTimerTheme() {
         Column() {
-            BigTimerText(milliSeconds = 75000)
-            MediumTimerAndIntervalText(milliSeconds = 10000, intervalText = "1 of 3")
+            BigTimerText(duration = 75.seconds)
+            MediumTimerAndIntervalText(duration = 10.seconds, intervalText = "1 of 3")
         }
     }
 }
