@@ -9,6 +9,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.exner.tools.fototimerresearch2.R
+import com.exner.tools.fototimerresearch2.data.FotoTimerSampleProcess
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModel
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
@@ -66,6 +67,7 @@ fun ExistingProcessDetails(
             process.hasSoundEnd,
             process.hasSoundInterval,
             process.hasSoundMetronome,
+            process.hasPreBeeps
         )
         ProcessTimerData(
             process.processTime,
@@ -107,13 +109,14 @@ fun ProcessAudioData(
     hasSoundEnd: Boolean,
     hasSoundInterval: Boolean,
     hasSoundMetronome: Boolean,
+    hasPreBeeps: Boolean,
     modifier: Modifier = Modifier
 ) {
-    if (hasSoundStart || hasSoundEnd || hasSoundInterval || hasSoundMetronome) {
+    if (hasSoundStart || hasSoundEnd || hasPreBeeps || hasSoundInterval || hasSoundMetronome) {
         var soundStatement = ""
         var space = ""
-        if (hasSoundStart || hasSoundEnd || hasSoundInterval) {
-            var soundStatement = "Will play sound at "
+        if (hasSoundStart || hasSoundEnd) {
+            soundStatement = "Will play sound at "
             if (hasSoundStart && hasSoundEnd) {
                 soundStatement += "start and end of process."
             } else if (hasSoundStart) {
@@ -125,6 +128,10 @@ fun ProcessAudioData(
         }
         if (hasSoundInterval) {
             soundStatement += space + "Will play sound at each interval."
+            space = " "
+        }
+        if (hasPreBeeps) {
+            soundStatement += space + "Will beep before the interval sound ('pre-beep')"
             space = " "
         }
         if (hasSoundMetronome) {
@@ -210,25 +217,7 @@ fun ProcessLeadInAndChainData(
 fun FTPPreview() {
     FotoTimerTheme {
         ExistingProcessDetails(
-            process = FotoTimerProcess(
-                "Sample Process",
-                30L,
-                10L,
-                true,
-                1,
-                true,
-                2,
-                true,
-                3,
-                hasSoundMetronome = true,
-                hasLeadIn = true,
-                leadInSeconds = 5,
-                hasAutoChain = true,
-                hasPauseBeforeChain = true,
-                pauseTime = 3,
-                gotoId = 3L,
-                keepsScreenOn = true
-            ),
+            process = FotoTimerSampleProcess.getFotoTimerSampleProcess(name = "Sample Process"),
             nextName = "Next Sample",
             onStartButtonClick = {},
             modifier = Modifier.fillMaxHeight()

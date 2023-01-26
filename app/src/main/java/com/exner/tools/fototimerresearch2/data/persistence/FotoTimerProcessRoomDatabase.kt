@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 @Database(
     entities = [FotoTimerProcess::class],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 public abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
@@ -28,6 +28,12 @@ public abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE FotoTimerProcess ADD COLUMN has_pre_beeps INTEGER NOT NULL DEFAULT FALSE;")
+            }
+        }
+
         fun getDatabase(context: Context, scope: CoroutineScope): FotoTimerProcessRoomDatabase {
             // check that INSTANCE is not null, then return it.
             // Otherwise, create it first
@@ -36,7 +42,8 @@ public abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
                     context.applicationContext,
                     FotoTimerProcessRoomDatabase::class.java,
                     "foto_timer_process_database"
-                ).addCallback(ProcessDatabaseCallback(scope)).addMigrations(MIGRATION_2_3).build()
+                ).addCallback(ProcessDatabaseCallback(scope))
+                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4).build()
                 INSTANCE = instance
                 // return instance
                 instance
@@ -77,7 +84,8 @@ public abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
                     hasPauseBeforeChain = false,
                     0,
                     -1L,
-                    keepsScreenOn = false
+                    keepsScreenOn = false,
+                    hasPreBeeps = false,
                 )
             fotoTimerProcessDao.insert(fotoTimerProcess)
             fotoTimerProcess =
@@ -98,7 +106,8 @@ public abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
                     hasPauseBeforeChain = false,
                     0,
                     -1L,
-                    keepsScreenOn = true
+                    keepsScreenOn = true,
+                    hasPreBeeps = false,
                 )
             fotoTimerProcessDao.insert(fotoTimerProcess)
         }

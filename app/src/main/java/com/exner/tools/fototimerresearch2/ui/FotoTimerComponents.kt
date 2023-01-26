@@ -1,16 +1,14 @@
 package com.exner.tools.fototimerresearch2.ui
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -44,6 +42,48 @@ fun SmallBodyText(text: String, modifier: Modifier = Modifier) {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TextAndSwitch(
+    text: String,
+    checked: Boolean,
+    onCheckedChange: ((Boolean) -> Unit)?,
+    modifier: Modifier = Modifier
+) {
+    ListItem(
+        headlineText = { BodyText(text = text) },
+        modifier = Modifier.fillMaxWidth(),
+        trailingContent = {
+            Switch(
+                checked = checked,
+                onCheckedChange = onCheckedChange,
+                modifier = Modifier
+            )
+        },
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TextFieldForTimes(
+    value: String,
+    label: @Composable() (() -> Unit)?,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    placeholder: @Composable() (() -> Unit)? = null,
+) {
+    TextField(
+        value = value,
+        label = label,
+        modifier = Modifier.fillMaxWidth(),
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        onValueChange = onValueChange,
+        placeholder = placeholder,
+        textStyle = MaterialTheme.typography.bodyLarge
+    )
+}
+
 @Composable
 fun BigTimerText(milliSeconds: Long, modifier: Modifier = Modifier) {
     // convert seconds to "00:00" style string
@@ -60,7 +100,11 @@ fun BigTimerText(milliSeconds: Long, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun MediumTimerAndIntervalText(milliSeconds: Long, intervalText: String, modifier: Modifier = Modifier) {
+fun MediumTimerAndIntervalText(
+    milliSeconds: Long,
+    intervalText: String,
+    modifier: Modifier = Modifier
+) {
     // convert seconds to "00:00" style string
     val seconds = milliSeconds / 1000L
     var output = (seconds / 60).toInt().toString().padStart(2, '0')

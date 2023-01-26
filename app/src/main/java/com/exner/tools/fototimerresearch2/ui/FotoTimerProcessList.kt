@@ -42,7 +42,7 @@ fun FotoTimerProcessList(
                         supText += " keeps screen on"
                     }
                     if (ftProcess.hasAutoChain && null != ftProcess.gotoId && ftProcess.gotoId >= 0) {
-                        supText += " then ${ftProcess.gotoId}"
+                        supText += ". Next: ${ftProcess.gotoId}"
                     }
                     ListItem(
                         headlineText = { HeaderText(text = ftProcess.name) },

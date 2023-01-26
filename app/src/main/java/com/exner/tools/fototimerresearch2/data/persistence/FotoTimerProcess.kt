@@ -31,6 +31,7 @@ data class FotoTimerProcess (
     @ColumnInfo(name = "goto_id") val gotoId: Long?,
 
     @ColumnInfo(name = "keeps_screen_on") val keepsScreenOn: Boolean = true,
+    @ColumnInfo(name = "has_pre_beeps") val hasPreBeeps: Boolean = false,
 
     @PrimaryKey(autoGenerate = true) val uid: Long = 0
 )

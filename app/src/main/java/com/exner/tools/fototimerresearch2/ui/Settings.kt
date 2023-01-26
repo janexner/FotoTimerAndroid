@@ -6,7 +6,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
@@ -20,7 +19,14 @@ import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 fun Settings(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val sharedSettings = PreferenceManager.getDefaultSharedPreferences(context)
-    var expertMode by remember { mutableStateOf(sharedSettings.getBoolean("preference_expert_mode", false)) }
+    var expertMode by remember {
+        mutableStateOf(
+            sharedSettings.getBoolean(
+                "preference_expert_mode",
+                false
+            )
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -32,56 +38,46 @@ fun Settings(modifier: Modifier = Modifier) {
             text = "UI",
             modifier = Modifier.fillMaxWidth()
         )
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Box(modifier = Modifier.fillMaxWidth()) {
-                BodyText(
-                    text = "Night mode (needs a restart)",
-                    modifier = Modifier.align(Alignment.CenterStart)
+        var night by remember {
+            mutableStateOf(
+                sharedSettings.getBoolean(
+                    "preference_night_mode",
+                    false
                 )
-                var night by remember { mutableStateOf(sharedSettings.getBoolean("preference_night_mode", false)) }
-                Switch(
-                    checked = night,
-                    modifier = Modifier.align(Alignment.CenterEnd),
-                    onCheckedChange = {
-                        sharedSettings.edit().putBoolean("preference_night_mode", it).apply()
-                        night = !night
-                    }
-                )
-            }
+            )
         }
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Box(modifier = Modifier.fillMaxWidth()) {
-                BodyText(
-                    text = "Default to keep screen on while counting",
-                    modifier = Modifier.align(Alignment.CenterStart)
-                )
-                var keepScreenOn by remember { mutableStateOf(sharedSettings.getBoolean("preference_screen_on", true)) }
-                Switch(
-                    checked = keepScreenOn,
-                    modifier = Modifier.align(Alignment.CenterEnd),
-                    onCheckedChange = {
-                        sharedSettings.edit().putBoolean("preference_screen_on", it).apply()
-                        keepScreenOn = !keepScreenOn
-                    }
-                )
+        TextAndSwitch(
+            text = "Night mode (needs a restart)",
+            checked = night,
+            onCheckedChange = {
+                sharedSettings.edit().putBoolean("preference_night_mode", it).apply()
+                night = !night
             }
+        )
+        var keepScreenOn by remember {
+            mutableStateOf(
+                sharedSettings.getBoolean(
+                    "preference_screen_on",
+                    true
+                )
+            )
         }
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Box(modifier = Modifier.fillMaxWidth()) {
-                BodyText(
-                    text = "Expert mode (more options everywhere)",
-                    modifier = Modifier.align(Alignment.CenterStart)
-                )
-                Switch(
-                    checked = expertMode,
-                    modifier = Modifier.align(Alignment.CenterEnd),
-                    onCheckedChange = {
-                        sharedSettings.edit().putBoolean("preference_expert_mode", it).apply()
-                        expertMode = !expertMode
-                    }
-                )
+        TextAndSwitch(
+            text = "Default to keep screen on while counting",
+            checked = keepScreenOn,
+            onCheckedChange = {
+                sharedSettings.edit().putBoolean("preference_screen_on", it).apply()
+                keepScreenOn = !keepScreenOn
             }
-        }
+        )
+        TextAndSwitch(
+            text = "Expert mode (more options everywhere)",
+            checked = expertMode,
+            onCheckedChange = {
+                sharedSettings.edit().putBoolean("preference_expert_mode", it).apply()
+                expertMode = !expertMode
+            }
+        )
         if (expertMode) {
             HeaderText(
                 text = "Times"
@@ -94,20 +90,19 @@ fun Settings(modifier: Modifier = Modifier) {
                     )).toString()
                 )
             }
-            TextField(
+            TextFieldForTimes(
                 value = processTimeText,
                 label = { Text(text = "Default Process time") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                placeholder = { Text(text = "30") },
                 onValueChange = {
                     processTimeText = it
                     sharedSettings.edit()
-                        .putLong("preference_process_time", processTimeText.toLongOrNull() ?: 0L)
+                        .putLong(
+                            "preference_process_time",
+                            processTimeText.toLongOrNull() ?: 0L
+                        )
                         .apply()
-                },
-                placeholder = { Text(text = "30") },
-                textStyle = MaterialTheme.typography.bodyLarge
+                }
             )
             var intervalTimeText by remember {
                 mutableStateOf(
@@ -117,20 +112,19 @@ fun Settings(modifier: Modifier = Modifier) {
                     )).toString()
                 )
             }
-            TextField(
+            TextFieldForTimes(
                 value = intervalTimeText,
                 label = { Text(text = "Default Interval time") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 onValueChange = {
                     intervalTimeText = it
                     sharedSettings.edit()
-                        .putLong("preference_interval_time", intervalTimeText.toLongOrNull() ?: 0L)
+                        .putLong(
+                            "preference_interval_time",
+                            intervalTimeText.toLongOrNull() ?: 0L
+                        )
                         .apply()
                 },
                 placeholder = { Text(text = "10") },
-                textStyle = MaterialTheme.typography.bodyLarge
             )
             var leadInTimeText by remember {
                 mutableStateOf(
@@ -140,12 +134,9 @@ fun Settings(modifier: Modifier = Modifier) {
                     )).toString()
                 )
             }
-            TextField(
+            TextFieldForTimes(
                 value = leadInTimeText,
                 label = { Text(text = "Default Lead-in time") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 onValueChange = {
                     leadInTimeText = it
                     sharedSettings.edit()
@@ -153,7 +144,6 @@ fun Settings(modifier: Modifier = Modifier) {
                         .apply()
                 },
                 placeholder = { Text(text = "0") },
-                textStyle = MaterialTheme.typography.bodyLarge
             )
             var pauseTimeText by remember {
                 mutableStateOf(
@@ -163,12 +153,9 @@ fun Settings(modifier: Modifier = Modifier) {
                     )).toString()
                 )
             }
-            TextField(
+            TextFieldForTimes(
                 value = pauseTimeText,
                 label = { Text(text = "Default Pause time") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 onValueChange = {
                     pauseTimeText = it
                     sharedSettings.edit()
@@ -176,7 +163,6 @@ fun Settings(modifier: Modifier = Modifier) {
                         .apply()
                 },
                 placeholder = { Text(text = "5") },
-                textStyle = MaterialTheme.typography.bodyLarge
             )
             HeaderText(
                 text = "Sound"
@@ -218,6 +204,14 @@ fun Settings(modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun SettingsPreview() {
+    FotoTimerTheme {
+        Settings()
+    }
+}
+
+@Preview(showBackground = true, fontScale = 1.5f)
+@Composable
+fun BigSettingsPreview() {
     FotoTimerTheme {
         Settings()
     }
