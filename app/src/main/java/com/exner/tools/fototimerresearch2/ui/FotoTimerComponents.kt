@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -96,7 +97,8 @@ fun BigTimerText(duration: Duration, modifier: Modifier = Modifier) {
     Text(
         text = output,
         style = MaterialTheme.typography.headlineLarge,
-        fontSize = 150.dp.toTextDp()
+        textAlign = TextAlign.Center,
+        fontSize = 94.dp.toTextDp()
     )
 }
 
@@ -115,14 +117,16 @@ fun MediumTimerAndIntervalText(
         Text(
             text = output,
             style = MaterialTheme.typography.headlineLarge,
-            fontSize = 68.dp.toTextDp(),
+            fontSize = 48.dp.toTextDp(),
+            textAlign = TextAlign.Center,
             modifier = Modifier.alignByBaseline()
         )
         Spacer(modifier = Modifier.weight(0.05f))
         Text(
             text = intervalText,
             style = MaterialTheme.typography.headlineLarge,
-            fontSize = 68.dp.toTextDp(),
+            fontSize = 48.dp.toTextDp(),
+            textAlign = TextAlign.Center,
             modifier = Modifier.alignByBaseline()
         )
     }

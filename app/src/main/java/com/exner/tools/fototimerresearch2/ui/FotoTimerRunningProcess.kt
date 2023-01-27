@@ -7,14 +7,12 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.exner.tools.fototimerresearch2.data.FotoTimerSampleProcess
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerCounterState
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerRunningProcessViewModel
-import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 
 @Composable
@@ -23,7 +21,6 @@ fun FotoTimerRunningProcess(
     modifier: Modifier = Modifier,
 ) {
     // this screen should stay visible, maybe
-    val context = LocalContext.current
     if (runningProcessViewModel.keepsScreenOn) {
         KeepScreenOn()
     }
@@ -36,34 +33,22 @@ fun FotoTimerRunningProcess(
         HeaderText(text = runningProcessViewModel.processName)
         Divider(modifier = Modifier.padding(8.dp))
         // show time
-        val processElapsedTime = runningProcessViewModel.elapsedProcessTime
-        BigTimerText(
-            duration = processElapsedTime,
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.End)
-        )
-        Text(
-            text = "Process Time (total ${runningProcessViewModel.processTime})",
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.End),
-            style = MaterialTheme.typography.bodyLarge
-        )
-        Spacer(modifier = Modifier.weight(0.001f))
         val intervalElapsedTime = runningProcessViewModel.elapsedIntervalTime
-        MediumTimerAndIntervalText(
+        val processRemainingTime = runningProcessViewModel.timeLeftUntilEndOfProcess
+        BigTimerText(
             duration = intervalElapsedTime,
-            intervalText = "${runningProcessViewModel.counterState.roundNumber} of ${runningProcessViewModel.numberOfIntervals}",
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.End)
         )
         Text(
             text = "Interval Time (total ${runningProcessViewModel.intervalTime})",
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.End),
+            style = MaterialTheme.typography.bodyLarge
+        )
+        Spacer(modifier = Modifier.weight(0.001f))
+        MediumTimerAndIntervalText(
+            duration = processRemainingTime,
+            intervalText = "${runningProcessViewModel.counterState.roundNumber} of ${runningProcessViewModel.numberOfIntervals}",
+        )
+        Text(
+            text = "Process Time (total ${runningProcessViewModel.processTime})",
             style = MaterialTheme.typography.bodyLarge
         )
         // show additional information (next process(es))
@@ -92,24 +77,8 @@ fun FTRPreview() {
         FotoTimerRunningProcess(
             runningProcessViewModel =
             FotoTimerRunningProcessViewModel(
-                process = FotoTimerProcess(
+                process = FotoTimerSampleProcess.getFotoTimerSampleProcess(
                     "Sample Process",
-                    30L,
-                    10L,
-                    true,
-                    1,
-                    true,
-                    2,
-                    true,
-                    3,
-                    hasSoundMetronome = true,
-                    hasLeadIn = true,
-                    leadInSeconds = 5,
-                    hasAutoChain = true,
-                    hasPauseBeforeChain = true,
-                    pauseTime = 3,
-                    gotoId = 3L,
-                    keepsScreenOn = true
                 )
             ),
             modifier = Modifier.fillMaxHeight()

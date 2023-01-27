@@ -28,6 +28,9 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
     private val TICKS_PER_DECISECOND = 100L
     private val FACTOR_MILLIS = 1000L
 
+    // ticks at the beginning of all of this
+    private var startTicks: Long = SystemClock.elapsedRealtime()
+
     // ticks at the beginning of each loop
     private var inticks: Long = 0L
 
@@ -49,7 +52,7 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
     @OptIn(ExperimentalTime::class)
     var processTime by mutableStateOf(process.processTime.seconds)
         private set
-    var elapsedProcessTime by mutableStateOf(Duration.ZERO)
+    var timeLeftUntilEndOfProcess by mutableStateOf(Duration.ZERO)
     var intervalTime by mutableStateOf(process.intervalTime.seconds)
         private set
     var elapsedIntervalTime by mutableStateOf(Duration.ZERO)
@@ -117,7 +120,7 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
 
             // 3 - done
             // one more update, for visual satisfaction
-            setElapsedProcessTimeCustom(process.processTime * FACTOR_MILLIS)
+            setTimeLeftUntilEndOfProcessCustom(process.processTime * FACTOR_MILLIS)
             setElapsedIntervalTimeCustom(process.intervalTime * FACTOR_MILLIS)
             setCurrentIntervalIndexCustom(
                 ceil(process.intervalTime.toDouble() / process.processTime.toDouble())
@@ -147,8 +150,8 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
                     if (process.hasSoundInterval) {
                         soundId = SoundStuff.SOUND_ID_INTERVAL
                     }
-                    counterState.countbase += intervalTime.inWholeMilliseconds * TICKS_PER_DECISECOND
-                    counterState.nextRound += intervalTime.inWholeMilliseconds * TICKS_PER_DECISECOND
+                    counterState.countbase += intervalTime.inWholeMilliseconds
+                    counterState.nextRound += intervalTime.inWholeMilliseconds
                     counterState.roundNumber++
                 }
                 if (counterState.nextDisplay <= nextcount) {
@@ -165,6 +168,7 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
                        oldTime += ((counterState.roundNumber - 1L) * process.intervalTime).seconds
                         val eta = process.processTime - oldTime.inWholeSeconds
                     }
+                    setTimeLeftUntilEndOfProcessCustom(startTicks + (process.processTime * TICKS_PER_SECOND) - inticks)
 
                     counterState.nextDisplay += TICKS_PER_DECISECOND;
                 }
@@ -184,14 +188,11 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
             }
             // play any sounds?
             FotoTimerSoundPoolHolder.playSound(soundId)
-
-            // log
-            Log.i("jexner Runnable", "running... elapsed $elapsedProcessTime")
         }
     }
 
-    fun setElapsedProcessTimeCustom(newTime: Long) {
-        elapsedProcessTime = newTime.milliseconds
+    fun setTimeLeftUntilEndOfProcessCustom(newTime: Long) {
+        timeLeftUntilEndOfProcess = newTime.milliseconds
     }
 
     fun setElapsedIntervalTimeCustom(newTime: Long) {
