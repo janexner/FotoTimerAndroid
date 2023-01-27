@@ -14,6 +14,7 @@ import com.exner.tools.fototimerresearch2.data.FotoTimerSampleProcess
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerCounterState
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerRunningProcessViewModel
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun FotoTimerRunningProcess(
@@ -33,10 +34,8 @@ fun FotoTimerRunningProcess(
         HeaderText(text = runningProcessViewModel.processName)
         Divider(modifier = Modifier.padding(8.dp))
         // show time
-        val intervalElapsedTime = runningProcessViewModel.elapsedIntervalTime
-        val processRemainingTime = runningProcessViewModel.timeLeftUntilEndOfProcess
         BigTimerText(
-            duration = intervalElapsedTime,
+            duration = runningProcessViewModel.elapsedIntervalTime,
         )
         Text(
             text = "Interval Time (total ${runningProcessViewModel.intervalTime})",
@@ -44,7 +43,7 @@ fun FotoTimerRunningProcess(
         )
         Spacer(modifier = Modifier.weight(0.001f))
         MediumTimerAndIntervalText(
-            duration = processRemainingTime,
+            duration = runningProcessViewModel.timeLeftUntilEndOfProcess.plus(1.seconds),
             intervalText = "${runningProcessViewModel.counterState.roundNumber} of ${runningProcessViewModel.numberOfIntervals}",
         )
         Text(
