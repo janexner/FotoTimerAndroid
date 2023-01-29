@@ -8,6 +8,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.*
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -87,15 +88,43 @@ fun TextFieldForTimes(
     )
 }
 
+@OptIn(ExperimentalTextApi::class)
 @Composable
-fun BigTimerText(duration: Duration, modifier: Modifier = Modifier) {
+fun durationToAnnotatedString(duration: Duration): AnnotatedString {
     // convert seconds to "00:00" style string
     val output = duration.toComponents { hours, minutes, seconds, _ ->
         String.format("%02d:%02d:%02d", hours, minutes, seconds)
     }
+    val tmp = output.split(":")
+    val styledOutput = buildAnnotatedString {
+        var myStyle = SpanStyle()
+        if ("00" == tmp[0]) {
+            myStyle = SpanStyle(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f))
+        }
+        withStyle(style = myStyle) {
+            append(tmp[0])
+        }
+        append(":")
+        if ("00" == tmp[1]) {
+            myStyle = SpanStyle(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f))
+        } else {
+            myStyle = SpanStyle(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 1f))
+        }
+        withStyle(style = myStyle) {
+            append(tmp[1])
+        }
+        append(":")
+        append(tmp[2])
+    }
+
+    return styledOutput
+}
+
+@Composable
+fun BigTimerText(duration: Duration, modifier: Modifier = Modifier) {
 
     Text(
-        text = output,
+        text = durationToAnnotatedString(duration),
         style = MaterialTheme.typography.headlineLarge,
         textAlign = TextAlign.Center,
         fontSize = 94.dp.toTextDp()
@@ -108,14 +137,9 @@ fun MediumTimerAndIntervalText(
     intervalText: String,
     modifier: Modifier = Modifier
 ) {
-    // convert seconds to "00:00" style string
-    val output = duration.toComponents { hours, minutes, seconds, _ ->
-        String.format("%02d:%02d:%02d", hours, minutes, seconds)
-    }
-
     Row(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = output,
+            text = durationToAnnotatedString(duration),
             style = MaterialTheme.typography.headlineLarge,
             fontSize = 48.dp.toTextDp(),
             textAlign = TextAlign.Center,
