@@ -19,6 +19,12 @@ import androidx.compose.ui.unit.dp
 import androidx.preference.PreferenceManager
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 
+sealed class SettingsTabs(val name: String, val selected: Boolean) {
+    object uiTab : SettingsTabs("UI", true)
+    object timersTab : SettingsTabs("Times", false)
+    object soundsTab : SettingsTabs("Sounds", false)
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Settings(
@@ -36,6 +42,8 @@ fun Settings(
         )
     }
     val isExpandedScreen = windowSize == WindowSize.Expanded
+    var tabIndex by remember { mutableStateOf(0) }
+    val tabItems = listOf(SettingsTabs.uiTab, SettingsTabs.timersTab, SettingsTabs.soundsTab)
 
     // what's the orientation, right now?
     val configuration = LocalConfiguration.current
@@ -48,51 +56,146 @@ fun Settings(
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
             ) {
-                Column(modifier = Modifier.weight(0.58f)) {
-                    StandardSettingsColumn(sharedSettings = sharedSettings)
-                    TextAndSwitch(
-                        text = "Expert mode (more options everywhere)",
-                        checked = expertMode,
-                        onCheckedChange = {
-                            sharedSettings.edit().putBoolean("preference_expert_mode", it).apply()
-                            expertMode = !expertMode
-                        }
-                    )
-//                    AnimatedVisibility(visible = expertMode) {
-                        ExpertSettingsSound(sharedSettings = sharedSettings)
-//                    }
+                NavigationRail(
+                    modifier = Modifier.fillMaxHeight()
+                ) {
+                    tabItems.forEachIndexed { index, settingsTabs ->
+                        NavigationRailItem(
+                            icon = { },
+                            label = { Text(settingsTabs.name, style = MaterialTheme.typography.bodyLarge) },
+                            selected = index == tabIndex,
+                            onClick = { tabIndex = index }
+                        )
+                    }
                 }
-                Spacer(modifier = Modifier.weight(0.04f))
-                Column(modifier = Modifier.weight(0.38f)) {
-//                    AnimatedVisibility(visible = expertMode) {
-                            ExpertSettingsDefaultTimes(sharedSettings = sharedSettings)
-//                  }
+                when (tabIndex) {
+                    0 -> Column(
+                        modifier = Modifier.padding(8.dp)
+                    ) {
+                        StandardSettingsColumn(sharedSettings = sharedSettings)
+                        TextAndSwitch(
+                            text = "Expert mode (more options everywhere)",
+                            checked = expertMode,
+                            onCheckedChange = {
+                                sharedSettings.edit().putBoolean("preference_expert_mode", it)
+                                    .apply()
+                                expertMode = !expertMode
+                            }
+                        )
+                    }
+                    1 -> Column(
+                        modifier = Modifier.padding(8.dp)
+                    ) {
+                        AnimatedVisibility(visible = expertMode) {
+                            ExpertSettingsDefaultTimes(sharedSettings)
+                        }
+                        TextAndSwitch(
+                            text = "Expert mode (more options everywhere)",
+                            checked = expertMode,
+                            onCheckedChange = {
+                                sharedSettings.edit().putBoolean("preference_expert_mode", it)
+                                    .apply()
+                                expertMode = !expertMode
+                            }
+                        )
+                    }
+                    2 -> Column(
+                        modifier = Modifier.padding(8.dp)
+                    ) {
+                        AnimatedVisibility(visible = expertMode) {
+                            ExpertSettingsSound(sharedSettings)
+                        }
+                        TextAndSwitch(
+                            text = "Expert mode (more options everywhere)",
+                            checked = expertMode,
+                            onCheckedChange = {
+                                sharedSettings.edit().putBoolean("preference_expert_mode", it)
+                                    .apply()
+                                expertMode = !expertMode
+                            }
+                        )
+                    }
                 }
             }
         }
         else -> {
             // show vertically
-            Column(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-            ) {
-                StandardSettingsColumn(sharedSettings = sharedSettings)
-                TextAndSwitch(
-                    text = "Expert mode (more options everywhere)",
-                    checked = expertMode,
-                    onCheckedChange = {
-                        sharedSettings.edit().putBoolean("preference_expert_mode", it).apply()
-                        expertMode = !expertMode
+            Column() {
+                TabRow(
+                    selectedTabIndex = tabIndex,
+                    modifier = Modifier.padding(top = 8.dp)
+                ) {
+                    tabItems.forEachIndexed { index, settingsTabs ->
+                        Tab(
+                            selected = index == tabIndex,
+                            onClick = { tabIndex = index },
+                            text = { BodyText(text = settingsTabs.name) }
+                        )
                     }
-                )
-                AnimatedVisibility(visible = expertMode) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth()
+                }
+                when (tabIndex) {
+                    0 -> Column(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
                     ) {
-                        ExpertSettingsDefaultTimes(sharedSettings)
-                        ExpertSettingsSound(sharedSettings)
+                        StandardSettingsColumn(sharedSettings = sharedSettings)
+                        TextAndSwitch(
+                            text = "Expert mode (more options everywhere)",
+                            checked = expertMode,
+                            onCheckedChange = {
+                                sharedSettings.edit().putBoolean("preference_expert_mode", it)
+                                    .apply()
+                                expertMode = !expertMode
+                            }
+                        )
+                    }
+                    1 -> Column(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        AnimatedVisibility(visible = expertMode) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                ExpertSettingsDefaultTimes(sharedSettings)
+                            }
+                        }
+                        TextAndSwitch(
+                            text = "Expert mode (more options everywhere)",
+                            checked = expertMode,
+                            onCheckedChange = {
+                                sharedSettings.edit().putBoolean("preference_expert_mode", it)
+                                    .apply()
+                                expertMode = !expertMode
+                            }
+                        )
+                    }
+                    2 -> Column(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        AnimatedVisibility(visible = expertMode) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                ExpertSettingsSound(sharedSettings)
+                            }
+                        }
+                        TextAndSwitch(
+                            text = "Expert mode (more options everywhere)",
+                            checked = expertMode,
+                            onCheckedChange = {
+                                sharedSettings.edit().putBoolean("preference_expert_mode", it)
+                                    .apply()
+                                expertMode = !expertMode
+                            }
+                        )
                     }
                 }
             }
@@ -113,9 +216,6 @@ private fun ExpertSettingsSound(sharedSettings: SharedPreferences) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        HeaderText(
-            text = "Sound"
-        )
         var preBeepsText by remember {
             mutableStateOf(
                 (sharedSettings.getInt(
@@ -147,9 +247,6 @@ private fun ExpertSettingsDefaultTimes(sharedSettings: SharedPreferences) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        HeaderText(
-            text = "Times"
-        )
         var processTimeText by remember {
             mutableStateOf(
                 (sharedSettings.getLong(
@@ -248,9 +345,6 @@ private fun StandardSettingsColumn(
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        HeaderText(
-            text = "UI",
-        )
         var night by remember {
             mutableStateOf(
                 sharedSettings.getBoolean(

@@ -78,7 +78,7 @@ fun TextFieldForTimes(
     TextField(
         value = value,
         label = label,
-//        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         onValueChange = onValueChange,
