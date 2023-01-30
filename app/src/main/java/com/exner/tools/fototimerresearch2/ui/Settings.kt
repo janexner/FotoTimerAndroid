@@ -12,17 +12,19 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.preference.PreferenceManager
+import com.exner.tools.fototimerresearch2.R
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 
-sealed class SettingsTabs(val name: String, val selected: Boolean) {
-    object uiTab : SettingsTabs("UI", true)
-    object timersTab : SettingsTabs("Times", false)
-    object soundsTab : SettingsTabs("Sounds", false)
+sealed class SettingsTabs(val name: String, val selected: Boolean, var resourceId: Int) {
+    object uiTab : SettingsTabs("UI", true, R.drawable.baseline_light_mode_24)
+    object timersTab : SettingsTabs("Times", false, R.drawable.ic_baseline_timer_24)
+    object soundsTab : SettingsTabs("Sounds", false, R.drawable.ic_baseline_music_note_24)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,7 +63,10 @@ fun Settings(
                 ) {
                     tabItems.forEachIndexed { index, settingsTabs ->
                         NavigationRailItem(
-                            icon = { },
+                            icon = { Icon(painterResource(
+                                id = settingsTabs.resourceId),
+                                contentDescription = settingsTabs.name
+                            ) },
                             label = { Text(settingsTabs.name, style = MaterialTheme.typography.bodyLarge) },
                             selected = index == tabIndex,
                             onClick = { tabIndex = index }
