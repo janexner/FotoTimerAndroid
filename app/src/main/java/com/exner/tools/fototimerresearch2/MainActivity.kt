@@ -53,6 +53,10 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val currentBackStack by navController.currentBackStackEntryAsState()
                 val currentDestination = currentBackStack?.destination
+
+                val windowSize = rememberWindowSizeClass()
+                val isExpandedScreen = windowSize == WindowSize.Expanded
+
                 Scaffold(
                     modifier = Modifier,
                     topBar = { FotoTimerTopBar(navController, currentDestination) },
@@ -127,7 +131,7 @@ class MainActivity : ComponentActivity() {
                             }
                             // Open Settings screen
                             composable(route = Settings.route) {
-                                Settings()
+                                Settings(windowSize)
                             }
                             // Run Process nested graph
                             runningGraph(navController)

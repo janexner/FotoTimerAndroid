@@ -2,7 +2,8 @@ package com.exner.tools.fototimerresearch2.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -23,8 +24,12 @@ fun FotoTimerProcessList(
     selectedProcessId: Long? = -1,
 ) {
     val ftpList by fotoTimerProcessViewModel.allProcesses.observeAsState()
-    LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = modifier)
-    {
+    LazyVerticalGrid (
+        columns = GridCells.Adaptive(minSize = 250.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier
+    ) {
         ftpList?.let {
             items(count = it.size) { fotoTimerProcess ->
                 val ftProcess = ftpList!![fotoTimerProcess]

@@ -1,5 +1,6 @@
 package com.exner.tools.fototimerresearch2.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -209,35 +210,39 @@ fun FotoTimerProcessEditor(
                 }
             )
         }
-        if (expertMode) {
-            TextAndSwitch(
-                text = "Play a sound every second ('metronome')",
-                checked = processViewModel.hasSoundMetronome,
-                onCheckedChange = {
-                    processViewModel.hasSoundMetronome = it
-                    modified = true
-                },
-            )
-            HeaderText(text = "Before the process")
-            TextAndSwitch(
-                text = "Lead-in before process",
-                checked = processViewModel.hasLeadIn,
-                onCheckedChange = {
-                    processViewModel.hasLeadIn = it
-                    modified = true
-                },
-            )
-            if (processViewModel.hasLeadIn) {
-                TextField(
-                    value = processViewModel.leadInSeconds,
-                    label = { Text(text = "Lead-in (seconds)") },
-                    onValueChange = {
-                        processViewModel.leadInSeconds = it
+        AnimatedVisibility(visible = expertMode) {
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextAndSwitch(
+                    text = "Play a sound every second ('metronome')",
+                    checked = processViewModel.hasSoundMetronome,
+                    onCheckedChange = {
+                        processViewModel.hasSoundMetronome = it
                         modified = true
                     },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
+                HeaderText(text = "Before the process")
+                TextAndSwitch(
+                    text = "Lead-in before process",
+                    checked = processViewModel.hasLeadIn,
+                    onCheckedChange = {
+                        processViewModel.hasLeadIn = it
+                        modified = true
+                    },
+                )
+                AnimatedVisibility(visible = processViewModel.hasLeadIn) {
+                    TextField(
+                        value = processViewModel.leadInSeconds,
+                        label = { Text(text = "Lead-in (seconds)") },
+                        onValueChange = {
+                            processViewModel.leadInSeconds = it
+                            modified = true
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
+                }
             }
         }
         HeaderText(text = "After the process")
@@ -249,57 +254,61 @@ fun FotoTimerProcessEditor(
                 modified = true
             },
         )
-        if (processViewModel.hasAutoChain) {
+        AnimatedVisibility(visible = processViewModel.hasAutoChain) {
             var expanded by remember { mutableStateOf(false) }
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = { expanded = !expanded }) {
-                TextField(
-                    // The `menuAnchor` modifier must be passed to the text field for correctness.
-                    modifier = Modifier
-                        .menuAnchor()
-                        .fillMaxWidth(),
-                    readOnly = true,
-                    value = nextProcessName,
-                    placeholder = { Text("Select next Process") },
-                    onValueChange = {},
-                    label = { Text("Next Process") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                )
-                ExposedDropdownMenu(
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                ExposedDropdownMenuBox(
                     expanded = expanded,
-                    onDismissRequest = { expanded = false }) {
-                    processIdsAndNames?.forEach { idAndName ->
-                        DropdownMenuItem(
-                            text = { Text(text = idAndName.name) },
-                            onClick = {
-                                processViewModel.gotoId = idAndName.uid
-                                nextProcessName = idAndName.name
-                                modified = true
-                                expanded = false
-                            },
-                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                        )
+                    onExpandedChange = { expanded = !expanded }) {
+                    TextField(
+                        // The `menuAnchor` modifier must be passed to the text field for correctness.
+                        modifier = Modifier
+                            .menuAnchor()
+                            .fillMaxWidth(),
+                        readOnly = true,
+                        value = nextProcessName,
+                        placeholder = { Text("Select next Process") },
+                        onValueChange = {},
+                        label = { Text("Next Process") },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                    )
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }) {
+                        processIdsAndNames?.forEach { idAndName ->
+                            DropdownMenuItem(
+                                text = { Text(text = idAndName.name) },
+                                onClick = {
+                                    processViewModel.gotoId = idAndName.uid
+                                    nextProcessName = idAndName.name
+                                    modified = true
+                                    expanded = false
+                                },
+                                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                            )
+                        }
                     }
                 }
-            }
-            TextAndSwitch(
-                text = "Pause before going to the next process",
-                checked = processViewModel.hasPauseBeforeChain ?: false,
-                onCheckedChange = {
-                    processViewModel.hasPauseBeforeChain = it
-                    modified = true
-                },
-            )
-            if (true == processViewModel.hasPauseBeforeChain) {
-                TextFieldForTimes(
-                    value = processViewModel.pauseTime,
-                    label = { Text(text = "Pause (seconds)") },
-                    onValueChange = {
-                        processViewModel.pauseTime = it
+                TextAndSwitch(
+                    text = "Pause before going to the next process",
+                    checked = processViewModel.hasPauseBeforeChain ?: false,
+                    onCheckedChange = {
+                        processViewModel.hasPauseBeforeChain = it
                         modified = true
                     },
                 )
+                AnimatedVisibility(visible = true == processViewModel.hasPauseBeforeChain) {
+                    TextFieldForTimes(
+                        value = processViewModel.pauseTime,
+                        label = { Text(text = "Pause (seconds)") },
+                        onValueChange = {
+                            processViewModel.pauseTime = it
+                            modified = true
+                        },
+                    )
+                }
             }
         }
         // middle and bottom - filler and save button
@@ -325,6 +334,7 @@ fun FotoTimerProcessEditor(
 }
 
 @Preview(showBackground = true)
+@Preview(showBackground = true, device = "spec:width=411dp,height=891dp,dpi=420,isRound=false,chinSize=0dp,orientation=landscape")
 @Composable
 fun FTEPreview() {
     spViewModel.setVarsFromProcess(

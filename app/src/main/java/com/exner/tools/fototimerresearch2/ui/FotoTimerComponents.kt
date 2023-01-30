@@ -55,8 +55,7 @@ fun TextAndSwitch(
     modifier: Modifier = Modifier
 ) {
     ListItem(
-        headlineText = { BodyText(text = text) },
-        modifier = Modifier.fillMaxWidth(),
+        headlineText = { Text(text = text, maxLines = 2, style = MaterialTheme.typography.bodyLarge) },
         trailingContent = {
             Switch(
                 checked = checked,
@@ -79,7 +78,7 @@ fun TextFieldForTimes(
     TextField(
         value = value,
         label = label,
-        modifier = Modifier.fillMaxWidth(),
+//        modifier = Modifier.fillMaxWidth(),
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         onValueChange = onValueChange,
@@ -99,14 +98,14 @@ fun durationToAnnotatedString(duration: Duration): AnnotatedString {
     val styledOutput = buildAnnotatedString {
         var myStyle = SpanStyle()
         if ("00" == tmp[0]) {
-            myStyle = SpanStyle(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f))
+            myStyle = SpanStyle(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f))
         }
         withStyle(style = myStyle) {
             append(tmp[0])
         }
         append(":")
         if ("00" == tmp[1]) {
-            myStyle = SpanStyle(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f))
+            myStyle = SpanStyle(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f))
         } else {
             myStyle = SpanStyle(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 1f))
         }
@@ -137,7 +136,7 @@ fun MediumTimerAndIntervalText(
     intervalText: String,
     modifier: Modifier = Modifier
 ) {
-    Row(modifier = Modifier.fillMaxWidth()) {
+    Row(modifier = Modifier) {
         Text(
             text = durationToAnnotatedString(duration),
             style = MaterialTheme.typography.headlineLarge,
@@ -179,8 +178,8 @@ fun KeepScreenOn() {
 fun BTTTest() {
     FotoTimerTheme() {
         Column() {
-            BigTimerText(duration = 75.seconds)
-            MediumTimerAndIntervalText(duration = 10.seconds, intervalText = "1 of 3")
+            BigTimerText(duration = 10.seconds)
+            MediumTimerAndIntervalText(duration = 75.seconds, intervalText = "1 of 3")
         }
     }
 }
@@ -190,8 +189,8 @@ fun BTTTest() {
 fun BTTNormalTest() {
     FotoTimerTheme() {
         Column() {
-            BigTimerText(duration = 75.seconds)
-            MediumTimerAndIntervalText(duration = 10.seconds, intervalText = "1 of 3")
+            BigTimerText(duration = 10.seconds)
+            MediumTimerAndIntervalText(duration = 75.seconds, intervalText = "1 of 3")
         }
     }
 }
