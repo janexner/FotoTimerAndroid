@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.preference.PreferenceManager
@@ -104,7 +105,7 @@ fun FotoTimerProcessEditor(
     ) {
         // top - fields
         Row(modifier = Modifier.fillMaxWidth()) {
-            TextField(
+            OutlinedTextField(
                 value = processViewModel.name,
                 onValueChange = {
                     processViewModel.name = it
@@ -232,7 +233,7 @@ fun FotoTimerProcessEditor(
                     },
                 )
                 AnimatedVisibility(visible = processViewModel.hasLeadIn) {
-                    TextField(
+                    OutlinedTextField(
                         value = processViewModel.leadInSeconds,
                         label = { Text(text = "Lead-in (seconds)") },
                         onValueChange = {
@@ -262,7 +263,7 @@ fun FotoTimerProcessEditor(
                 ExposedDropdownMenuBox(
                     expanded = expanded,
                     onExpandedChange = { expanded = !expanded }) {
-                    TextField(
+                    OutlinedTextField(
                         // The `menuAnchor` modifier must be passed to the text field for correctness.
                         modifier = Modifier
                             .menuAnchor()
@@ -335,6 +336,10 @@ fun FotoTimerProcessEditor(
 
 @Preview(showBackground = true)
 @Preview(showBackground = true, device = "spec:width=411dp,height=891dp,dpi=420,isRound=false,chinSize=0dp,orientation=landscape")
+@Preview(
+    showSystemUi = true,
+    device = Devices.TABLET
+)
 @Composable
 fun FTEPreview() {
     spViewModel.setVarsFromProcess(

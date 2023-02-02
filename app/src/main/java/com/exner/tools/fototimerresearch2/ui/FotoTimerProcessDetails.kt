@@ -1,11 +1,13 @@
 package com.exner.tools.fototimerresearch2.ui
 
+import android.content.pm.ActivityInfo
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.exner.tools.fototimerresearch2.R
@@ -21,9 +23,11 @@ fun FotoTimerProcessDetails(
     onStartButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
     val uid = processId.toLong()
     val ftProcess = fotoTimerProcessViewModel.getProcessById(uid)
+
+    // lock screen rotation
+    LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
     if (null != ftProcess) {
         // if this process auto chains, let's find the name of the next process, too
@@ -50,6 +54,10 @@ fun ExistingProcessDetails(
         // top - process information
         ProcessName(process.name)
         Divider(modifier = Modifier.padding(8.dp))
+        ProcessTimerData(
+            process.processTime,
+            process.intervalTime,
+        )
         if (process.keepsScreenOn) {
             ListItem(
                 headlineText = { SmallBodyText(text = "UI") },
@@ -62,17 +70,6 @@ fun ExistingProcessDetails(
                 }
             )
         }
-        ProcessAudioData(
-            process.hasSoundStart,
-            process.hasSoundEnd,
-            process.hasSoundInterval,
-            process.hasSoundMetronome,
-            process.hasPreBeeps
-        )
-        ProcessTimerData(
-            process.processTime,
-            process.intervalTime,
-        )
         ProcessLeadInAndChainData(
             process.hasLeadIn,
             process.leadInSeconds,
@@ -81,6 +78,13 @@ fun ExistingProcessDetails(
             process.pauseTime,
             process.gotoId,
             nextName,
+        )
+        ProcessAudioData(
+            process.hasSoundStart,
+            process.hasSoundEnd,
+            process.hasSoundInterval,
+            process.hasSoundMetronome,
+            process.hasPreBeeps
         )
         // middle - spacer
         Spacer(modifier = Modifier.weight(0.5f))
@@ -213,6 +217,10 @@ fun ProcessLeadInAndChainData(
 }
 
 @Preview(showBackground = true)
+@Preview(
+    showSystemUi = true,
+    device = Devices.TABLET
+)
 @Composable
 fun FTPPreview() {
     FotoTimerTheme {

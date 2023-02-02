@@ -168,7 +168,7 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
                        oldTime += ((counterState.roundNumber - 1L) * process.intervalTime).seconds
                         val eta = process.processTime - oldTime.inWholeSeconds
                     }
-                    setTimeLeftUntilEndOfProcessCustom(startTicks + (process.processTime * TICKS_PER_SECOND) - inticks)
+                    setTimeLeftUntilEndOfProcessCustom(startTicks + (process.processTime * TICKS_PER_SECOND) - inticks + 1000)
 
                     counterState.nextDisplay += TICKS_PER_DECISECOND;
                 }

@@ -1,6 +1,8 @@
 package com.exner.tools.fototimerresearch2.ui
 
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -10,13 +12,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.preference.PreferenceManager
 import com.exner.tools.fototimerresearch2.data.FotoTimerSampleProcess
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerCounterState
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerRunningProcessViewModel
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
-import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun FotoTimerRunningProcess(
@@ -27,40 +32,63 @@ fun FotoTimerRunningProcess(
     if (runningProcessViewModel.keepsScreenOn) {
         KeepScreenOn()
     }
+    // we need the settings
+    val context = LocalContext.current
+    val sharedSettings = PreferenceManager.getDefaultSharedPreferences(context)
+    // unlock screen rotation
+    LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR)
     // what's the orientation, right now?
     val configuration = LocalConfiguration.current
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> {
             // show horizontally
             Row(
-                modifier = Modifier.fillMaxSize().padding(8.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp)
+                    .clickable {
+                        if (sharedSettings.getBoolean(
+                                "preference_stop_is_everywhere",
+                                false
+                            )
+                        ) {
+                            runningProcessViewModel.cancelRunner()
+                        }
+                    }
             ) {
-                Column() {
-                    BigTimerText(
-                        duration = runningProcessViewModel.elapsedIntervalTime,
-                    )
-                    Text(
-                        text = "Interval Time (total ${runningProcessViewModel.intervalTime})",
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    // show additional information (next process(es))
-                    Spacer(modifier = Modifier.weight(0.01f))
+                BoxWithConstraints() {
+                    val fifth = maxHeight / 5
+                    Column() {
+                        BigTimerText(
+                            duration = runningProcessViewModel.elapsedIntervalTime,
+                            modifier = Modifier.height(fifth * 4)
+                        )
+                        Text(
+                            text = "Interval Time (total ${runningProcessViewModel.intervalTime})",
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.height(fifth)
+                        )
+                        // show additional information (next process(es))
+                    }
+                }
+                Spacer(modifier = Modifier.weight(0.1f))
+                if (!sharedSettings.getBoolean("preference_stop_is_everywhere", false)) {
                     // show huge cancel button
                     Button(
                         onClick = { runningProcessViewModel.cancelRunner() },
                         shape = RoundedCornerShape(16.dp),
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(0.5f),
+                            .width(192.dp)
+                            .fillMaxHeight(),
                         enabled = runningProcessViewModel.counterState.state == FotoTimerCounterState.COUNTING
                     ) {
                         Text(
-                            text = "Cancel",
+                            text = "Stop",
+                            textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.headlineLarge,
                         )
                     }
                 }
-                Spacer(modifier = Modifier.weight(0.001f))
             }
         }
         else -> {
@@ -69,6 +97,15 @@ fun FotoTimerRunningProcess(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(8.dp)
+                    .clickable {
+                        if (sharedSettings.getBoolean(
+                                "preference_stop_is_everywhere",
+                                false
+                            )
+                        ) {
+                            runningProcessViewModel.cancelRunner()
+                        }
+                    }
             ) {
                 HeaderText(text = runningProcessViewModel.processName)
                 Divider(modifier = Modifier.padding(8.dp))
@@ -82,7 +119,7 @@ fun FotoTimerRunningProcess(
                 )
                 Spacer(modifier = Modifier.weight(0.001f))
                 MediumTimerAndIntervalText(
-                    duration = runningProcessViewModel.timeLeftUntilEndOfProcess.plus(1.seconds),
+                    duration = runningProcessViewModel.timeLeftUntilEndOfProcess,
                     intervalText = "${runningProcessViewModel.counterState.roundNumber} of ${runningProcessViewModel.numberOfIntervals}",
                 )
                 Text(
@@ -91,19 +128,21 @@ fun FotoTimerRunningProcess(
                 )
                 // show additional information (next process(es))
                 Spacer(modifier = Modifier.weight(0.01f))
-                // show huge cancel button
-                Button(
-                    onClick = { runningProcessViewModel.cancelRunner() },
-                    shape = RoundedCornerShape(16.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(0.5f),
-                    enabled = runningProcessViewModel.counterState.state == FotoTimerCounterState.COUNTING
-                ) {
-                    Text(
-                        text = "Cancel",
-                        style = MaterialTheme.typography.headlineLarge,
-                    )
+                if (!sharedSettings.getBoolean("preference_stop_is_everywhere", false)) {
+                    // show huge cancel button
+                    Button(
+                        onClick = { runningProcessViewModel.cancelRunner() },
+                        shape = RoundedCornerShape(16.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(0.5f),
+                        enabled = runningProcessViewModel.counterState.state == FotoTimerCounterState.COUNTING
+                    ) {
+                        Text(
+                            text = "Stop",
+                            style = MaterialTheme.typography.headlineLarge,
+                        )
+                    }
                 }
             }
         }
@@ -111,7 +150,11 @@ fun FotoTimerRunningProcess(
 }
 
 @Preview(showBackground = true)
-@Preview(showBackground = true, device = "spec:width=411dp,height=891dp,dpi=420,isRound=false,chinSize=0dp,orientation=landscape")
+@Preview(
+    showBackground = true,
+    device = "spec:width=300dp,height=900dp,dpi=420,isRound=false,chinSize=0dp,orientation=landscape"
+)
+@Preview(showSystemUi = true, device = Devices.TABLET)
 @Composable
 fun FTRPPreview() {
     FotoTimerTheme {

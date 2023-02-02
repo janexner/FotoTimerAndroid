@@ -1,21 +1,25 @@
 package com.exner.tools.fototimerresearch2.ui
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.*
 import androidx.compose.ui.text.*
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.*
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -55,7 +59,13 @@ fun TextAndSwitch(
     modifier: Modifier = Modifier
 ) {
     ListItem(
-        headlineText = { Text(text = text, maxLines = 2, style = MaterialTheme.typography.bodyLarge) },
+        headlineText = {
+            Text(
+                text = text,
+                maxLines = 2,
+                style = MaterialTheme.typography.bodyLarge
+            )
+        },
         trailingContent = {
             Switch(
                 checked = checked,
@@ -75,7 +85,7 @@ fun TextFieldForTimes(
     modifier: Modifier = Modifier,
     placeholder: @Composable() (() -> Unit)? = null,
 ) {
-    TextField(
+    OutlinedTextField(
         value = value,
         label = label,
         modifier = Modifier.fillMaxWidth(),
@@ -121,13 +131,16 @@ fun durationToAnnotatedString(duration: Duration): AnnotatedString {
 
 @Composable
 fun BigTimerText(duration: Duration, modifier: Modifier = Modifier) {
-
-    Text(
-        text = durationToAnnotatedString(duration),
-        style = MaterialTheme.typography.headlineLarge,
-        textAlign = TextAlign.Center,
-        fontSize = 94.dp.toTextDp()
-    )
+    BoxWithConstraints(modifier = modifier) {
+        Log.i("jexner BigTimerText", "Constraints: $constraints")
+        AutoSizeText(
+            text = durationToAnnotatedString(duration),
+            style = MaterialTheme.typography.headlineLarge,
+            textAlign = TextAlign.Center,
+            fontSize = 294.dp.toTextDp(),
+            constraints = constraints
+        )
+    }
 }
 
 @Composable
@@ -171,6 +184,87 @@ fun KeepScreenOn() {
             currentView.keepScreenOn = false
         }
     }
+}
+
+@OptIn(ExperimentalTextApi::class)
+@Composable
+private fun AutoSizeText(
+    text: AnnotatedString,
+    constraints: Constraints,
+    modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    onTextLayout: (TextLayoutResult) -> Unit = {},
+    style: TextStyle = LocalTextStyle.current
+) {
+    val tm = TextMeasurer(
+        fallbackFontFamilyResolver = LocalFontFamilyResolver.current,
+        fallbackDensity = LocalDensity.current,
+        fallbackLayoutDirection = LayoutDirection.Ltr
+    )
+    var shrunkFontSize = fontSize
+    // measure
+    var measure = tm.measure(
+        text = text,
+        style = TextStyle.Default.copy(
+            fontSize = shrunkFontSize,
+        ),
+        maxLines = 1,
+        constraints = constraints
+    )
+    while (measure.hasVisualOverflow) {
+        shrunkFontSize = (shrunkFontSize.value - 2).sp
+        measure = tm.measure(
+            text = text,
+            style = TextStyle.Default.copy(
+                fontSize = shrunkFontSize,
+            ),
+            maxLines = 1,
+            constraints = constraints
+        )
+    }
+    Text(
+        text = text,
+        modifier = modifier,
+        color = color,
+        fontSize = shrunkFontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        onTextLayout = onTextLayout,
+        style = style
+    )
+}
+
+@Composable
+fun LockScreenOrientation(orientation: Int) {
+    val context = LocalContext.current
+    DisposableEffect(Unit) {
+        val activity = context.findActivity() ?: return@DisposableEffect onDispose {}
+        val originalOrientation = activity.requestedOrientation
+        activity.requestedOrientation = orientation
+        onDispose {
+            // restore original orientation when view disappears
+            activity.requestedOrientation = originalOrientation
+        }
+    }
+}
+
+fun Context.findActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
 }
 
 @Preview(fontScale = 1.5f)

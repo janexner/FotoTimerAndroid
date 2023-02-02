@@ -1,6 +1,7 @@
 package com.exner.tools.fototimerresearch2.ui
 
 import android.content.SharedPreferences
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
@@ -8,6 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -22,15 +24,14 @@ import com.exner.tools.fototimerresearch2.R
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 
 sealed class SettingsTabs(val name: String, val selected: Boolean, var resourceId: Int) {
-    object uiTab : SettingsTabs("UI", true, R.drawable.baseline_light_mode_24)
-    object timersTab : SettingsTabs("Times", false, R.drawable.ic_baseline_timer_24)
-    object soundsTab : SettingsTabs("Sounds", false, R.drawable.ic_baseline_music_note_24)
+    object UiTab : SettingsTabs("UI", true, R.drawable.baseline_light_mode_24)
+    object TimersTab : SettingsTabs("Times", false, R.drawable.ic_baseline_timer_24)
+    object SoundsTab : SettingsTabs("Sounds", false, R.drawable.ic_baseline_music_note_24)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Settings(
-    windowSize: WindowSize,
+    windowSize: WindowWidthSizeClass,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -43,9 +44,11 @@ fun Settings(
             )
         )
     }
-    val isExpandedScreen = windowSize == WindowSize.Expanded
+    // unlock screen rotation
+    LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR)
+    val isExpandedScreen = windowSize == WindowWidthSizeClass.Expanded
     var tabIndex by remember { mutableStateOf(0) }
-    val tabItems = listOf(SettingsTabs.uiTab, SettingsTabs.timersTab, SettingsTabs.soundsTab)
+    val tabItems = listOf(SettingsTabs.UiTab, SettingsTabs.TimersTab, SettingsTabs.SoundsTab)
 
     // what's the orientation, right now?
     val configuration = LocalConfiguration.current
@@ -87,6 +90,9 @@ fun Settings(
                                 expertMode = !expertMode
                             }
                         )
+                        AnimatedVisibility(visible = expertMode) {
+                            ExpertSettingsUI(sharedSettings)
+                        }
                     }
                     1 -> Column(
                         modifier = Modifier.padding(8.dp)
@@ -155,6 +161,9 @@ fun Settings(
                                 expertMode = !expertMode
                             }
                         )
+                        AnimatedVisibility(visible = expertMode) {
+                            ExpertSettingsUI(sharedSettings)
+                        }
                     }
                     1 -> Column(
                         modifier = Modifier
@@ -216,6 +225,27 @@ fun Settings(
 }
 
 @Composable
+private fun ExpertSettingsUI(sharedSettings: SharedPreferences) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        var stopIsEverywhere by remember {
+            mutableStateOf(
+                sharedSettings.getBoolean("preference_stop_is_everywhere", false)
+            )
+        }
+        TextAndSwitch(
+            text = "Running timer can be stopped by tapping anywhere on the screen",
+            checked = stopIsEverywhere,
+            onCheckedChange = {
+                sharedSettings.edit().putBoolean("preference_stop_is_everywhere", it).apply()
+                stopIsEverywhere = it
+            }
+        )
+    }
+}
+
+@Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun ExpertSettingsSound(sharedSettings: SharedPreferences) {
     Column(
@@ -229,7 +259,7 @@ private fun ExpertSettingsSound(sharedSettings: SharedPreferences) {
                 )).toString()
             )
         }
-        TextField(
+        OutlinedTextField(
             value = preBeepsText,
             label = { Text(text = "Pre-beeps (small beeps before the interval)") },
             modifier = Modifier.fillMaxWidth(),
@@ -404,7 +434,7 @@ private fun StandardSettingsColumn(
 @Composable
 fun SettingsPreview() {
     FotoTimerTheme {
-        Settings(WindowSize.Medium)
+        Settings(WindowWidthSizeClass.Medium)
     }
 }
 
@@ -419,6 +449,6 @@ fun SettingsPreview() {
 @Composable
 fun BigSettingsPreview() {
     FotoTimerTheme {
-        Settings(WindowSize.Expanded)
+        Settings(WindowWidthSizeClass.Expanded)
     }
 }

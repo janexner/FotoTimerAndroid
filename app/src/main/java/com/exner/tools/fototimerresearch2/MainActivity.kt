@@ -1,5 +1,6 @@
 package com.exner.tools.fototimerresearch2
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -54,8 +55,13 @@ class MainActivity : ComponentActivity() {
                 val currentBackStack by navController.currentBackStackEntryAsState()
                 val currentDestination = currentBackStack?.destination
 
-                val windowSize = rememberWindowSizeClass()
-                val isExpandedScreen = windowSize == WindowSize.Expanded
+                val isExpandedScreen = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded
+                val isCompact = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
+
+                if (isCompact) {
+                    // lock screen in portrait mode for small-ish screens
+                    LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+                }
 
                 Scaffold(
                     modifier = Modifier,
@@ -131,7 +137,7 @@ class MainActivity : ComponentActivity() {
                             }
                             // Open Settings screen
                             composable(route = Settings.route) {
-                                Settings(windowSize)
+                                Settings(windowSizeClass.widthSizeClass)
                             }
                             // Run Process nested graph
                             runningGraph(navController)
