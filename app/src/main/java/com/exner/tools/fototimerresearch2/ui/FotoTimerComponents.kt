@@ -3,7 +3,6 @@ package com.exner.tools.fototimerresearch2.ui
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -132,7 +131,6 @@ fun durationToAnnotatedString(duration: Duration): AnnotatedString {
 @Composable
 fun BigTimerText(duration: Duration, modifier: Modifier = Modifier) {
     BoxWithConstraints(modifier = modifier) {
-        Log.i("jexner BigTimerText", "Constraints: $constraints")
         AutoSizeText(
             text = durationToAnnotatedString(duration),
             style = MaterialTheme.typography.headlineLarge,

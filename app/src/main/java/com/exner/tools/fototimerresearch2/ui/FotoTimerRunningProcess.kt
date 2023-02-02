@@ -10,6 +10,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -63,30 +64,45 @@ fun FotoTimerRunningProcess(
                             duration = runningProcessViewModel.elapsedIntervalTime,
                             modifier = Modifier.height(fifth * 4)
                         )
-                        Text(
-                            text = "Interval Time (total ${runningProcessViewModel.intervalTime})",
-                            style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.height(fifth)
-                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(fifth)
+                        ) {
+                            Text(
+                                text = "Time left ${durationToAnnotatedString(duration = runningProcessViewModel.timeLeftUntilEndOfProcess)})",
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier.align(Alignment.CenterStart)
+                            )
+                            if (!sharedSettings.getBoolean(
+                                    "preference_stop_is_everywhere",
+                                    false
+                                )
+                            ) {
+                                // show huge cancel button
+                                Button(
+                                    onClick = { runningProcessViewModel.cancelRunner() },
+                                    shape = RoundedCornerShape(16.dp),
+                                    modifier = Modifier
+                                        .fillMaxHeight()
+                                        .fillMaxWidth(0.3f)
+                                        .align(Alignment.Center),
+                                    enabled = runningProcessViewModel.counterState.state == FotoTimerCounterState.COUNTING
+                                ) {
+                                    Text(
+                                        text = "Stop",
+                                        textAlign = TextAlign.Center,
+                                        style = MaterialTheme.typography.bodyLarge,
+                                    )
+                                }
+                            }
+                            Text(
+                                text = "Round ${runningProcessViewModel.counterState.roundNumber} of ${runningProcessViewModel.numberOfIntervals}",
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier.align(Alignment.CenterEnd)
+                            )
+                        }
                         // show additional information (next process(es))
-                    }
-                }
-                Spacer(modifier = Modifier.weight(0.1f))
-                if (!sharedSettings.getBoolean("preference_stop_is_everywhere", false)) {
-                    // show huge cancel button
-                    Button(
-                        onClick = { runningProcessViewModel.cancelRunner() },
-                        shape = RoundedCornerShape(16.dp),
-                        modifier = Modifier
-                            .width(192.dp)
-                            .fillMaxHeight(),
-                        enabled = runningProcessViewModel.counterState.state == FotoTimerCounterState.COUNTING
-                    ) {
-                        Text(
-                            text = "Stop",
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.headlineLarge,
-                        )
                     }
                 }
             }
@@ -152,7 +168,7 @@ fun FotoTimerRunningProcess(
 @Preview(showBackground = true)
 @Preview(
     showBackground = true,
-    device = "spec:width=300dp,height=900dp,dpi=420,isRound=false,chinSize=0dp,orientation=landscape"
+    device = "spec:width=411dp,height=891dp,dpi=420,isRound=false,chinSize=0dp,orientation=landscape"
 )
 @Preview(showSystemUi = true, device = Devices.TABLET)
 @Composable
