@@ -70,6 +70,13 @@ fun ExistingProcessDetails(
                 }
             )
         }
+        ProcessAudioData(
+            process.hasSoundStart,
+            process.hasSoundEnd,
+            process.hasSoundInterval,
+            process.hasSoundMetronome,
+            process.hasPreBeeps
+        )
         ProcessLeadInAndChainData(
             process.hasLeadIn,
             process.leadInSeconds,
@@ -78,13 +85,6 @@ fun ExistingProcessDetails(
             process.pauseTime,
             process.gotoId,
             nextName,
-        )
-        ProcessAudioData(
-            process.hasSoundStart,
-            process.hasSoundEnd,
-            process.hasSoundInterval,
-            process.hasSoundMetronome,
-            process.hasPreBeeps
         )
         // middle - spacer
         Spacer(modifier = Modifier.weight(0.5f))
@@ -225,7 +225,26 @@ fun ProcessLeadInAndChainData(
 fun FTPPreview() {
     FotoTimerTheme {
         ExistingProcessDetails(
-            process = FotoTimerSampleProcess.getFotoTimerSampleProcess(name = "Sample Process"),
+            process = FotoTimerSampleProcess.getFotoTimerSampleProcess(
+                name = "Sample Process",
+                processTime = 75L,
+                intervalTime = 25L,
+                hasSoundStart = true,
+                soundStartId = 1L,
+                hasSoundEnd = true,
+                soundEndId = 2L,
+                hasSoundInterval = true,
+                soundIntervalId = 3L,
+                hasSoundMetronome = true,
+                hasLeadIn = true,
+                leadInSeconds = 5,
+                hasAutoChain = true,
+                hasPauseBeforeChain = true,
+                pauseTime = 10,
+                gotoId = 1L,
+                keepsScreenOn = true,
+                hasPreBeeps = true
+            ),
             nextName = "Next Sample",
             onStartButtonClick = {},
             modifier = Modifier.fillMaxHeight()

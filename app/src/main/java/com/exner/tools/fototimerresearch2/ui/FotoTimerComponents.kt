@@ -61,7 +61,7 @@ fun TextAndSwitch(
         headlineText = {
             Text(
                 text = text,
-                maxLines = 2,
+                maxLines = 3,
                 style = MaterialTheme.typography.bodyLarge
             )
         },
@@ -263,6 +263,15 @@ fun Context.findActivity(): Activity? = when (this) {
     is Activity -> this
     is ContextWrapper -> baseContext.findActivity()
     else -> null
+}
+
+// from https://stackoverflow.com/questions/67768746/chaining-modifier-based-on-certain-conditions-in-android-compose
+fun Modifier.conditional(condition : Boolean, modifier : Modifier.() -> Modifier) : Modifier {
+    return if (condition) {
+        then(modifier(Modifier))
+    } else {
+        this
+    }
 }
 
 @Preview(fontScale = 1.5f)

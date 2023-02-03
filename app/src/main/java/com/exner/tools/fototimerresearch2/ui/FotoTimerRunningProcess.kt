@@ -5,8 +5,8 @@ import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,19 +47,20 @@ fun FotoTimerRunningProcess(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(8.dp)
-                    .clickable {
-                        if (sharedSettings.getBoolean(
-                                "preference_stop_is_everywhere",
-                                false
-                            )
-                        ) {
+                    .conditional(
+                        sharedSettings.getBoolean(
+                            "preference_stop_is_everywhere",
+                            false
+                        )
+                    ) {
+                        clickable {
                             runningProcessViewModel.cancelRunner()
                         }
                     }
             ) {
-                BoxWithConstraints() {
+                BoxWithConstraints {
                     val fifth = maxHeight / 5
-                    Column() {
+                    Column {
                         BigTimerText(
                             duration = runningProcessViewModel.elapsedIntervalTime,
                             modifier = Modifier.height(fifth * 4)
@@ -80,7 +81,7 @@ fun FotoTimerRunningProcess(
                                 )
                             ) {
                                 // show huge cancel button
-                                Button(
+                                FilledTonalButton(
                                     onClick = { runningProcessViewModel.cancelRunner() },
                                     shape = RoundedCornerShape(16.dp),
                                     modifier = Modifier
@@ -113,12 +114,13 @@ fun FotoTimerRunningProcess(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(8.dp)
-                    .clickable {
-                        if (sharedSettings.getBoolean(
-                                "preference_stop_is_everywhere",
-                                false
-                            )
-                        ) {
+                    .conditional(
+                        sharedSettings.getBoolean(
+                            "preference_stop_is_everywhere",
+                            false
+                        )
+                    ) {
+                        clickable {
                             runningProcessViewModel.cancelRunner()
                         }
                     }
@@ -146,7 +148,7 @@ fun FotoTimerRunningProcess(
                 Spacer(modifier = Modifier.weight(0.01f))
                 if (!sharedSettings.getBoolean("preference_stop_is_everywhere", false)) {
                     // show huge cancel button
-                    Button(
+                    FilledTonalButton(
                         onClick = { runningProcessViewModel.cancelRunner() },
                         shape = RoundedCornerShape(16.dp),
                         modifier = Modifier

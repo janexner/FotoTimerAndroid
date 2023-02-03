@@ -116,7 +116,7 @@ fun FotoTimerProcessEditor(
                 modifier = Modifier.weight(0.75f)
             )
             Spacer(modifier = Modifier.weight(0.05f))
-            Button(
+            FilledTonalButton(
                 onClick = {
                     val process = spViewModel.getAsFotoTimerProcess()
                     if (0L == process.uid) {
@@ -314,7 +314,7 @@ fun FotoTimerProcessEditor(
         }
         // middle and bottom - filler and save button
         Spacer(modifier = Modifier.weight(0.5f))
-        Button(onClick = {
+        FilledTonalButton(onClick = {
             val process = spViewModel.getAsFotoTimerProcess()
             if (0L == process.uid) {
                 ftpViewModel.insert(process)
