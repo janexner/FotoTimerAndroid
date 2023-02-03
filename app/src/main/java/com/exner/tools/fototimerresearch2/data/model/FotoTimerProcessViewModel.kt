@@ -18,7 +18,7 @@ class FotoTimerProcessViewModel(private val repository: FotoTimerProcessReposito
 
     fun getProcessById(id: Long): FotoTimerProcess? = runBlocking { repository.loadProcessById(id) }
 
-    fun getIdsAndNamesOfAllProcesses(): List<FotoTimerProcessIdAndName>? =
+    fun getIdsAndNamesOfAllProcesses(): List<FotoTimerProcessIdAndName> =
         runBlocking { repository.loadIdsAndNamesForAllProcesses() }
 
     /**

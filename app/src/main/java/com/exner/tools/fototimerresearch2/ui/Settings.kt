@@ -8,27 +8,23 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.preference.PreferenceManager
-import com.exner.tools.fototimerresearch2.R
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 
-sealed class SettingsTabs(val name: String, val selected: Boolean, var resourceId: Int) {
-    object UiTab : SettingsTabs("UI", true, R.drawable.baseline_light_mode_24)
-    object TimersTab : SettingsTabs("Times", false, R.drawable.ic_baseline_timer_24)
-    object SoundsTab : SettingsTabs("Sounds", false, R.drawable.ic_baseline_music_note_24)
+sealed class SettingsTabs(val name: String) {
+    object UiTab : SettingsTabs("UI")
+    object TimersTab : SettingsTabs("Times")
+    object SoundsTab : SettingsTabs("Sounds")
 }
 
 @Composable
 fun Settings(
-    windowSize: WindowWidthSizeClass,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -43,14 +39,11 @@ fun Settings(
     }
     // unlock screen rotation
     LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR)
-    val isExpandedScreen = windowSize == WindowWidthSizeClass.Expanded
     var tabIndex by remember { mutableStateOf(0) }
     val tabItems = listOf(SettingsTabs.UiTab, SettingsTabs.TimersTab, SettingsTabs.SoundsTab)
 
-    // what's the orientation, right now?
-    val configuration = LocalConfiguration.current
     // show vertically
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = modifier.fillMaxSize()) {
         TabRow(
             selectedTabIndex = tabIndex,
         ) {
@@ -71,13 +64,12 @@ fun Settings(
                 StandardSettingsColumn(sharedSettings = sharedSettings)
                 TextAndSwitch(
                     text = "Expert mode (more options everywhere)",
-                    checked = expertMode,
-                    onCheckedChange = {
-                        sharedSettings.edit().putBoolean("preference_expert_mode", it)
-                            .apply()
-                        expertMode = !expertMode
-                    }
-                )
+                    checked = expertMode
+                ) {
+                    sharedSettings.edit().putBoolean("preference_expert_mode", it)
+                        .apply()
+                    expertMode = !expertMode
+                }
                 AnimatedVisibility(visible = expertMode) {
                     ExpertSettingsUI(sharedSettings)
                 }
@@ -96,13 +88,12 @@ fun Settings(
                 }
                 TextAndSwitch(
                     text = "Expert mode (more options everywhere)",
-                    checked = expertMode,
-                    onCheckedChange = {
-                        sharedSettings.edit().putBoolean("preference_expert_mode", it)
-                            .apply()
-                        expertMode = !expertMode
-                    }
-                )
+                    checked = expertMode
+                ) {
+                    sharedSettings.edit().putBoolean("preference_expert_mode", it)
+                        .apply()
+                    expertMode = !expertMode
+                }
             }
             2 -> Column(
                 modifier = Modifier
@@ -118,13 +109,12 @@ fun Settings(
                 }
                 TextAndSwitch(
                     text = "Expert mode (more options everywhere)",
-                    checked = expertMode,
-                    onCheckedChange = {
-                        sharedSettings.edit().putBoolean("preference_expert_mode", it)
-                            .apply()
-                        expertMode = !expertMode
-                    }
-                )
+                    checked = expertMode
+                ) {
+                    sharedSettings.edit().putBoolean("preference_expert_mode", it)
+                        .apply()
+                    expertMode = !expertMode
+                }
             }
         }
     }
@@ -149,12 +139,11 @@ private fun ExpertSettingsUI(sharedSettings: SharedPreferences) {
         }
         TextAndSwitch(
             text = "Running timer can be stopped by tapping anywhere on the screen",
-            checked = stopIsEverywhere,
-            onCheckedChange = {
-                sharedSettings.edit().putBoolean("preference_stop_is_everywhere", it).apply()
-                stopIsEverywhere = it
-            }
-        )
+            checked = stopIsEverywhere
+        ) {
+            sharedSettings.edit().putBoolean("preference_stop_is_everywhere", it).apply()
+            stopIsEverywhere = it
+        }
     }
 }
 
@@ -206,7 +195,6 @@ private fun ExpertSettingsDefaultTimes(sharedSettings: SharedPreferences) {
         TextFieldForTimes(
             value = processTimeText,
             label = { Text(text = "Default Process time") },
-            placeholder = { Text(text = "30") },
             onValueChange = {
                 processTimeText = it
                 sharedSettings.edit()
@@ -216,7 +204,7 @@ private fun ExpertSettingsDefaultTimes(sharedSettings: SharedPreferences) {
                     )
                     .apply()
             }
-        )
+        ) { Text(text = "30") }
         var intervalTimeText by remember {
             mutableStateOf(
                 (sharedSettings.getLong(
@@ -237,8 +225,7 @@ private fun ExpertSettingsDefaultTimes(sharedSettings: SharedPreferences) {
                     )
                     .apply()
             },
-            placeholder = { Text(text = "10") },
-        )
+        ) { Text(text = "10") }
         var leadInTimeText by remember {
             mutableStateOf(
                 (sharedSettings.getLong(
@@ -259,8 +246,7 @@ private fun ExpertSettingsDefaultTimes(sharedSettings: SharedPreferences) {
                     )
                     .apply()
             },
-            placeholder = { Text(text = "0") },
-        )
+        ) { Text(text = "0") }
         var pauseTimeText by remember {
             mutableStateOf(
                 (sharedSettings.getLong(
@@ -281,8 +267,7 @@ private fun ExpertSettingsDefaultTimes(sharedSettings: SharedPreferences) {
                     )
                     .apply()
             },
-            placeholder = { Text(text = "5") },
-        )
+        ) { Text(text = "5") }
     }
 }
 
@@ -303,12 +288,11 @@ private fun StandardSettingsColumn(
         }
         TextAndSwitch(
             text = "Night mode (needs a restart)",
-            checked = night,
-            onCheckedChange = {
-                sharedSettings.edit().putBoolean("preference_night_mode", it).apply()
-                night = !night
-            }
-        )
+            checked = night
+        ) {
+            sharedSettings.edit().putBoolean("preference_night_mode", it).apply()
+            night = !night
+        }
         var keepScreenOn by remember {
             mutableStateOf(
                 sharedSettings.getBoolean(
@@ -319,12 +303,11 @@ private fun StandardSettingsColumn(
         }
         TextAndSwitch(
             text = "Default to keep screen on while counting",
-            checked = keepScreenOn,
-            onCheckedChange = {
-                sharedSettings.edit().putBoolean("preference_screen_on", it).apply()
-                keepScreenOn = !keepScreenOn
-            }
-        )
+            checked = keepScreenOn
+        ) {
+            sharedSettings.edit().putBoolean("preference_screen_on", it).apply()
+            keepScreenOn = !keepScreenOn
+        }
     }
 }
 
@@ -347,7 +330,7 @@ private fun StandardSettingsColumn(
 @Composable
 fun SettingsPreview() {
     FotoTimerTheme {
-        Settings(WindowWidthSizeClass.Medium)
+        Settings()
     }
 }
 
@@ -362,6 +345,6 @@ fun SettingsPreview() {
 @Composable
 fun BigSettingsPreview() {
     FotoTimerTheme {
-        Settings(WindowWidthSizeClass.Expanded)
+        Settings()
     }
 }

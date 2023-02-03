@@ -24,7 +24,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun HeaderText(text: String, modifier: Modifier = Modifier) {
+fun HeaderText(text: String) {
     Text(
         text = text,
         modifier = Modifier
@@ -34,7 +34,7 @@ fun HeaderText(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun BodyText(text: String, modifier: Modifier = Modifier) {
+fun BodyText(text: String) {
     Text(
         text = text,
         style = MaterialTheme.typography.bodyLarge
@@ -42,7 +42,7 @@ fun BodyText(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SmallBodyText(text: String, modifier: Modifier = Modifier) {
+fun SmallBodyText(text: String) {
     Text(
         text = text,
         style = MaterialTheme.typography.bodySmall
@@ -54,8 +54,7 @@ fun SmallBodyText(text: String, modifier: Modifier = Modifier) {
 fun TextAndSwitch(
     text: String,
     checked: Boolean,
-    onCheckedChange: ((Boolean) -> Unit)?,
-    modifier: Modifier = Modifier
+    onCheckedChange: ((Boolean) -> Unit)?
 ) {
     ListItem(
         headlineText = {
@@ -79,10 +78,9 @@ fun TextAndSwitch(
 @Composable
 fun TextFieldForTimes(
     value: String,
-    label: @Composable() (() -> Unit)?,
+    label: @Composable (() -> Unit)?,
     onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    placeholder: @Composable() (() -> Unit)? = null,
+    placeholder: @Composable (() -> Unit)? = null,
 ) {
     OutlinedTextField(
         value = value,
@@ -96,7 +94,6 @@ fun TextFieldForTimes(
     )
 }
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
 fun durationToAnnotatedString(duration: Duration): AnnotatedString {
     // convert seconds to "00:00" style string
@@ -113,10 +110,10 @@ fun durationToAnnotatedString(duration: Duration): AnnotatedString {
             append(tmp[0])
         }
         append(":")
-        if ("00" == tmp[1]) {
-            myStyle = SpanStyle(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f))
+        myStyle = if ("00" == tmp[1]) {
+            SpanStyle(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f))
         } else {
-            myStyle = SpanStyle(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 1f))
+            SpanStyle(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 1f))
         }
         withStyle(style = myStyle) {
             append(tmp[1])
@@ -144,8 +141,7 @@ fun BigTimerText(duration: Duration, modifier: Modifier = Modifier) {
 @Composable
 fun MediumTimerAndIntervalText(
     duration: Duration,
-    intervalText: String,
-    modifier: Modifier = Modifier
+    intervalText: String
 ) {
     Row(modifier = Modifier) {
         Text(
@@ -277,8 +273,8 @@ fun Modifier.conditional(condition : Boolean, modifier : Modifier.() -> Modifier
 @Preview(fontScale = 1.5f)
 @Composable
 fun BTTTest() {
-    FotoTimerTheme() {
-        Column() {
+    FotoTimerTheme {
+        Column {
             BigTimerText(duration = 10.seconds)
             MediumTimerAndIntervalText(duration = 75.seconds, intervalText = "1 of 3")
         }
@@ -288,8 +284,8 @@ fun BTTTest() {
 @Preview(fontScale = 1.0f)
 @Composable
 fun BTTNormalTest() {
-    FotoTimerTheme() {
-        Column() {
+    FotoTimerTheme {
+        Column {
             BigTimerText(duration = 10.seconds)
             MediumTimerAndIntervalText(duration = 75.seconds, intervalText = "1 of 3")
         }

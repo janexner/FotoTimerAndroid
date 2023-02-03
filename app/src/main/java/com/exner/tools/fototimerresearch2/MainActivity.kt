@@ -55,7 +55,6 @@ class MainActivity : ComponentActivity() {
                 val currentBackStack by navController.currentBackStackEntryAsState()
                 val currentDestination = currentBackStack?.destination
 
-                val isExpandedScreen = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded
                 val isCompact = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
 
                 if (isCompact) {
@@ -109,13 +108,12 @@ class MainActivity : ComponentActivity() {
                                         }
                                         FotoTimerProcessDetails(
                                             fotoTimerProcessViewModel,
-                                            processId,
-                                            onStartButtonClick = {
-                                                navController.navigate(
-                                                    route = "${RunningProcess.route}/${processId}"
-                                                )
-                                            }
-                                        )
+                                            processId
+                                        ) {
+                                            navController.navigate(
+                                                route = "${RunningProcess.route}/${processId}"
+                                            )
+                                        }
                                     }
                                 }
                             }
@@ -131,13 +129,12 @@ class MainActivity : ComponentActivity() {
                                 FotoTimerProcessEdit(
                                     fotoTimerProcessViewModel = fotoTimerProcessViewModel,
                                     singleProcessViewModel = spViewModel,
-                                    processId = processId,
-                                    onSaveClicked = { navController.popBackStack() }
-                                )
+                                    processId = processId
+                                ) { navController.popBackStack() }
                             }
                             // Open Settings screen
                             composable(route = Settings.route) {
-                                Settings(windowSizeClass.widthSizeClass)
+                                Settings()
                             }
                             // Run Process nested graph
                             runningGraph(navController)

@@ -21,7 +21,6 @@ fun FotoTimerProcessDetails(
     fotoTimerProcessViewModel: FotoTimerProcessViewModel,
     processId: String,
     onStartButtonClick: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     val uid = processId.toLong()
     val ftProcess = fotoTimerProcessViewModel.getProcessById(uid)
@@ -47,8 +46,7 @@ fun FotoTimerProcessDetails(
 fun ExistingProcessDetails(
     process: FotoTimerProcess,
     nextName: String?,
-    onStartButtonClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onStartButtonClick: () -> Unit
 ) {
     Column(modifier = Modifier.padding(8.dp)) {
         // top - process information
@@ -102,7 +100,7 @@ fun ExistingProcessDetails(
 }
 
 @Composable
-fun ProcessName(name: String, modifier: Modifier = Modifier) {
+fun ProcessName(name: String) {
     HeaderText(text = name)
 }
 
@@ -113,20 +111,19 @@ fun ProcessAudioData(
     hasSoundEnd: Boolean,
     hasSoundInterval: Boolean,
     hasSoundMetronome: Boolean,
-    hasPreBeeps: Boolean,
-    modifier: Modifier = Modifier
+    hasPreBeeps: Boolean
 ) {
     if (hasSoundStart || hasSoundEnd || hasPreBeeps || hasSoundInterval || hasSoundMetronome) {
         var soundStatement = ""
         var space = ""
         if (hasSoundStart || hasSoundEnd) {
             soundStatement = "Will play sound at "
-            if (hasSoundStart && hasSoundEnd) {
-                soundStatement += "start and end of process."
+            soundStatement += if (hasSoundStart && hasSoundEnd) {
+                "start and end of process."
             } else if (hasSoundStart) {
-                soundStatement += "start of process."
-            } else if (hasSoundEnd) {
-                soundStatement += "end of process."
+                "start of process."
+            } else { // hasSoundEnd == true here
+                "end of process."
             }
             space = " "
         }
@@ -158,8 +155,7 @@ fun ProcessAudioData(
 @Composable
 fun ProcessTimerData(
     processTime: Long,
-    intervalTime: Long,
-    modifier: Modifier = Modifier
+    intervalTime: Long
 ) {
     ListItem(
         headlineText = { SmallBodyText(text = "Times") },
@@ -182,8 +178,7 @@ fun ProcessLeadInAndChainData(
     hasPauseBeforeChain: Boolean?,
     pauseTime: Int?,
     gotoId: Long?,
-    nextName: String?,
-    modifier: Modifier = Modifier
+    nextName: String?
 ) {
     if (hasLeadIn && (null != leadInSeconds)) {
         ListItem(
@@ -245,9 +240,7 @@ fun FTPPreview() {
                 keepsScreenOn = true,
                 hasPreBeeps = true
             ),
-            nextName = "Next Sample",
-            onStartButtonClick = {},
-            modifier = Modifier.fillMaxHeight()
-        )
+            nextName = "Next Sample"
+        ) {}
     }
 }

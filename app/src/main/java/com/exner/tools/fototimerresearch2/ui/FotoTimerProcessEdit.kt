@@ -30,7 +30,6 @@ fun FotoTimerProcessEdit(
     fotoTimerProcessViewModel: FotoTimerProcessViewModel,
     singleProcessViewModel: FotoTimerSingleProcessViewModel,
     processId: String?,
-    modifier: Modifier = Modifier,
     onSaveClicked: (Unit) -> Boolean
 ) {
     ftpViewModel = fotoTimerProcessViewModel
@@ -139,29 +138,28 @@ fun FotoTimerProcessEditor(
         HeaderText(text = "Times")
         TextFieldForTimes(
             value = processViewModel.processTime,
+            label = { Text(text = "Process time (total)") },
             onValueChange = {
                 processViewModel.processTime = it
                 modified = true
             },
-            label = { Text(text = "Process time (total)") },
         )
         TextFieldForTimes(
             value = processViewModel.intervalTime,
+            label = { Text(text = "Interval time") },
             onValueChange = {
                 processViewModel.intervalTime = it
                 modified = true
             },
-            label = { Text(text = "Interval time") },
         )
         HeaderText(text = "During the process")
         TextAndSwitch(
             text = "Keep the screen on",
             checked = processViewModel.keepsScreenOn,
-            onCheckedChange = {
-                processViewModel.keepsScreenOn = it
-                modified = true
-            },
-        )
+        ) {
+            processViewModel.keepsScreenOn = it
+            modified = true
+        }
         Text(
             text = "Play sounds:",
             modifier = Modifier.fillMaxWidth()
@@ -169,47 +167,42 @@ fun FotoTimerProcessEditor(
         if (expertMode) {
             TextAndSwitch(
                 text = "At start",
-                checked = processViewModel.hasSoundStart,
-                onCheckedChange = {
-                    processViewModel.hasSoundStart = it
-                    modified = true
-                }
-            )
+                checked = processViewModel.hasSoundStart
+            ) {
+                processViewModel.hasSoundStart = it
+                modified = true
+            }
             TextAndSwitch(
                 text = "Before each interval ('pre-beeps')",
                 checked = processViewModel.hasPreBeeps,
-                onCheckedChange = {
-                    processViewModel.hasPreBeeps = it
-                    modified = true
-                },
-            )
+            ) {
+                processViewModel.hasPreBeeps = it
+                modified = true
+            }
             TextAndSwitch(
                 text = "At each interval",
                 checked = processViewModel.hasSoundInterval,
-                onCheckedChange = {
-                    processViewModel.hasSoundInterval = it
-                    modified = true
-                },
-            )
+            ) {
+                processViewModel.hasSoundInterval = it
+                modified = true
+            }
             TextAndSwitch(
                 text = "At the end",
                 checked = processViewModel.hasSoundEnd,
-                onCheckedChange = {
-                    processViewModel.hasSoundEnd = it
-                    modified = true
-                },
-            )
+            ) {
+                processViewModel.hasSoundEnd = it
+                modified = true
+            }
         } else {
             TextAndSwitch(
                 text = "At start, intervals, and end",
-                checked = processViewModel.hasSoundStart && processViewModel.hasSoundInterval && processViewModel.hasSoundEnd,
-                onCheckedChange = {
-                    processViewModel.hasSoundStart = it
-                    processViewModel.hasSoundInterval = it
-                    processViewModel.hasSoundEnd = it
-                    modified = true
-                }
-            )
+                checked = processViewModel.hasSoundStart && processViewModel.hasSoundInterval && processViewModel.hasSoundEnd
+            ) {
+                processViewModel.hasSoundStart = it
+                processViewModel.hasSoundInterval = it
+                processViewModel.hasSoundEnd = it
+                modified = true
+            }
         }
         AnimatedVisibility(visible = expertMode) {
             Column(
@@ -218,20 +211,18 @@ fun FotoTimerProcessEditor(
                 TextAndSwitch(
                     text = "Play a sound every second ('metronome')",
                     checked = processViewModel.hasSoundMetronome,
-                    onCheckedChange = {
-                        processViewModel.hasSoundMetronome = it
-                        modified = true
-                    },
-                )
+                ) {
+                    processViewModel.hasSoundMetronome = it
+                    modified = true
+                }
                 HeaderText(text = "Before the process")
                 TextAndSwitch(
                     text = "Lead-in before process",
                     checked = processViewModel.hasLeadIn,
-                    onCheckedChange = {
-                        processViewModel.hasLeadIn = it
-                        modified = true
-                    },
-                )
+                ) {
+                    processViewModel.hasLeadIn = it
+                    modified = true
+                }
                 AnimatedVisibility(visible = processViewModel.hasLeadIn) {
                     OutlinedTextField(
                         value = processViewModel.leadInSeconds,
@@ -250,11 +241,10 @@ fun FotoTimerProcessEditor(
         TextAndSwitch(
             text = "Automatically start another process",
             checked = processViewModel.hasAutoChain,
-            onCheckedChange = {
-                processViewModel.hasAutoChain = it
-                modified = true
-            },
-        )
+        ) {
+            processViewModel.hasAutoChain = it
+            modified = true
+        }
         AnimatedVisibility(visible = processViewModel.hasAutoChain) {
             var expanded by remember { mutableStateOf(false) }
             Column(
@@ -295,11 +285,10 @@ fun FotoTimerProcessEditor(
                 TextAndSwitch(
                     text = "Pause before going to the next process",
                     checked = processViewModel.hasPauseBeforeChain ?: false,
-                    onCheckedChange = {
-                        processViewModel.hasPauseBeforeChain = it
-                        modified = true
-                    },
-                )
+                ) {
+                    processViewModel.hasPauseBeforeChain = it
+                    modified = true
+                }
                 AnimatedVisibility(visible = true == processViewModel.hasPauseBeforeChain) {
                     TextFieldForTimes(
                         value = processViewModel.pauseTime,

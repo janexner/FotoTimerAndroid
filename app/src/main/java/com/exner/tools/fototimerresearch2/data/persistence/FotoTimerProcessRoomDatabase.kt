@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
     version = 4,
     exportSchema = false
 )
-public abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
+abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
     abstract fun processDAO(): FotoTimerProcessDAO
 
     companion object {
@@ -53,7 +53,7 @@ public abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
 
     private class ProcessDatabaseCallback(
         private val scope: CoroutineScope
-    ) : RoomDatabase.Callback() {
+    ) : Callback() {
 
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)

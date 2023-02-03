@@ -27,7 +27,6 @@ import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 @Composable
 fun FotoTimerRunningProcess(
     runningProcessViewModel: FotoTimerRunningProcessViewModel,
-    modifier: Modifier = Modifier,
 ) {
     // this screen should stay visible, maybe
     if (runningProcessViewModel.keepsScreenOn) {
@@ -182,8 +181,7 @@ fun FTRPPreview() {
                 process = FotoTimerSampleProcess.getFotoTimerSampleProcess(
                     "Sample Process",
                 )
-            ),
-            modifier = Modifier.fillMaxHeight()
+            )
         )
     }
 }

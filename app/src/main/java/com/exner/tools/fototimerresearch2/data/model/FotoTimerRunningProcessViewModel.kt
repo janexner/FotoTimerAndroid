@@ -19,7 +19,6 @@ import kotlin.math.ceil
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
-import kotlin.time.ExperimentalTime
 
 class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : ViewModel() {
     // ticks per "loop" - 50L would b 0.05s, roughly
@@ -49,7 +48,6 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
     var processName by mutableStateOf(process.name)
         private set
 
-    @OptIn(ExperimentalTime::class)
     var processTime by mutableStateOf(process.processTime.seconds)
         private set
     var timeLeftUntilEndOfProcess by mutableStateOf(Duration.ZERO)
@@ -84,19 +82,19 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
                 // ATTENTION - side effects! counterState will be updated within updateProcess!
                 // TODO see whether that can be avoided
                 if (targetticks > counterState.nextDisplay) {
-                    targetticks = counterState.nextDisplay;
+                    targetticks = counterState.nextDisplay
                 }
                 if (targetticks > counterState.nextRound) {
-                    targetticks = counterState.nextRound;
+                    targetticks = counterState.nextRound
                 }
-                if ((counterState.countbase < counterState.nextFinish) && (targetticks > counterState.nextFinish)) {
-                    targetticks = counterState.nextFinish;
+                if ((counterState.countBase < counterState.nextFinish) && (targetticks > counterState.nextFinish)) {
+                    targetticks = counterState.nextFinish
                 }
 
                 // 2.3 - calculate wait time
                 val targetDuration =
                     (targetticks - inticks).milliseconds // calculate time left for next target
-                var looptime = Duration.ZERO
+                var looptime: Duration
                 if (LOOP_TIME < targetDuration) {
                     looptime = targetDuration.div(LOOP_TIME).milliseconds
                     if (Duration.ZERO == looptime) {
@@ -140,7 +138,7 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
             var soundId = SoundStuff.SOUND_ID_NO_SOUND
             // nextcount, will help calculate targetticks
             val nextcount = SystemClock.elapsedRealtime()
-            if ((counterState.countbase < counterState.nextFinish) && (counterState.nextFinish <= nextcount)) {
+            if ((counterState.countBase < counterState.nextFinish) && (counterState.nextFinish <= nextcount)) {
                 // all counters are done!
                 counterState.state = FotoTimerCounterState.COMPLETED
             } else {
@@ -150,13 +148,13 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
                     if (process.hasSoundInterval) {
                         soundId = SoundStuff.SOUND_ID_INTERVAL
                     }
-                    counterState.countbase += intervalTime.inWholeMilliseconds
+                    counterState.countBase += intervalTime.inWholeMilliseconds
                     counterState.nextRound += intervalTime.inWholeMilliseconds
                     counterState.roundNumber++
                 }
                 if (counterState.nextDisplay <= nextcount) {
                     // a decisecond
-                    msecs = (nextcount - counterState.countbase).milliseconds
+                    msecs = (nextcount - counterState.countBase).milliseconds
                     var oldTime = msecs
 
                     // update display
@@ -166,11 +164,10 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
                     setElapsedIntervalTimeCustom(msecs.inWholeMilliseconds)
                     if (0L < process.processTime) {
                        oldTime += ((counterState.roundNumber - 1L) * process.intervalTime).seconds
-                        val eta = process.processTime - oldTime.inWholeSeconds
                     }
                     setTimeLeftUntilEndOfProcessCustom(startTicks + (process.processTime * TICKS_PER_SECOND) - inticks + 1000)
 
-                    counterState.nextDisplay += TICKS_PER_DECISECOND;
+                    counterState.nextDisplay += TICKS_PER_DECISECOND
                 }
                 if (counterState.nextBeep <= nextcount) {
                     // a second
@@ -182,7 +179,7 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
                         } else if (process.hasSoundMetronome) {
                             soundId = SoundStuff.SOUND_ID_METRONOME
                         }
-                        counterState.nextBeep += TICKS_PER_DECISECOND * 10;
+                        counterState.nextBeep += TICKS_PER_DECISECOND * 10
                     }
                 }
             }
