@@ -154,6 +154,7 @@ class MainActivity : ComponentActivity() {
         var currentTitle = "Foto Timer"
         var inProcessList = false
         var inProcessDetails = false
+        var inSettings = false
 
         // some state checking - probably lame
         if (currentDestination != null) {
@@ -165,6 +166,7 @@ class MainActivity : ComponentActivity() {
             }
             if (currentDestination.route == Settings.route) {
                 currentTitle = "Settings"
+                inSettings = true
             }
         }
 
@@ -198,15 +200,17 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
-                IconButton(onClick = {
-                    navController.navigate(Settings.route) {
-                        launchSingleTop = true
+                if (!inSettings) {
+                    IconButton(onClick = {
+                        navController.navigate(Settings.route) {
+                            launchSingleTop = true
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Settings.icon,
+                            contentDescription = Settings.contentDescription
+                        )
                     }
-                }) {
-                    Icon(
-                        imageVector = Settings.icon,
-                        contentDescription = Settings.contentDescription
-                    )
                 }
             }
         )
