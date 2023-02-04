@@ -93,6 +93,7 @@ fun FotoTimerProcessEditor(
     val context = LocalContext.current
     val sharedSettings = PreferenceManager.getDefaultSharedPreferences(context)
     val expertMode = sharedSettings.getBoolean("preference_expert_mode", false)
+    val keepScreenOn = sharedSettings.getBoolean("preference_screen_on", true)
     var modified by remember { mutableStateOf(false) }
 
     Column(
@@ -153,18 +154,20 @@ fun FotoTimerProcessEditor(
             },
         )
         HeaderText(text = "During the process")
-        TextAndSwitch(
-            text = "Keep the screen on",
-            checked = processViewModel.keepsScreenOn,
-        ) {
-            processViewModel.keepsScreenOn = it
-            modified = true
+        if (expertMode || !keepScreenOn) {
+            TextAndSwitch(
+                text = "Keep the screen on",
+                checked = processViewModel.keepsScreenOn,
+            ) {
+                processViewModel.keepsScreenOn = it
+                modified = true
+            }
         }
-        Text(
-            text = "Play sounds:",
-            modifier = Modifier.fillMaxWidth()
-        )
         if (expertMode) {
+            Text(
+                text = "Play sounds:",
+                modifier = Modifier.fillMaxWidth()
+            )
             TextAndSwitch(
                 text = "At start",
                 checked = processViewModel.hasSoundStart
@@ -195,7 +198,7 @@ fun FotoTimerProcessEditor(
             }
         } else {
             TextAndSwitch(
-                text = "At start, intervals, and end",
+                text = "Play sounds at start, intervals, and end",
                 checked = processViewModel.hasSoundStart && processViewModel.hasSoundInterval && processViewModel.hasSoundEnd
             ) {
                 processViewModel.hasSoundStart = it

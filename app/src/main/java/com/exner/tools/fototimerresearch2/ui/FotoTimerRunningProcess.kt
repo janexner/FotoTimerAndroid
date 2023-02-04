@@ -57,7 +57,9 @@ fun FotoTimerRunningProcess(
                         }
                     }
             ) {
-                BoxWithConstraints {
+                BoxWithConstraints(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     val fifth = maxHeight / 5
                     Column {
                         BigTimerText(
@@ -70,7 +72,7 @@ fun FotoTimerRunningProcess(
                                 .height(fifth)
                         ) {
                             Text(
-                                text = "Time left ${durationToAnnotatedString(duration = runningProcessViewModel.timeLeftUntilEndOfProcess)})",
+                                text = "Time left ${durationToAnnotatedString(duration = runningProcessViewModel.timeLeftUntilEndOfProcess)}",
                                 style = MaterialTheme.typography.bodyLarge,
                                 modifier = Modifier.align(Alignment.CenterStart)
                             )

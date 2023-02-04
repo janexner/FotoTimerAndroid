@@ -24,9 +24,7 @@ sealed class SettingsTabs(val name: String) {
 }
 
 @Composable
-fun Settings(
-    modifier: Modifier = Modifier
-) {
+fun Settings() {
     val context = LocalContext.current
     val sharedSettings = PreferenceManager.getDefaultSharedPreferences(context)
     var expertMode by remember {
@@ -43,7 +41,7 @@ fun Settings(
     val tabItems = listOf(SettingsTabs.UiTab, SettingsTabs.TimersTab, SettingsTabs.SoundsTab)
 
     // show vertically
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize()) {
         TabRow(
             selectedTabIndex = tabIndex,
         ) {
