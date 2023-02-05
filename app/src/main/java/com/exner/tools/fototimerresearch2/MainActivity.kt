@@ -232,9 +232,17 @@ class MainActivity : ComponentActivity() {
                         @Suppress("ReplaceGetOrSet")
                         val ftrpViewModel = ViewModelProvider(
                             backStackEntry.viewModelStore,
-                            FotoTimerRunningProcessViewModelFactory(process)
+                            FotoTimerRunningProcessViewModelFactory(process,
+                                onStartNextProcess = {
+                                    navController.navigate(
+                                        route = "${RunningProcess.route}/${process.gotoId}"
+                                    )
+                                }
+                            )
                         ).get(FotoTimerRunningProcessViewModel::class.java)
-                        FotoTimerRunningProcess(ftrpViewModel)
+                        FotoTimerRunningProcess(
+                            runningProcessViewModel = ftrpViewModel
+                        )
                     }
                 }
             }

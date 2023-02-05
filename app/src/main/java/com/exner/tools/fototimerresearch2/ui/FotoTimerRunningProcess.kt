@@ -182,7 +182,8 @@ fun FTRPPreview() {
             FotoTimerRunningProcessViewModel(
                 process = FotoTimerSampleProcess.getFotoTimerSampleProcess(
                     "Sample Process",
-                )
+                ),
+                onStartNextProcess = {}
             )
         )
     }

@@ -20,7 +20,10 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
-class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : ViewModel() {
+class FotoTimerRunningProcessViewModel(
+    private val process: FotoTimerProcess,
+    onStartNextProcess: () -> Unit
+) : ViewModel() {
     // ticks per "loop" - 50L would b 0.05s, roughly
     private val LOOP_TIME: Duration = 50.milliseconds
     private val TICKS_PER_SECOND = 1000L
@@ -129,6 +132,12 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
                 FotoTimerSoundPoolHolder.playSound(SoundStuff.SOUND_ID_PROCESS_END)
             }
             setCounterComplete()
+
+            // 4 - chain
+            // if there is a next process, start it
+            if (process.hasAutoChain && null != process.gotoId && process.gotoId >= 0L) {
+                onStartNextProcess
+            }
         }
     }
 
@@ -163,7 +172,7 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
                     }
                     setElapsedIntervalTimeCustom(msecs.inWholeMilliseconds)
                     if (0L < process.processTime) {
-                       oldTime += ((counterState.roundNumber - 1L) * process.intervalTime).seconds
+                        oldTime += ((counterState.roundNumber - 1L) * process.intervalTime).seconds
                     }
                     setTimeLeftUntilEndOfProcessCustom(startTicks + (process.processTime * TICKS_PER_SECOND) - inticks + 1000)
 
@@ -188,6 +197,10 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
         }
     }
 
+    fun chainToNextProcess(processId: Long) {
+
+    }
+
     fun setTimeLeftUntilEndOfProcessCustom(newTime: Long) {
         timeLeftUntilEndOfProcess = newTime.milliseconds
     }
@@ -210,12 +223,15 @@ class FotoTimerRunningProcessViewModel(private val process: FotoTimerProcess) : 
 }
 
 @Suppress("UNCHECKED_CAST")
-class FotoTimerRunningProcessViewModelFactory(private val process: FotoTimerProcess) :
+class FotoTimerRunningProcessViewModelFactory(
+    private val process: FotoTimerProcess,
+    private val onStartNextProcess: () -> Unit
+) :
     ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
         if (modelClass.isAssignableFrom(FotoTimerRunningProcessViewModel::class.java)) {
-            return FotoTimerRunningProcessViewModel(process) as T
+            return FotoTimerRunningProcessViewModel(process, onStartNextProcess) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class")
