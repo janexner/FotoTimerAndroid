@@ -136,7 +136,7 @@ class FotoTimerRunningProcessViewModel(
             // 4 - chain
             // if there is a next process, start it
             if (process.hasAutoChain && null != process.gotoId && process.gotoId >= 0L) {
-                onStartNextProcess
+                onStartNextProcess.invoke()
             }
         }
     }

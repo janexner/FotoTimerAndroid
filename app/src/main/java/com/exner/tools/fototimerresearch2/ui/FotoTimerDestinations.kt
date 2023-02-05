@@ -39,3 +39,9 @@ object RunningProcess : FotoTimerDestinations {
     override val route = "running"
     override val contentDescription = "Run Process"
 }
+
+object ChainingProcess : FotoTimerDestinations {
+    override val icon = Icons.Filled.ArrowForward
+    override val route = "chaining"
+    override val contentDescription = "Chain Process"
+}

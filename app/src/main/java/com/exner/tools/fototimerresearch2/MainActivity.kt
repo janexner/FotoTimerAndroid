@@ -2,6 +2,7 @@ package com.exner.tools.fototimerresearch2
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -136,6 +137,27 @@ class MainActivity : ComponentActivity() {
                             composable(route = Settings.route) {
                                 Settings()
                             }
+                            // chain to next process
+                            composable(
+                                route = ChainingProcess.route,
+                                deepLinks = listOf(navDeepLink {
+                                    uriPattern =
+                                        "android-app://androidx.navigation/chaining/{processId}"
+                                }),
+                                arguments = listOf(navArgument("processId") {
+                                    type = NavType.StringType
+                                    nullable = false
+                                })
+                            ) { backStackEntry ->
+                                val processId = backStackEntry.arguments?.getString("processId")
+                                Column(modifier = Modifier.fillMaxSize()) {
+                                    HeaderText(text = "Moving on...")
+                                }
+                                Log.i("jexner Main Nav", "Backstack ${navController.toString()}")
+                                navController.navigate(
+                                    route = "${RunningProcess.route}/${processId}"
+                                )
+                            }
                             // Run Process nested graph
                             runningGraph(navController)
                         }
@@ -235,7 +257,7 @@ class MainActivity : ComponentActivity() {
                             FotoTimerRunningProcessViewModelFactory(process,
                                 onStartNextProcess = {
                                     navController.navigate(
-                                        route = "${RunningProcess.route}/${process.gotoId}"
+                                        route = "${ChainingProcess.route}/${process.gotoId}"
                                     )
                                 }
                             )
