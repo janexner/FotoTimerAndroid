@@ -4,9 +4,11 @@ import android.app.Application
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcessRepository
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcessRoomDatabase
 import com.google.android.material.color.DynamicColors
+import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 
+@HiltAndroidApp
 class FotoTimerApplication : Application() {
     // No need to cancel this scope as it'll be torn down with the process
     private val applicationScope = CoroutineScope(SupervisorJob())

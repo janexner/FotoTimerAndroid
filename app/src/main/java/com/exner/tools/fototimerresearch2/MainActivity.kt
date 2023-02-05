@@ -1,5 +1,6 @@
 package com.exner.tools.fototimerresearch2
 
+import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +17,7 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.*
@@ -26,6 +28,7 @@ import com.exner.tools.fototimerresearch2.sound.FotoTimerSoundPoolHolder
 import com.exner.tools.fototimerresearch2.ui.*
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.navigation.dependency
 
 class MainActivity : ComponentActivity() {
 
@@ -36,10 +39,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        @Suppress("ReplaceGetOrSet")
-        val spViewModel: FotoTimerSingleProcessViewModel =
-            ViewModelProvider(this).get(FotoTimerSingleProcessViewModel::class.java)
-
         // load sounds
         FotoTimerSoundPoolHolder.loadSounds(this)
 
@@ -48,19 +47,25 @@ class MainActivity : ComponentActivity() {
         val forceNightMode = sharedSettings.getBoolean("preference_night_mode", false)
 
         setContent {
-            HomeScreen(forceNightMode, spViewModel)
+            HomeScreen(forceNightMode, this)
         }
     }
 
     @Composable
     private fun HomeScreen(
         forceNightMode: Boolean,
-        spViewModel: FotoTimerSingleProcessViewModel
+        activity: Activity
     ) {
         FotoTimerTheme(
             darkTheme = forceNightMode
         ) {
-            DestinationsNavHost(navGraph = NavGraphs.root)
+            DestinationsNavHost(
+                navGraph = NavGraphs.root,
+                dependenciesContainerBuilder = {
+                    // tie the fotoTimerProcessViewModel to the Activity, so all Screens can see it
+                    dependency(hiltViewModel<FotoTimerProcessViewModel>(activity))
+                }
+            )
         }
     }
 

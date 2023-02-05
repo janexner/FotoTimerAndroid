@@ -9,6 +9,9 @@ plugins {
 
     // compose destinations
     id 'com.google.devtools.ksp' version '1.7.20-1.0.8'
+
+    // hilt
+    id 'com.google.dagger.hilt.android' version "2.44.2" apply false
 }
 
 android {
@@ -74,9 +77,9 @@ android {
             }
         }
     }
-//    sourceSets {
-//        main.kotlin.srcDirs += "build/generated/ksp/debug/kotlin"
-//    }
+    sourceSets {
+        main.kotlin.srcDirs += "build/generated/ksp/debug/kotlin"
+    }
 }
 
 dependencies {
@@ -140,4 +143,12 @@ dependencies {
     // compose destinations
     implementation 'io.github.raamcosta.compose-destinations:core:1.7.33-beta'
     ksp 'io.github.raamcosta.compose-destinations:ksp:1.7.33-beta'
+
+    // hilt
+    implementation "com.google.dagger:hilt-android:2.44.2"
+    kapt "com.google.dagger:hilt-compiler:2.44.2"
+}
+
+kapt {
+    correctErrorTypes true
 }
