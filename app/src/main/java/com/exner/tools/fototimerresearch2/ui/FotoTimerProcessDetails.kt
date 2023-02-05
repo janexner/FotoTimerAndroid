@@ -2,14 +2,18 @@ package com.exner.tools.fototimerresearch2.ui
 
 import android.content.pm.ActivityInfo
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.preference.PreferenceManager
 import com.exner.tools.fototimerresearch2.R
 import com.exner.tools.fototimerresearch2.data.FotoTimerSampleProcess
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModel
@@ -48,49 +52,60 @@ fun ExistingProcessDetails(
     nextName: String?,
     onStartButtonClick: () -> Unit
 ) {
-    Column(modifier = Modifier.padding(8.dp)) {
-        // top - process information
-        ProcessName(process.name)
-        Divider(modifier = Modifier.padding(8.dp))
-        ProcessTimerData(
-            process.processTime,
-            process.intervalTime,
-        )
-        if (process.keepsScreenOn) {
-            ListItem(
-                headlineText = { SmallBodyText(text = "UI") },
-                supportingText = { BodyText(text = "Keeps screen on") },
-                leadingContent = {
-                    Icon(
-                        painterResource(id = R.drawable.baseline_light_mode_24),
-                        contentDescription = "UI",
-                    )
-                }
+    val context = LocalContext.current
+    val sharedSettings = PreferenceManager.getDefaultSharedPreferences(context)
+    val expertMode = sharedSettings.getBoolean("preference_expert_mode", false)
+    Column(modifier = Modifier
+        .padding(8.dp)
+        .fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .weight(0.75f)
+                .verticalScroll(rememberScrollState())
+        ) {
+            // top - process information
+            ProcessName(process.name)
+            Divider(modifier = Modifier.padding(8.dp))
+            ProcessTimerData(
+                process.processTime,
+                process.intervalTime,
             )
+            if (process.keepsScreenOn && expertMode) {
+                ListItem(
+                    headlineText = { SmallBodyText(text = "UI") },
+                    supportingText = { BodyText(text = "Keeps screen on") },
+                    leadingContent = {
+                        Icon(
+                            painterResource(id = R.drawable.baseline_light_mode_24),
+                            contentDescription = "UI",
+                        )
+                    }
+                )
+            }
+            ProcessAudioData(
+                process.hasSoundStart,
+                process.hasSoundEnd,
+                process.hasSoundInterval,
+                process.hasSoundMetronome,
+                process.hasPreBeeps
+            )
+            ProcessLeadInAndChainData(
+                process.hasLeadIn,
+                process.leadInSeconds,
+                process.hasAutoChain,
+                process.hasPauseBeforeChain,
+                process.pauseTime,
+                process.gotoId,
+                nextName,
+            )
+            // middle - spacer
+            Spacer(modifier = Modifier)
         }
-        ProcessAudioData(
-            process.hasSoundStart,
-            process.hasSoundEnd,
-            process.hasSoundInterval,
-            process.hasSoundMetronome,
-            process.hasPreBeeps
-        )
-        ProcessLeadInAndChainData(
-            process.hasLeadIn,
-            process.leadInSeconds,
-            process.hasAutoChain,
-            process.hasPauseBeforeChain,
-            process.pauseTime,
-            process.gotoId,
-            nextName,
-        )
-        // middle - spacer
-        Spacer(modifier = Modifier.weight(0.5f))
         // bottom - start button
-        Surface(modifier = Modifier.weight(0.2f)) {
+        Surface(modifier = Modifier.weight(0.25f)) {
             FilledTonalButton(
                 onClick = onStartButtonClick,
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Text(text = "Start", style = MaterialTheme.typography.headlineLarge)
@@ -113,34 +128,50 @@ fun ProcessAudioData(
     hasSoundMetronome: Boolean,
     hasPreBeeps: Boolean
 ) {
-    if (hasSoundStart || hasSoundEnd || hasPreBeeps || hasSoundInterval || hasSoundMetronome) {
-        var soundStatement = ""
-        var space = ""
-        if (hasSoundStart || hasSoundEnd) {
-            soundStatement = "Will play sound at "
-            soundStatement += if (hasSoundStart && hasSoundEnd) {
-                "start and end of process."
-            } else if (hasSoundStart) {
-                "start of process."
-            } else { // hasSoundEnd == true here
-                "end of process."
+    val context = LocalContext.current
+    val sharedSettings = PreferenceManager.getDefaultSharedPreferences(context)
+    val expertMode = sharedSettings.getBoolean("preference_expert_mode", false)
+    if (expertMode) {
+        if (hasSoundStart || hasSoundEnd || hasPreBeeps || hasSoundInterval || hasSoundMetronome) {
+            var soundStatement = ""
+            var space = ""
+            if (hasSoundStart || hasSoundEnd) {
+                soundStatement = "Will play sound at "
+                soundStatement += if (hasSoundStart && hasSoundEnd) {
+                    "start and end of process."
+                } else if (hasSoundStart) {
+                    "start of process."
+                } else { // hasSoundEnd == true here
+                    "end of process."
+                }
+                space = " "
             }
-            space = " "
+            if (hasSoundInterval) {
+                soundStatement += space + "Will play sound at each interval."
+                space = " "
+            }
+            if (hasPreBeeps) {
+                soundStatement += space + "Will beep before the interval sound ('pre-beep')"
+                space = " "
+            }
+            if (hasSoundMetronome) {
+                soundStatement += space + "Will tick every second ('metronome')."
+            }
+            ListItem(
+                headlineText = { SmallBodyText(text = "Sounds") },
+                supportingText = { BodyText(text = soundStatement) },
+                leadingContent = {
+                    Icon(
+                        painterResource(id = R.drawable.ic_baseline_music_note_24),
+                        contentDescription = "Process Sounds",
+                    )
+                }
+            )
         }
-        if (hasSoundInterval) {
-            soundStatement += space + "Will play sound at each interval."
-            space = " "
-        }
-        if (hasPreBeeps) {
-            soundStatement += space + "Will beep before the interval sound ('pre-beep')"
-            space = " "
-        }
-        if (hasSoundMetronome) {
-            soundStatement += space + "Will tick every second ('metronome')."
-        }
+    } else { // not expert mode
         ListItem(
             headlineText = { SmallBodyText(text = "Sounds") },
-            supportingText = { BodyText(text = soundStatement) },
+            supportingText = { BodyText(text = "Sound is on") },
             leadingContent = {
                 Icon(
                     painterResource(id = R.drawable.ic_baseline_music_note_24),
@@ -180,38 +211,63 @@ fun ProcessLeadInAndChainData(
     gotoId: Long?,
     nextName: String?
 ) {
-    if (hasLeadIn && (null != leadInSeconds)) {
-        ListItem(
-            headlineText = { SmallBodyText(text = "Before") },
-            supportingText = { BodyText(text = "Before the process starts, there will be a $leadInSeconds second count down.") },
-            leadingContent = {
-                Icon(
-                    painterResource(id = R.drawable.ic_baseline_start_24),
-                    contentDescription = "Process Start",
-                )
-            }
-        )
-    }
-    if (hasAutoChain && (null != gotoId) && (-1L < gotoId) && (null != nextName)) {
-        var doneText =
-            "When the process is done, it will automatically lead into the next process: '$nextName'."
-        if (true == hasPauseBeforeChain && (null != pauseTime) && (0 < pauseTime)) {
-            doneText += " There will be a pause of $pauseTime seconds before '$nextName' starts."
+    val context = LocalContext.current
+    val sharedSettings = PreferenceManager.getDefaultSharedPreferences(context)
+    val expertMode = sharedSettings.getBoolean("preference_expert_mode", false)
+    if (expertMode) {
+        if (hasLeadIn && (null != leadInSeconds)) {
+            ListItem(
+                headlineText = { SmallBodyText(text = "Before") },
+                supportingText = { BodyText(text = "Before the process starts, there will be a $leadInSeconds second count down.") },
+                leadingContent = {
+                    Icon(
+                        painterResource(id = R.drawable.ic_baseline_start_24),
+                        contentDescription = "Process Start",
+                    )
+                }
+            )
         }
-        ListItem(
-            headlineText = { SmallBodyText(text = "After") },
-            supportingText = { BodyText(text = doneText) },
-            leadingContent = {
-                Icon(
-                    painterResource(id = R.drawable.ic_baseline_navigate_next_24),
-                    contentDescription = "Process End",
-                )
+        if (hasAutoChain && (null != gotoId) && (-1L < gotoId) && (null != nextName)) {
+            var doneText =
+                "When the process is done, it will automatically lead into the next process: '$nextName'."
+            if (true == hasPauseBeforeChain && (null != pauseTime) && (0 < pauseTime)) {
+                doneText += " There will be a pause of $pauseTime seconds before '$nextName' starts."
             }
-        )
+            ListItem(
+                headlineText = { SmallBodyText(text = "After") },
+                supportingText = { BodyText(text = doneText) },
+                leadingContent = {
+                    Icon(
+                        painterResource(id = R.drawable.ic_baseline_navigate_next_24),
+                        contentDescription = "Process End",
+                    )
+                }
+            )
+        }
+    } else {
+        if (hasAutoChain && (null != gotoId) && (-1L < gotoId) && (null != nextName)) {
+            ListItem(
+                headlineText = { SmallBodyText(text = "After") },
+                supportingText = { BodyText(text = "Next up: '$nextName'") },
+                leadingContent = {
+                    Icon(
+                        painterResource(id = R.drawable.ic_baseline_navigate_next_24),
+                        contentDescription = "Process End",
+                    )
+                }
+            )
+        }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    showSystemUi = true,
+    device = Devices.PHONE
+)
+@Preview(
+    showSystemUi = true,
+    device = Devices.NEXUS_5
+)
 @Preview(
     showSystemUi = true,
     device = Devices.TABLET
