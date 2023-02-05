@@ -29,7 +29,7 @@ fun HeaderText(text: String) {
         text = text,
         modifier = Modifier
             .fillMaxWidth(),
-        style = MaterialTheme.typography.headlineMedium
+        style = MaterialTheme.typography.headlineSmall
     )
 }
 

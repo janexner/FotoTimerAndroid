@@ -73,7 +73,7 @@ fun ExistingProcessDetails(
             if (process.keepsScreenOn && expertMode) {
                 ListItem(
                     headlineText = { SmallBodyText(text = "UI") },
-                    supportingText = { BodyText(text = "Keeps screen on") },
+                    supportingText = { BodyText(text = "Screen will stay on") },
                     leadingContent = {
                         Icon(
                             painterResource(id = R.drawable.baseline_light_mode_24),
@@ -133,29 +133,25 @@ fun ProcessAudioData(
     val expertMode = sharedSettings.getBoolean("preference_expert_mode", false)
     if (expertMode) {
         if (hasSoundStart || hasSoundEnd || hasPreBeeps || hasSoundInterval || hasSoundMetronome) {
-            var soundStatement = ""
+            var soundStatement = "Sounds: "
             var space = ""
-            if (hasSoundStart || hasSoundEnd) {
-                soundStatement = "Will play sound at "
-                soundStatement += if (hasSoundStart && hasSoundEnd) {
-                    "start and end of process."
-                } else if (hasSoundStart) {
-                    "start of process."
-                } else { // hasSoundEnd == true here
-                    "end of process."
-                }
-                space = " "
+            if (hasSoundStart) {
+                soundStatement += "start"
+                space = ", "
             }
             if (hasSoundInterval) {
-                soundStatement += space + "Will play sound at each interval."
-                space = " "
+                soundStatement += space + "interval"
+                if (hasPreBeeps) {
+                    soundStatement += " (with 'pre-beeps')"
+                }
+                space = ", "
             }
-            if (hasPreBeeps) {
-                soundStatement += space + "Will beep before the interval sound ('pre-beep')"
-                space = " "
+            if (hasSoundEnd) {
+                soundStatement += space + "end"
+                space = ", "
             }
             if (hasSoundMetronome) {
-                soundStatement += space + "Will tick every second ('metronome')."
+                soundStatement += space + "every second ('metronome')"
             }
             ListItem(
                 headlineText = { SmallBodyText(text = "Sounds") },
@@ -169,16 +165,18 @@ fun ProcessAudioData(
             )
         }
     } else { // not expert mode
-        ListItem(
-            headlineText = { SmallBodyText(text = "Sounds") },
-            supportingText = { BodyText(text = "Sound is on") },
-            leadingContent = {
-                Icon(
-                    painterResource(id = R.drawable.ic_baseline_music_note_24),
-                    contentDescription = "Process Sounds",
-                )
-            }
-        )
+        if (hasSoundStart || hasSoundEnd || hasPreBeeps || hasSoundInterval || hasSoundMetronome) {
+            ListItem(
+                headlineText = { SmallBodyText(text = "Sounds") },
+                supportingText = { BodyText(text = "Sound is on") },
+                leadingContent = {
+                    Icon(
+                        painterResource(id = R.drawable.ic_baseline_music_note_24),
+                        contentDescription = "Process Sounds",
+                    )
+                }
+            )
+        }
     }
 }
 
@@ -218,7 +216,7 @@ fun ProcessLeadInAndChainData(
         if (hasLeadIn && (null != leadInSeconds)) {
             ListItem(
                 headlineText = { SmallBodyText(text = "Before") },
-                supportingText = { BodyText(text = "Before the process starts, there will be a $leadInSeconds second count down.") },
+                supportingText = { BodyText(text = "There will be a $leadInSeconds second count down") },
                 leadingContent = {
                     Icon(
                         painterResource(id = R.drawable.ic_baseline_start_24),
@@ -229,9 +227,9 @@ fun ProcessLeadInAndChainData(
         }
         if (hasAutoChain && (null != gotoId) && (-1L < gotoId) && (null != nextName)) {
             var doneText =
-                "When the process is done, it will automatically lead into the next process: '$nextName'."
+                "Afterwards, '$nextName' will be started."
             if (true == hasPauseBeforeChain && (null != pauseTime) && (0 < pauseTime)) {
-                doneText += " There will be a pause of $pauseTime seconds before '$nextName' starts."
+                doneText += " There will be a pause of $pauseTime seconds before that."
             }
             ListItem(
                 headlineText = { SmallBodyText(text = "After") },
@@ -248,7 +246,7 @@ fun ProcessLeadInAndChainData(
         if (hasAutoChain && (null != gotoId) && (-1L < gotoId) && (null != nextName)) {
             ListItem(
                 headlineText = { SmallBodyText(text = "After") },
-                supportingText = { BodyText(text = "Next up: '$nextName'") },
+                supportingText = { BodyText(text = "'$nextName' will be started next") },
                 leadingContent = {
                     Icon(
                         painterResource(id = R.drawable.ic_baseline_navigate_next_24),
