@@ -21,10 +21,12 @@ import com.exner.tools.fototimerresearch2.data.model.FotoTimerSingleProcessViewM
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcessIdAndName
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
+import com.ramcosta.composedestinations.annotation.Destination
 
 lateinit var ftpViewModel: FotoTimerProcessViewModel
 lateinit var spViewModel: FotoTimerSingleProcessViewModel
 
+@Destination
 @Composable
 fun FotoTimerProcessEdit(
     fotoTimerProcessViewModel: FotoTimerProcessViewModel,

@@ -23,7 +23,18 @@ import com.exner.tools.fototimerresearch2.data.FotoTimerSampleProcess
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerCounterState
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerRunningProcessViewModel
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.NavGraph
+import com.ramcosta.composedestinations.annotation.RootNavGraph
 
+@RootNavGraph
+@NavGraph
+annotation class RunningNavGraph(
+    val start: Boolean = false
+)
+
+@RunningNavGraph( start = true )
+@Destination
 @Composable
 fun FotoTimerRunningProcess(
     runningProcessViewModel: FotoTimerRunningProcessViewModel,

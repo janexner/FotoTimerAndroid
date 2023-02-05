@@ -25,6 +25,7 @@ import com.exner.tools.fototimerresearch2.data.model.*
 import com.exner.tools.fototimerresearch2.sound.FotoTimerSoundPoolHolder
 import com.exner.tools.fototimerresearch2.ui.*
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 class MainActivity : ComponentActivity() {
 
@@ -169,7 +170,7 @@ class MainActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun FotoTimerTopBar(navController: NavHostController, currentDestination: NavDestination?) {
+    fun FotoTimerTopBar(navigator: DestinationsNavigator, currentDestination: NavDestination?) {
         var currentTitle = "Foto Timer"
         var inProcessList = false
         var inProcessDetails = false

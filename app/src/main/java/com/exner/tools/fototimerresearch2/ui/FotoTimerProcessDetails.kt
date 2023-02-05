@@ -19,12 +19,15 @@ import com.exner.tools.fototimerresearch2.data.FotoTimerSampleProcess
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModel
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+@Destination
 @Composable
 fun FotoTimerProcessDetails(
     fotoTimerProcessViewModel: FotoTimerProcessViewModel,
     processId: String,
-    onStartButtonClick: () -> Unit,
+    navigator: DestinationsNavigator
 ) {
     val uid = processId.toLong()
     val ftProcess = fotoTimerProcessViewModel.getProcessById(uid)
@@ -39,7 +42,7 @@ fun FotoTimerProcessDetails(
         if (null != nextProcess) {
             nextName = nextProcess.name
         }
-        ExistingProcessDetails(ftProcess, nextName, onStartButtonClick)
+        ExistingProcessDetails(ftProcess, nextName, navigator)
     } else {
         HeaderText(text = "This process does not exist!")
     }
@@ -50,7 +53,7 @@ fun FotoTimerProcessDetails(
 fun ExistingProcessDetails(
     process: FotoTimerProcess,
     nextName: String?,
-    onStartButtonClick: () -> Unit
+    navigator: DestinationsNavigator
 ) {
     val context = LocalContext.current
     val sharedSettings = PreferenceManager.getDefaultSharedPreferences(context)
@@ -104,7 +107,7 @@ fun ExistingProcessDetails(
         // bottom - start button
         Surface(modifier = Modifier.weight(0.25f)) {
             FilledTonalButton(
-                onClick = onStartButtonClick,
+                onClick = navigator.navigate(FotoTimerRunningProcessDestination()),
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp)
             ) {
