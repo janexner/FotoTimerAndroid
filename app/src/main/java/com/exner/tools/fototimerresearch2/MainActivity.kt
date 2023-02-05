@@ -25,6 +25,7 @@ import com.exner.tools.fototimerresearch2.data.model.*
 import com.exner.tools.fototimerresearch2.sound.FotoTimerSoundPoolHolder
 import com.exner.tools.fototimerresearch2.ui.*
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
+import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 class MainActivity : ComponentActivity() {
@@ -53,7 +54,7 @@ class MainActivity : ComponentActivity() {
             FotoTimerTheme(
                 darkTheme = forceNightMode
             ) {
-                val navController = rememberNavController()
+                DestinationsNavHost(navGraph = NavGraphs.root)
                 val currentBackStack by navController.currentBackStackEntryAsState()
                 val currentDestination = currentBackStack?.destination
 

@@ -2,12 +2,12 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.22'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.20'
     id 'org.jetbrains.kotlin.android'
 
     id 'com.google.gms.google-services'
 
-    id 'com.google.devtools.ksp' version '1.7.22-1.0.8' // Depends on your kotlin version
+    id 'com.google.devtools.ksp' version '1.7.20-1.0.8' // Depends on your kotlin version
 }
 
 android {
