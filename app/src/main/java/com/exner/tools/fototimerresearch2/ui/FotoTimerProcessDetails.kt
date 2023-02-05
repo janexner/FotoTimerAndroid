@@ -18,30 +18,51 @@ import com.exner.tools.fototimerresearch2.R
 import com.exner.tools.fototimerresearch2.data.FotoTimerSampleProcess
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModel
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
+import com.exner.tools.fototimerresearch2.ui.destinations.FotoTimerRunningProcessDestination
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 
+@Destination
 @Composable
 fun FotoTimerProcessDetails(
+    navigator: DestinationsNavigator,
+    processId: Long,
     fotoTimerProcessViewModel: FotoTimerProcessViewModel,
-    processId: String,
-    onStartButtonClick: () -> Unit,
 ) {
-    val uid = processId.toLong()
-    val ftProcess = fotoTimerProcessViewModel.getProcessById(uid)
+    val ftProcess = fotoTimerProcessViewModel.getProcessById(processId)
 
     // lock screen rotation
     LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
-    if (null != ftProcess) {
-        // if this process auto chains, let's find the name of the next process, too
-        val nextProcess = ftProcess.gotoId?.let { fotoTimerProcessViewModel.getProcessById(it) }
-        var nextName: String? = null
-        if (null != nextProcess) {
-            nextName = nextProcess.name
+    Column(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxSize()
+    ) {
+        if (null != ftProcess) {
+            // if this process auto chains, let's find the name of the next process, too
+            val nextProcess = ftProcess.gotoId?.let { fotoTimerProcessViewModel.getProcessById(it) }
+            var nextName: String? = null
+            if (null != nextProcess) {
+                nextName = nextProcess.name
+            }
+            ExistingProcessDetails(ftProcess, nextName)
+        } else {
+            HeaderText(text = "This process does not exist!")
         }
-        ExistingProcessDetails(ftProcess, nextName, onStartButtonClick)
-    } else {
-        HeaderText(text = "This process does not exist!")
+        // bottom - start button
+        Surface(modifier = Modifier.weight(0.25f)) {
+            FilledTonalButton(
+                onClick = { navigator.navigate(FotoTimerRunningProcessDestination()) }, // TODO
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                enabled = (null != ftProcess)
+            ) {
+                Text(text = "Start", style = MaterialTheme.typography.headlineLarge)
+            }
+        }
     }
 }
 
@@ -50,67 +71,51 @@ fun FotoTimerProcessDetails(
 fun ExistingProcessDetails(
     process: FotoTimerProcess,
     nextName: String?,
-    onStartButtonClick: () -> Unit
 ) {
     val context = LocalContext.current
     val sharedSettings = PreferenceManager.getDefaultSharedPreferences(context)
     val expertMode = sharedSettings.getBoolean("preference_expert_mode", false)
-    Column(modifier = Modifier
-        .padding(8.dp)
-        .fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .weight(0.75f)
-                .verticalScroll(rememberScrollState())
-        ) {
-            // top - process information
-            ProcessName(process.name)
-            Divider(modifier = Modifier.padding(8.dp))
-            ProcessTimerData(
-                process.processTime,
-                process.intervalTime,
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+    ) {
+        // top - process information
+        ProcessName(process.name)
+        Divider(modifier = Modifier.padding(8.dp))
+        ProcessTimerData(
+            process.processTime,
+            process.intervalTime,
+        )
+        if (process.keepsScreenOn && expertMode) {
+            ListItem(
+                headlineText = { SmallBodyText(text = "UI") },
+                supportingText = { BodyText(text = "Screen will stay on") },
+                leadingContent = {
+                    Icon(
+                        painterResource(id = R.drawable.baseline_light_mode_24),
+                        contentDescription = "UI",
+                    )
+                }
             )
-            if (process.keepsScreenOn && expertMode) {
-                ListItem(
-                    headlineText = { SmallBodyText(text = "UI") },
-                    supportingText = { BodyText(text = "Screen will stay on") },
-                    leadingContent = {
-                        Icon(
-                            painterResource(id = R.drawable.baseline_light_mode_24),
-                            contentDescription = "UI",
-                        )
-                    }
-                )
-            }
-            ProcessAudioData(
-                process.hasSoundStart,
-                process.hasSoundEnd,
-                process.hasSoundInterval,
-                process.hasSoundMetronome,
-                process.hasPreBeeps
-            )
-            ProcessLeadInAndChainData(
-                process.hasLeadIn,
-                process.leadInSeconds,
-                process.hasAutoChain,
-                process.hasPauseBeforeChain,
-                process.pauseTime,
-                process.gotoId,
-                nextName,
-            )
-            // middle - spacer
-            Spacer(modifier = Modifier)
         }
-        // bottom - start button
-        Surface(modifier = Modifier.weight(0.25f)) {
-            FilledTonalButton(
-                onClick = onStartButtonClick,
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp)
-            ) {
-                Text(text = "Start", style = MaterialTheme.typography.headlineLarge)
-            }
-        }
+        ProcessAudioData(
+            process.hasSoundStart,
+            process.hasSoundEnd,
+            process.hasSoundInterval,
+            process.hasSoundMetronome,
+            process.hasPreBeeps
+        )
+        ProcessLeadInAndChainData(
+            process.hasLeadIn,
+            process.leadInSeconds,
+            process.hasAutoChain,
+            process.hasPauseBeforeChain,
+            process.pauseTime,
+            process.gotoId,
+            nextName,
+        )
+        // middle - spacer
+        Spacer(modifier = Modifier)
     }
 }
 
@@ -294,7 +299,7 @@ fun FTPPreview() {
                 keepsScreenOn = true,
                 hasPreBeeps = true
             ),
-            nextName = "Next Sample"
-        ) {}
+            nextName = "Next Sample",
+        )
     }
 }

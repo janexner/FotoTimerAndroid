@@ -25,6 +25,7 @@ import com.exner.tools.fototimerresearch2.data.model.*
 import com.exner.tools.fototimerresearch2.sound.FotoTimerSoundPoolHolder
 import com.exner.tools.fototimerresearch2.ui.*
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
+import com.ramcosta.composedestinations.DestinationsNavHost
 
 class MainActivity : ComponentActivity() {
 
@@ -32,7 +33,6 @@ class MainActivity : ComponentActivity() {
         FotoTimerProcessViewModelFactory((application as FotoTimerApplication).repository)
     }
 
-    @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -48,121 +48,173 @@ class MainActivity : ComponentActivity() {
         val forceNightMode = sharedSettings.getBoolean("preference_night_mode", false)
 
         setContent {
-            val windowSizeClass = calculateWindowSizeClass(this)
-            FotoTimerTheme(
-                darkTheme = forceNightMode
-            ) {
-                val navController = rememberNavController()
-                val currentBackStack by navController.currentBackStackEntryAsState()
-                val currentDestination = currentBackStack?.destination
+            HomeScreen(forceNightMode, spViewModel)
+        }
+    }
 
-                val isCompact = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
+    @Composable
+    private fun HomeScreen(
+        forceNightMode: Boolean,
+        spViewModel: FotoTimerSingleProcessViewModel
+    ) {
+        FotoTimerTheme(
+            darkTheme = forceNightMode
+        ) {
+            DestinationsNavHost(navGraph = NavGraphs.root)
+        }
+    }
 
-                if (isCompact) {
-                    // lock screen in portrait mode for small-ish screens
-                    LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-                }
+    /*
+    @Composable
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
+    private fun ListScreen(spViewModel: FotoTimerSingleProcessViewModel) {
+        val windowSizeClass = calculateWindowSizeClass(this)
 
-                Scaffold(
-                    modifier = Modifier,
-                    topBar = { FotoTimerTopBar(navController, currentDestination) },
-                    content = { innerPadding ->
-                        NavHost(
-                            navController = navController,
-                            startDestination = ProcessList.route,
-                            modifier = Modifier.padding(innerPadding)
-                        ) {
-                            // Home / Process List
-                            composable(route = ProcessList.route) {
-                                FotoTimerProcessList(
-                                    fotoTimerProcessViewModel,
-                                    onNavigateToProcessDetails = {
-                                        navController.navigate(
-                                            "${ProcessDetails.route}/${it}"
-                                        )
-                                    }
-                                )
-                            }
-                            // Show Process details
-                            composable(
-                                route = "${ProcessDetails.route}/{processId}",
-                                arguments = listOf(navArgument("processId") {
-                                    type = NavType.StringType
-                                })
-                            ) { backStackEntry ->
-                                val processId = backStackEntry.arguments?.getString("processId")
-                                if (null != processId) {
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth()
-                                    ) {
-                                        if (windowSizeClass.widthSizeClass > WindowWidthSizeClass.Compact) {
-                                            FotoTimerProcessList(
-                                                fotoTimerProcessViewModel,
-                                                onNavigateToProcessDetails = {
-                                                    navController.navigate(
-                                                        "${ProcessDetails.route}/${it}"
-                                                    )
-                                                },
-                                                modifier = Modifier.width(350.dp),
-                                                selectedProcessId = processId.toLongOrNull()
-                                            )
-                                        }
-                                        FotoTimerProcessDetails(
-                                            fotoTimerProcessViewModel,
-                                            processId
-                                        ) {
-                                            navController.navigate(
-                                                route = "${RunningProcess.route}/${processId}"
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                            // Edit Process
-                            composable(
-                                route = "${ProcessEdit.route}?processId={processId}",
-                                arguments = listOf(navArgument("processId") {
-                                    type = NavType.StringType
-                                    nullable = true
-                                })
-                            ) { backStackEntry ->
-                                val processId = backStackEntry.arguments?.getString("processId")
-                                FotoTimerProcessEdit(
-                                    fotoTimerProcessViewModel = fotoTimerProcessViewModel,
-                                    singleProcessViewModel = spViewModel,
-                                    processId = processId
-                                ) { navController.popBackStack() }
-                            }
-                            // Open Settings screen
-                            composable(route = Settings.route) {
-                                Settings()
-                            }
-                            // chain to next process
-                            composable(
-                                route = ChainingProcess.route,
-                                deepLinks = listOf(navDeepLink {
-                                    uriPattern =
-                                        "android-app://androidx.navigation/chaining/{processId}"
-                                }),
-                                arguments = listOf(navArgument("processId") {
-                                    type = NavType.StringType
-                                    nullable = false
-                                })
-                            ) { backStackEntry ->
-                                val processId = backStackEntry.arguments?.getString("processId")
-                                Column(modifier = Modifier.fillMaxSize()) {
-                                    HeaderText(text = "Moving on...")
-                                }
-                                Log.i("jexner Main Nav", "Backstack ${navController.toString()}")
+        val navController = rememberNavController()
+        val currentBackStack by navController.currentBackStackEntryAsState()
+        val currentDestination = currentBackStack?.destination
+
+        val isCompact = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
+
+        if (isCompact) {
+            // lock screen in portrait mode for small-ish screens
+            LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+        }
+
+        Scaffold(
+            modifier = Modifier,
+            topBar = { FotoTimerTopBar(navController, currentDestination) },
+            content = { innerPadding ->
+                NavHost(
+                    navController = navController,
+                    startDestination = ProcessList.route,
+                    modifier = Modifier.padding(innerPadding)
+                ) {
+                    // Home / Process List
+                    composable(route = ProcessList.route) {
+                        FotoTimerProcessList(
+                            fotoTimerProcessViewModel,
+                            onNavigateToProcessDetails = {
                                 navController.navigate(
-                                    route = "${RunningProcess.route}/${processId}"
+                                    "${ProcessDetails.route}/${it}"
                                 )
                             }
-                            // Run Process nested graph
-                            runningGraph(navController)
+                        )
+                    }
+                    // Show Process details
+                    composable(
+                        route = "${ProcessDetails.route}/{processId}",
+                        arguments = listOf(navArgument("processId") {
+                            type = NavType.StringType
+                        })
+                    ) { backStackEntry ->
+                        val processId = backStackEntry.arguments?.getString("processId")
+                        if (null != processId) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                if (windowSizeClass.widthSizeClass > WindowWidthSizeClass.Compact) {
+                                    FotoTimerProcessList(
+                                        fotoTimerProcessViewModel,
+                                        onNavigateToProcessDetails = {
+                                            navController.navigate(
+                                                "${ProcessDetails.route}/${it}"
+                                            )
+                                        },
+                                        modifier = Modifier.width(350.dp),
+                                        selectedProcessId = processId.toLongOrNull()
+                                    )
+                                }
+                                FotoTimerProcessDetails(
+                                    fotoTimerProcessViewModel,
+                                    processId
+                                ) {
+                                    navController.navigate(
+                                        route = "${RunningProcess.route}/${processId}"
+                                    )
+                                }
+                            }
                         }
                     }
-                )
+                    // Edit Process
+                    composable(
+                        route = "${ProcessEdit.route}?processId={processId}",
+                        arguments = listOf(navArgument("processId") {
+                            type = NavType.StringType
+                            nullable = true
+                        })
+                    ) { backStackEntry ->
+                        val processId = backStackEntry.arguments?.getString("processId")
+                        FotoTimerProcessEdit(
+                            fotoTimerProcessViewModel = fotoTimerProcessViewModel,
+                            singleProcessViewModel = spViewModel,
+                            processId = processId
+                        ) { navController.popBackStack() }
+                    }
+                    // Open Settings screen
+                    composable(route = Settings.route) {
+                        Settings()
+                    }
+                    // chain to next process
+                    composable(
+                        route = ChainingProcess.route,
+                        deepLinks = listOf(navDeepLink {
+                            uriPattern =
+                                "android-app://androidx.navigation/chaining/{processId}"
+                        }),
+                        arguments = listOf(navArgument("processId") {
+                            type = NavType.StringType
+                            nullable = false
+                        })
+                    ) { backStackEntry ->
+                        val processId = backStackEntry.arguments?.getString("processId")
+                        Column(modifier = Modifier.fillMaxSize()) {
+                            HeaderText(text = "Moving on...")
+                        }
+                        Log.i("jexner Main Nav", "Backstack ${navController.toString()}")
+                        navController.navigate(
+                            route = "${RunningProcess.route}/${processId}"
+                        )
+                    }
+                    // Run Process nested graph
+                    runningGraph(navController)
+                }
+            }
+        )
+    }
+
+    private fun NavGraphBuilder.runningGraph(navController: NavController) {
+        navigation(
+            startDestination = "runnerScreen/{processId}",
+            route = "${RunningProcess.route}/{processId}",
+            arguments = listOf(navArgument("processId") { defaultValue = "-1" })
+        ) {
+            composable(
+                route = "runnerScreen/{processId}",
+                arguments = listOf(navArgument("processId") {})
+            ) { backStackEntry ->
+                val processId =
+                    backStackEntry.arguments?.getString("processId")?.toLongOrNull()
+                if (null != processId && processId >= 0) {
+                    val process =
+                        fotoTimerProcessViewModel.getProcessById(processId)
+                    if (null != process) {
+                        @Suppress("ReplaceGetOrSet")
+                        val ftrpViewModel = ViewModelProvider(
+                            backStackEntry.viewModelStore,
+                            FotoTimerRunningProcessViewModelFactory(process,
+                                onStartNextProcess = {
+                                    navController.navigate(
+                                        route = "${ChainingProcess.route}/${process.gotoId}"
+                                    )
+                                }
+                            )
+                        ).get(FotoTimerRunningProcessViewModel::class.java)
+                        FotoTimerRunningProcess(
+                            runningProcessViewModel = ftrpViewModel
+                        )
+                    }
+                }
             }
         }
     }
@@ -234,40 +286,5 @@ class MainActivity : ComponentActivity() {
             }
         )
     }
-
-    private fun NavGraphBuilder.runningGraph(navController: NavController) {
-        navigation(
-            startDestination = "runnerScreen/{processId}",
-            route = "${RunningProcess.route}/{processId}",
-            arguments = listOf(navArgument("processId") { defaultValue = "-1" })
-        ) {
-            composable(
-                route = "runnerScreen/{processId}",
-                arguments = listOf(navArgument("processId") {})
-            ) { backStackEntry ->
-                val processId =
-                    backStackEntry.arguments?.getString("processId")?.toLongOrNull()
-                if (null != processId && processId >= 0) {
-                    val process =
-                        fotoTimerProcessViewModel.getProcessById(processId)
-                    if (null != process) {
-                        @Suppress("ReplaceGetOrSet")
-                        val ftrpViewModel = ViewModelProvider(
-                            backStackEntry.viewModelStore,
-                            FotoTimerRunningProcessViewModelFactory(process,
-                                onStartNextProcess = {
-                                    navController.navigate(
-                                        route = "${ChainingProcess.route}/${process.gotoId}"
-                                    )
-                                }
-                            )
-                        ).get(FotoTimerRunningProcessViewModel::class.java)
-                        FotoTimerRunningProcess(
-                            runningProcessViewModel = ftrpViewModel
-                        )
-                    }
-                }
-            }
-        }
-    }
+*/
 }

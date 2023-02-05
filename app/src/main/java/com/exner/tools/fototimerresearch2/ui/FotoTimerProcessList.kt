@@ -14,33 +14,35 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModel
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.exner.tools.fototimerresearch2.ui.destinations.FotoTimerProcessDetailsDestination
 
+@RootNavGraph(start = true)
+@Destination
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FotoTimerProcessList(
     fotoTimerProcessViewModel: FotoTimerProcessViewModel,
-    onNavigateToProcessDetails: (processId: Long) -> Unit,
-    modifier: Modifier = Modifier,
-    selectedProcessId: Long? = -1,
+    navigator: DestinationsNavigator,
 ) {
     val ftpList by fotoTimerProcessViewModel.allProcesses.observeAsState()
     LazyVerticalGrid (
         columns = GridCells.Adaptive(minSize = 250.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
     ) {
         ftpList?.let {
             items(count = it.size) { fotoTimerProcess ->
                 val ftProcess = ftpList!![fotoTimerProcess]
-                var sColor = MaterialTheme.colorScheme.surface
-                if (selectedProcessId == ftProcess.uid) {
-                    sColor = MaterialTheme.colorScheme.secondary
-                }
                 Surface(
                     modifier = Modifier
-                        .clickable { onNavigateToProcessDetails(ftProcess.uid) },
-                    color = sColor
+                        .clickable { navigator.navigate(
+                            FotoTimerProcessDetailsDestination(
+                                processId = ftProcess.uid,
+                            )
+                        ) },
                 ) {
                     var supText = "${ftProcess.processTime}/${ftProcess.intervalTime}"
                     if (ftProcess.keepsScreenOn) {

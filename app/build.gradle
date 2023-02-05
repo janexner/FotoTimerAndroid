@@ -6,6 +6,9 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 
     id 'com.google.gms.google-services'
+
+    // compose destinations
+    id 'com.google.devtools.ksp' version '1.7.20-1.0.8'
 }
 
 android {
@@ -62,6 +65,18 @@ android {
     }
     buildToolsVersion '31.0.0'
     namespace 'com.exner.tools.fototimerresearch2'
+
+    // compose destinations
+    applicationVariants.all { variant ->
+        sourceSets {
+            getByName(variant.name) {
+                main.kotlin.srcDir("build/generated/ksp/${variant.name}/kotlin")
+            }
+        }
+    }
+//    sourceSets {
+//        main.kotlin.srcDirs += "build/generated/ksp/debug/kotlin"
+//    }
 }
 
 dependencies {
@@ -121,4 +136,8 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
 
     implementation platform('com.google.firebase:firebase-bom:31.2.0')
+
+    // compose destinations
+    implementation 'io.github.raamcosta.compose-destinations:core:1.7.33-beta'
+    ksp 'io.github.raamcosta.compose-destinations:ksp:1.7.33-beta'
 }

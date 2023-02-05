@@ -21,16 +21,20 @@ import com.exner.tools.fototimerresearch2.data.model.FotoTimerSingleProcessViewM
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcessIdAndName
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 
 lateinit var ftpViewModel: FotoTimerProcessViewModel
 lateinit var spViewModel: FotoTimerSingleProcessViewModel
 
+@Destination
 @Composable
 fun FotoTimerProcessEdit(
     fotoTimerProcessViewModel: FotoTimerProcessViewModel,
     singleProcessViewModel: FotoTimerSingleProcessViewModel,
     processId: String?,
-    onSaveClicked: (Unit) -> Boolean
+    navigator: DestinationsNavigator
 ) {
     ftpViewModel = fotoTimerProcessViewModel
     spViewModel = singleProcessViewModel
@@ -38,9 +42,11 @@ fun FotoTimerProcessEdit(
     // read the process, if it exists
     val uid = processId?.toLong() ?: -1
     var tmpProcess: FotoTimerProcess? = fotoTimerProcessViewModel.getProcessById(uid)
+    var thisProcessIsNew = false
 
     // do we need to build one?
     if (null == tmpProcess) {
+        thisProcessIsNew = true
         // build one
         val context = LocalContext.current
         val sharedSettings = PreferenceManager.getDefaultSharedPreferences(context)
@@ -67,7 +73,7 @@ fun FotoTimerProcessEdit(
 
     // OK, at this point we have a process, either existing, or fresh.
     // Now display the thing for editing
-    FotoTimerProcessEditor(spViewModel, processIdsAndNames, onSaveClicked)
+    FotoTimerProcessEditor(spViewModel, processIdsAndNames, navigator, thisProcessIsNew)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,7 +81,8 @@ fun FotoTimerProcessEdit(
 fun FotoTimerProcessEditor(
     processViewModel: FotoTimerSingleProcessViewModel,
     processIdsAndNames: List<FotoTimerProcessIdAndName>?,
-    onSaveClicked: (Unit) -> Boolean
+    navigator: DestinationsNavigator,
+    isThisNewProcess: Boolean
 ) {
     var nextProcessName: String by remember { mutableStateOf("") }
     if ((null != processViewModel.gotoId) && (-1L != processViewModel.gotoId)) {
@@ -115,25 +122,23 @@ fun FotoTimerProcessEditor(
                 singleLine = true,
                 modifier = Modifier.weight(0.75f)
             )
-            Spacer(modifier = Modifier.weight(0.05f))
-            FilledTonalButton(
-                onClick = {
-                    val process = spViewModel.getAsFotoTimerProcess()
-                    if (0L == process.uid) {
-                        ftpViewModel.insert(process)
-                    } else {
-                        ftpViewModel.update(process)
-                    }
-                    modified = false
-                },
-                enabled = modified,
-                modifier = Modifier.width(100.dp)
-            ) {
-                Text(
-                    text = "Save",
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center,
-                )
+            if (!isThisNewProcess) {
+                Spacer(modifier = Modifier.weight(0.05f))
+                FilledTonalButton(
+                    onClick = {
+                        val process = spViewModel.getAsFotoTimerProcess()
+                        ftpViewModel.update(process) // this button only for edit
+                        modified = false
+                    },
+                    enabled = modified,
+                    modifier = Modifier.width(100.dp)
+                ) {
+                    Text(
+                        text = "Save",
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center,
+                    )
+                }
             }
         }
         HeaderText(text = "Times")
@@ -308,13 +313,13 @@ fun FotoTimerProcessEditor(
         Spacer(modifier = Modifier.weight(0.5f))
         FilledTonalButton(onClick = {
             val process = spViewModel.getAsFotoTimerProcess()
-            if (0L == process.uid) {
+            if (isThisNewProcess) {
                 ftpViewModel.insert(process)
             } else {
                 ftpViewModel.update(process)
             }
             // navigate back
-            onSaveClicked(Unit)
+            navigator.popBackStack()
         }) {
             Text(
                 text = "Save Process",
@@ -327,7 +332,10 @@ fun FotoTimerProcessEditor(
 }
 
 @Preview(showBackground = true)
-@Preview(showBackground = true, device = "spec:width=411dp,height=891dp,dpi=420,isRound=false,chinSize=0dp,orientation=landscape")
+@Preview(
+    showBackground = true,
+    device = "spec:width=411dp,height=891dp,dpi=420,isRound=false,chinSize=0dp,orientation=landscape"
+)
 @Preview(
     showSystemUi = true,
     device = Devices.TABLET
@@ -365,7 +373,9 @@ fun FTEPreview() {
     FotoTimerTheme {
         FotoTimerProcessEditor(
             processViewModel = spViewModel,
-            processIdsAndNames = processIdsAndNames
-        ) { true }
+            processIdsAndNames = processIdsAndNames,
+            navigator = EmptyDestinationsNavigator,
+            isThisNewProcess = false
+        )
     }
 }
