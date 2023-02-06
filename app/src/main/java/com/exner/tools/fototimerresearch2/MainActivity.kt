@@ -1,40 +1,22 @@
 package com.exner.tools.fototimerresearch2
 
-import android.app.Activity
-import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.*
-import androidx.navigation.compose.*
 import androidx.preference.PreferenceManager
-import com.exner.tools.fototimerresearch2.data.model.*
+import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessListViewModel
 import com.exner.tools.fototimerresearch2.sound.FotoTimerSoundPoolHolder
-import com.exner.tools.fototimerresearch2.ui.*
+import com.exner.tools.fototimerresearch2.ui.NavGraphs
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 import com.ramcosta.composedestinations.DestinationsNavHost
-import com.ramcosta.composedestinations.navigation.dependency
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val fotoTimerProcessViewModel: FotoTimerProcessViewModel by viewModels {
-        FotoTimerProcessViewModelFactory((application as FotoTimerApplication).repository)
-    }
+    // instantiate(?) the FTPVM
+    val fotoTimerProcessListViewModel: FotoTimerProcessListViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,25 +29,13 @@ class MainActivity : ComponentActivity() {
         val forceNightMode = sharedSettings.getBoolean("preference_night_mode", false)
 
         setContent {
-            HomeScreen(forceNightMode, this)
-        }
-    }
-
-    @Composable
-    private fun HomeScreen(
-        forceNightMode: Boolean,
-        activity: Activity
-    ) {
-        FotoTimerTheme(
-            darkTheme = forceNightMode
-        ) {
-            DestinationsNavHost(
-                navGraph = NavGraphs.root,
-                dependenciesContainerBuilder = {
-                    // tie the fotoTimerProcessViewModel to the Activity, so all Screens can see it
-                    dependency(hiltViewModel<FotoTimerProcessViewModel>(activity))
-                }
-            )
+            FotoTimerTheme(
+                darkTheme = forceNightMode
+            ) {
+                DestinationsNavHost(
+                    navGraph = NavGraphs.root,
+                )
+            }
         }
     }
 

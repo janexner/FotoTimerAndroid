@@ -4,10 +4,16 @@ import androidx.lifecycle.*
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcessIdAndName
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcessRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
-class FotoTimerProcessViewModel(private val repository: FotoTimerProcessRepository) : ViewModel() {
+@HiltViewModel
+class FotoTimerProcessListViewModel @Inject constructor(
+    val savedStateHandle: SavedStateHandle,
+    val repository: FotoTimerProcessRepository
+    ) : ViewModel() {
 
     // Using LiveData and caching what allWords returns has several benefits:
     // - We can put an observer on the data (instead of polling for changes) and only update the
@@ -29,15 +35,4 @@ class FotoTimerProcessViewModel(private val repository: FotoTimerProcessReposito
 
     fun update(fotoTimerProcess: FotoTimerProcess) =
         viewModelScope.launch { repository.update(fotoTimerProcess) }
-}
-
-class FotoTimerProcessViewModelFactory(private val repository: FotoTimerProcessRepository) :
-    ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(FotoTimerProcessViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return FotoTimerProcessViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
 }

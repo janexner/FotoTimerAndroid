@@ -2,10 +2,13 @@ package com.exner.tools.fototimerresearch2.data.persistence
 
 import androidx.annotation.WorkerThread
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
 // Declares the DAO as a private property in the constructor. Pass in the DAO
 // instead of the whole database, because you only need access to the DAO
-class FotoTimerProcessRepository(private val fotoTimerProcessDAO: FotoTimerProcessDAO) {
+@Singleton
+class FotoTimerProcessRepository @Inject constructor(private val fotoTimerProcessDAO: FotoTimerProcessDAO) {
 
     // Room executes all queries on a separate thread.
     // Observed Flow will notify the observer when the data has changed.

@@ -13,6 +13,8 @@ buildscript {
         room_version = "2.5.0"
         activity_version = "1.6.1"
         theme_adapter_version = "0.28.0"
+        hilt_version = "2.44.2"
+        compose_destinations_version = "1.7.33-beta"
     }
     repositories {
         google()
@@ -26,7 +28,15 @@ buildscript {
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+
+        // ignoring the above
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
+        // because https://dagger.dev/hilt/gradle-setup.html told me so
     }
+}
+
+plugins {
+    id 'com.google.dagger.hilt.android' version "$hilt_version" apply false
 }
 
 task clean(type: Delete) {

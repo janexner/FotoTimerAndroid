@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.preference.PreferenceManager
 import com.exner.tools.fototimerresearch2.data.FotoTimerSampleProcess
-import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessViewModel
+import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessListViewModel
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerSingleProcessViewModel
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcessIdAndName
@@ -25,23 +25,23 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 
-lateinit var ftpViewModel: FotoTimerProcessViewModel
+lateinit var ftpViewModel: FotoTimerProcessListViewModel
 lateinit var spViewModel: FotoTimerSingleProcessViewModel
 
 @Destination
 @Composable
 fun FotoTimerProcessEdit(
-    fotoTimerProcessViewModel: FotoTimerProcessViewModel,
+    fotoTimerProcessListViewModel: FotoTimerProcessListViewModel,
     singleProcessViewModel: FotoTimerSingleProcessViewModel,
     processId: String?,
     navigator: DestinationsNavigator
 ) {
-    ftpViewModel = fotoTimerProcessViewModel
+    ftpViewModel = fotoTimerProcessListViewModel
     spViewModel = singleProcessViewModel
 
     // read the process, if it exists
     val uid = processId?.toLong() ?: -1
-    var tmpProcess: FotoTimerProcess? = fotoTimerProcessViewModel.getProcessById(uid)
+    var tmpProcess: FotoTimerProcess? = fotoTimerProcessListViewModel.getProcessById(uid)
     var thisProcessIsNew = false
 
     // do we need to build one?
@@ -69,7 +69,7 @@ fun FotoTimerProcessEdit(
     spViewModel.setVarsFromProcess(tmpProcess)
 
     // while we're here, let's get the list of all available processes for goto
-    val processIdsAndNames = fotoTimerProcessViewModel.getIdsAndNamesOfAllProcesses()
+    val processIdsAndNames = fotoTimerProcessListViewModel.getIdsAndNamesOfAllProcesses()
 
     // OK, at this point we have a process, either existing, or fresh.
     // Now display the thing for editing
