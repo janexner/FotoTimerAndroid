@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.preference.PreferenceManager
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
+import com.ramcosta.composedestinations.annotation.Destination
 
 sealed class SettingsTabs(val name: String) {
     object UiTab : SettingsTabs("UI")
@@ -23,8 +24,9 @@ sealed class SettingsTabs(val name: String) {
     object SoundsTab : SettingsTabs("Sounds")
 }
 
+@Destination
 @Composable
-fun Settings() {
+fun FotoTimerSettings() {
     val context = LocalContext.current
     val sharedSettings = PreferenceManager.getDefaultSharedPreferences(context)
     var expertMode by remember {
@@ -328,7 +330,7 @@ private fun StandardSettingsColumn(
 @Composable
 fun SettingsPreview() {
     FotoTimerTheme {
-        Settings()
+        FotoTimerSettings()
     }
 }
 
@@ -343,6 +345,6 @@ fun SettingsPreview() {
 @Composable
 fun BigSettingsPreview() {
     FotoTimerTheme {
-        Settings()
+        FotoTimerSettings()
     }
 }
