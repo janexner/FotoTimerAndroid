@@ -14,6 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.preference.PreferenceManager
 import com.exner.tools.fototimerresearch2.data.FotoTimerSampleProcess
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessListViewModel
@@ -31,17 +32,18 @@ lateinit var spViewModel: FotoTimerSingleProcessViewModel
 @Destination
 @Composable
 fun FotoTimerProcessEdit(
-    fotoTimerProcessListViewModel: FotoTimerProcessListViewModel,
-    singleProcessViewModel: FotoTimerSingleProcessViewModel,
-    processId: String?,
+    processId: Long,
+    viewModel: FotoTimerSingleProcessViewModel = hiltViewModel(),
+    fotoTimerProcessListViewModel: FotoTimerProcessListViewModel = hiltViewModel(),
     navigator: DestinationsNavigator
 ) {
+    // set them view models
     ftpViewModel = fotoTimerProcessListViewModel
-    spViewModel = singleProcessViewModel
+    spViewModel = viewModel
 
     // read the process, if it exists
     val uid = processId?.toLong() ?: -1
-    var tmpProcess: FotoTimerProcess? = fotoTimerProcessListViewModel.getProcessById(uid)
+    var tmpProcess: FotoTimerProcess? = ftpViewModel.getProcessById(uid)
     var thisProcessIsNew = false
 
     // do we need to build one?
@@ -69,7 +71,7 @@ fun FotoTimerProcessEdit(
     spViewModel.setVarsFromProcess(tmpProcess)
 
     // while we're here, let's get the list of all available processes for goto
-    val processIdsAndNames = fotoTimerProcessListViewModel.getIdsAndNamesOfAllProcesses()
+    val processIdsAndNames = ftpViewModel.getIdsAndNamesOfAllProcesses()
 
     // OK, at this point we have a process, either existing, or fresh.
     // Now display the thing for editing
@@ -126,7 +128,7 @@ fun FotoTimerProcessEditor(
                 Spacer(modifier = Modifier.weight(0.05f))
                 FilledTonalButton(
                     onClick = {
-                        val process = spViewModel.getAsFotoTimerProcess()
+                        val process = processViewModel.getAsFotoTimerProcess()
                         ftpViewModel.update(process) // this button only for edit
                         modified = false
                     },
@@ -312,7 +314,7 @@ fun FotoTimerProcessEditor(
         // middle and bottom - filler and save button
         Spacer(modifier = Modifier.weight(0.5f))
         FilledTonalButton(onClick = {
-            val process = spViewModel.getAsFotoTimerProcess()
+            val process = processViewModel.getAsFotoTimerProcess()
             if (isThisNewProcess) {
                 ftpViewModel.insert(process)
             } else {

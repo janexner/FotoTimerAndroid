@@ -17,13 +17,11 @@ fun FotoTimerApp() {
     val engine = rememberNavHostEngine()
     val navController = engine.rememberNavController()
 
-    // val vm
-
     FotoTimerScaffold(
         startRoute = NavGraphs.root.startRoute,
         navController = navController,
         topBar = { dest, backStackEntry ->
-            FotoTimerTopBar(dest, backStackEntry)
+            FotoTimerTopBar(navController = navController, destination = dest, navBackStackEntry = backStackEntry)
         },
         content = { innerPadding ->
             DestinationsNavHost(

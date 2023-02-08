@@ -9,7 +9,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
-import com.exner.tools.fototimerresearch2.ui.destinations.*
+import com.exner.tools.fototimerresearch2.ui.destinations.FotoTimerProcessDetailsDestination
+import com.exner.tools.fototimerresearch2.ui.destinations.FotoTimerProcessEditDestination
+import com.exner.tools.fototimerresearch2.ui.destinations.FotoTimerProcessListDestination
+import com.exner.tools.fototimerresearch2.ui.destinations.FotoTimerSettingsDestination
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.navigate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,11 +52,15 @@ fun FotoTimerTopBar(
         },
         actions = {
             if (inProcessList) {
-                IconButton(onClick = { navController.navigate() }) {
+                IconButton(onClick = {
+                    navController.navigate(
+                        FotoTimerProcessEditDestination(-1L)
+                    )
+                }) {
                     Icon(imageVector = Icons.Filled.Add, contentDescription = "Add Process")
                 }
             } else if (inProcessDetails) {
-                IconButton(onClick = { }) {
+                IconButton(onClick = { navController.navigate(FotoTimerProcessEditDestination(-1L)) }) {
                     Icon(
                         imageVector = Icons.Filled.Edit,
                         contentDescription = "Edit Process"
@@ -60,6 +69,7 @@ fun FotoTimerTopBar(
             }
             if (!inSettings) {
                 IconButton(onClick = {
+                    navController.navigate(FotoTimerSettingsDestination())
                 }) {
                     Icon(
                         imageVector = Icons.Filled.Settings,

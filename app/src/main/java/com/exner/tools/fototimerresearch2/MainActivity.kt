@@ -4,11 +4,13 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.preference.PreferenceManager
+import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessListViewModel
 import com.exner.tools.fototimerresearch2.sound.FotoTimerSoundPoolHolder
 import com.exner.tools.fototimerresearch2.ui.LockScreenOrientation
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
@@ -20,6 +22,8 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val fotoTimerProcessListViewModel by viewModels<FotoTimerProcessListViewModel>()
 
         // load sounds
         FotoTimerSoundPoolHolder.loadSounds(this)
