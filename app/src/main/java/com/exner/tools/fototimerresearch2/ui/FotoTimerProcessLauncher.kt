@@ -5,17 +5,22 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessLauncherViewModel
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessListViewModel
+import com.exner.tools.fototimerresearch2.ui.destinations.FotoTimerProcessListDestination
 import com.exner.tools.fototimerresearch2.ui.destinations.FotoTimerRunningProcessDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.result.NavResult
+import com.ramcosta.composedestinations.result.ResultRecipient
 
 @Destination
 @Composable
 fun FotoTimerProcessLauncher(
     fotoTimerProcessLauncherViewModel: FotoTimerProcessLauncherViewModel = hiltViewModel(),
     navigator: DestinationsNavigator,
-    processId: Long
+    processId: Long,
 ) {
+
     if (fotoTimerProcessLauncherViewModel.noProcessSoGoBack) {
         Log.i("jexner FTPL", "Process ID $processId was not good, so jumping back...")
         navigator.popBackStack()

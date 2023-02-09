@@ -9,6 +9,7 @@ object FotoTimerCounterState {
     const val IDLE = 2
     const val COUNTING = 3
 //    const val PAUSED = 4
+    const val CHAINING = 5
 }
 
 class FotoTimerCounterStateHolder {

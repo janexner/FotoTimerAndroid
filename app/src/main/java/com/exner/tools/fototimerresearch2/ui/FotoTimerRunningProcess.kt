@@ -2,6 +2,7 @@ package com.exner.tools.fototimerresearch2.ui
 
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,12 +24,18 @@ import androidx.preference.PreferenceManager
 import com.exner.tools.fototimerresearch2.data.FotoTimerSampleProcess
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerCounterState
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerRunningProcessViewModel
+import com.exner.tools.fototimerresearch2.ui.destinations.FotoTimerProcessDetailsDestination
+import com.exner.tools.fototimerresearch2.ui.destinations.FotoTimerProcessLauncherDestination
+import com.exner.tools.fototimerresearch2.ui.destinations.FotoTimerProcessListDestination
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.NavGraph
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
+import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.navigation.popUpTo
+import com.ramcosta.composedestinations.result.ResultBackNavigator
 
 @Destination
 @Composable
@@ -37,6 +44,26 @@ fun FotoTimerRunningProcess(
     navigator: DestinationsNavigator,
     processId: Long,
 ) {
+    // are we done?
+    when (runningProcessViewModel.counterState.state) {
+        FotoTimerCounterState.COMPLETED -> {
+            Log.i("jexner FTR", "counterState completed")
+//            resultBackNavigator.navigateBack(result = true)
+        }
+        FotoTimerCounterState.CANCELLED -> {
+            Log.i("jexner FTR", "counterState cancelled")
+//            resultBackNavigator.navigateBack(result = false)
+        }
+        FotoTimerCounterState.CHAINING -> {
+            Log.i("jexner FTR", "will chain!")
+            navigator.navigate(FotoTimerProcessLauncherDestination(runningProcessViewModel.processGotoId!!)) {
+                popUpTo(FotoTimerProcessLauncherDestination.route) {
+                    inclusive = true
+                }
+            }
+        }
+    }
+
     // this screen should stay visible, maybe
     if (runningProcessViewModel.keepsScreenOn) {
         KeepScreenOn()
@@ -63,6 +90,11 @@ fun FotoTimerRunningProcess(
                     ) {
                         clickable {
                             runningProcessViewModel.cancelRunner()
+                            navigator.navigate(FotoTimerProcessDetailsDestination(processId)) {
+                                popUpTo(FotoTimerProcessDetailsDestination.route) {
+                                    inclusive = true
+                                }
+                            }
                         }
                     }
             ) {
@@ -92,7 +124,14 @@ fun FotoTimerRunningProcess(
                             ) {
                                 // show huge cancel button
                                 FilledTonalButton(
-                                    onClick = { runningProcessViewModel.cancelRunner() },
+                                    onClick = {
+                                        runningProcessViewModel.cancelRunner()
+                                        navigator.navigate(FotoTimerProcessDetailsDestination(processId)) {
+                                            popUpTo(FotoTimerProcessDetailsDestination.route) {
+                                                inclusive = true
+                                            }
+                                        }
+                                    },
                                     shape = RoundedCornerShape(16.dp),
                                     modifier = Modifier
                                         .fillMaxHeight()
@@ -132,6 +171,11 @@ fun FotoTimerRunningProcess(
                     ) {
                         clickable {
                             runningProcessViewModel.cancelRunner()
+                            navigator.navigate(FotoTimerProcessDetailsDestination(processId)) {
+                                popUpTo(FotoTimerProcessDetailsDestination.route) {
+                                    inclusive = true
+                                }
+                            }
                         }
                     }
             ) {
@@ -159,7 +203,14 @@ fun FotoTimerRunningProcess(
                 if (!sharedSettings.getBoolean("preference_stop_is_everywhere", false)) {
                     // show huge cancel button
                     FilledTonalButton(
-                        onClick = { runningProcessViewModel.cancelRunner() },
+                        onClick = {
+                            runningProcessViewModel.cancelRunner()
+                            navigator.navigate(FotoTimerProcessDetailsDestination(processId)) {
+                                popUpTo(FotoTimerProcessDetailsDestination.route) {
+                                    inclusive = true
+                                }
+                            }
+                        },
                         shape = RoundedCornerShape(16.dp),
                         modifier = Modifier
                             .fillMaxWidth()

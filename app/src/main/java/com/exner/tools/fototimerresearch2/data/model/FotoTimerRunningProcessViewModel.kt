@@ -63,7 +63,8 @@ class FotoTimerRunningProcessViewModel @Inject constructor(
     // vars that are used in Screens
     var processName by mutableStateOf(process.name)
         private set
-
+    var processGotoId by mutableStateOf(process.gotoId)
+        private set
     var processTime by mutableStateOf(process.processTime.seconds)
         private set
     var timeLeftUntilEndOfProcess by mutableStateOf(Duration.ZERO)
@@ -141,15 +142,15 @@ class FotoTimerRunningProcessViewModel @Inject constructor(
                     .toInt() + 1
             )
             // if there is an end sound, and this was not a cancellation, play end sound
-            if (process.hasSoundEnd && FotoTimerCounterState.COMPLETED == counterState.state) {
+            if (process.hasSoundEnd && FotoTimerCounterState.COUNTING == counterState.state) {
                 FotoTimerSoundPoolHolder.playSound(SoundStuff.SOUND_ID_PROCESS_END)
             }
-            setCounterComplete()
-
-            // 4 - chain
-            // if there is a next process, start it
-            if (process.hasAutoChain && null != process.gotoId && process.gotoId >= 0L) {
-                // onStartNextProcess.invoke()
+            if (FotoTimerCounterState.CANCELLED != counterState.state) {
+                setCounterComplete()
+                // this will trigger chaining, if necessary
+                if (process.hasAutoChain && null != process.gotoId && process.gotoId >= 0L) {
+                    setCounterChaining()
+                }
             }
         }
     }
@@ -228,6 +229,10 @@ class FotoTimerRunningProcessViewModel @Inject constructor(
 
     private fun setCounterComplete() {
         counterState.state = FotoTimerCounterState.COMPLETED
+    }
+
+    private fun setCounterChaining() {
+        counterState.state = FotoTimerCounterState.CHAINING
     }
 
     fun cancelRunner() {
