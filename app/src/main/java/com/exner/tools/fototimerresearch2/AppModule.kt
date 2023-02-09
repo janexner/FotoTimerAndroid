@@ -1,6 +1,8 @@
 package com.exner.tools.fototimerresearch2
 
 import android.content.Context
+import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import com.exner.tools.fototimerresearch2.data.persistence.*
 import dagger.Module
 import dagger.Provides
@@ -24,4 +26,9 @@ object AppModule {
     @Provides
     fun provideFotoTimerProcessRepository(processDAO: FotoTimerProcessDAO) =
         FotoTimerProcessRepository(processDAO)
+
+    @Provides
+    fun provideDefaultSharedPreferences(@ApplicationContext appContext: Context): SharedPreferences {
+        return PreferenceManager.getDefaultSharedPreferences(appContext)
+    }
 }

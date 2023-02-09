@@ -1,20 +1,25 @@
 package com.exner.tools.fototimerresearch2.data.model
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.SystemClock
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.preference.PreferenceManager
 import com.exner.tools.fototimerresearch2.data.FotoTimerSampleProcess
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcessRepository
 import com.exner.tools.fototimerresearch2.sound.FotoTimerSoundPoolHolder
 import com.exner.tools.fototimerresearch2.sound.SoundStuff
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import javax.inject.Inject
 import kotlin.math.ceil
@@ -26,6 +31,7 @@ import kotlin.time.Duration.Companion.seconds
 class FotoTimerRunningProcessViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val repository: FotoTimerProcessRepository,
+    private val sharedPreferences: SharedPreferences,
 ) : ViewModel() {
     // get the process we are about to run
     private val processId = savedStateHandle.get<Long>("processId")
@@ -49,7 +55,7 @@ class FotoTimerRunningProcessViewModel @Inject constructor(
     var numberOfIntervals =
         ceil(process.processTime.toDouble() / process.intervalTime.toDouble()).toLong()
     var keepsScreenOn = process.keepsScreenOn
-    val numPreBeeps = 4 // TODO read from sharedPreferences
+    val numPreBeeps = sharedPreferences.getInt("preference_pre_beeps", 4)
 
     // state vars
     val counterState by mutableStateOf(FotoTimerCounterStateHolder())

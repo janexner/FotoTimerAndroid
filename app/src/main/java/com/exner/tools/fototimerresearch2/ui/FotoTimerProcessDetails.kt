@@ -19,6 +19,7 @@ import com.exner.tools.fototimerresearch2.R
 import com.exner.tools.fototimerresearch2.data.FotoTimerSampleProcess
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerSingleProcessViewModel
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
+import com.exner.tools.fototimerresearch2.ui.destinations.FotoTimerProcessLauncherDestination
 import com.exner.tools.fototimerresearch2.ui.destinations.FotoTimerRunningProcessDestination
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 import com.ramcosta.composedestinations.annotation.Destination
@@ -51,7 +52,7 @@ fun FotoTimerProcessDetails(
         // bottom - start button
         Surface(modifier = Modifier.weight(0.25f)) {
             FilledTonalButton(
-                onClick = { navigator.navigate(FotoTimerRunningProcessDestination(processId)) },
+                onClick = { navigator.navigate(FotoTimerProcessLauncherDestination(processId)) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
                 enabled = (null != ftProcess)

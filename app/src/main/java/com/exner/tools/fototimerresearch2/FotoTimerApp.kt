@@ -59,6 +59,19 @@ private fun FotoTimerTopBar(
                 FotoTimerProcessListDestination -> {
                     // no back button here
                 }
+                FotoTimerRunningProcessDestination -> {
+                    // go back, but all the way to the list!
+                    IconButton(onClick = { navController.navigate(FotoTimerProcessListDestination) {
+                        popUpTo(FotoTimerProcessListDestination.route) {
+                            inclusive = true
+                        }
+                    } }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                }
                 else -> {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
@@ -92,11 +105,11 @@ private fun FotoTimerTopBar(
                     }
                 }
                 FotoTimerProcessDetailsDestination -> {
-                    argsFrom(navController.currentBackStackEntry!!)?.processId.let {
+                    argsFrom(navController.currentBackStackEntry!!).processId.let {
                         IconButton(onClick = {
                             navController.navigate(
                                 FotoTimerProcessEditDestination(
-                                    it!!
+                                    it
                                 )
                             )
                         }) {
