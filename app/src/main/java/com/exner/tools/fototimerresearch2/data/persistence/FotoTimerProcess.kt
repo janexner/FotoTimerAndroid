@@ -5,7 +5,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-@kotlinx.serialization.Serializable
 data class FotoTimerProcess (
     @ColumnInfo(name = "name") val name : String,
     @ColumnInfo(name = "process_time") val processTime : Long = 30,

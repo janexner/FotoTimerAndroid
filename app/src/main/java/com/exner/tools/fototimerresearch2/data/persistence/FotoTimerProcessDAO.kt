@@ -17,6 +17,9 @@ interface FotoTimerProcessDAO {
     @Query("SELECT * FROM fototimerprocess WHERE uid=:id")
     suspend fun getFotoTimerProcess(id : Long): FotoTimerProcess?
 
+    @Query("SELECT count(uid) FROM fototimerprocess")
+    suspend fun getNumberOfProcesses(): Int
+
     @Insert
     suspend fun insert(fotoTimerProcess: FotoTimerProcess)
 

@@ -32,7 +32,7 @@ lateinit var spViewModel: FotoTimerSingleProcessViewModel
 @Destination
 @Composable
 fun FotoTimerProcessEdit(
-    processId: Long,
+    processId: Long? = -1,
     viewModel: FotoTimerSingleProcessViewModel = hiltViewModel(),
     fotoTimerProcessListViewModel: FotoTimerProcessListViewModel = hiltViewModel(),
     navigator: DestinationsNavigator
@@ -67,8 +67,6 @@ fun FotoTimerProcessEdit(
             keepsScreenOn = sharedSettings.getBoolean("preference_screen_on", true)
         )
     }
-    // let's use that fancy ViewModel
-    spViewModel.setVarsFromProcess(tmpProcess)
 
     // while we're here, let's get the list of all available processes for goto
     val processIdsAndNames = ftpViewModel.getIdsAndNamesOfAllProcesses()
@@ -344,28 +342,6 @@ fun FotoTimerProcessEditor(
 )
 @Composable
 fun FTEPreview() {
-    spViewModel.setVarsFromProcess(
-        FotoTimerSampleProcess.getFotoTimerSampleProcess(
-            "Sample Process",
-            30L,
-            10L,
-            true,
-            1,
-            true,
-            2,
-            true,
-            3,
-            hasSoundMetronome = true,
-            hasLeadIn = true,
-            leadInSeconds = 5,
-            hasAutoChain = true,
-            hasPauseBeforeChain = true,
-            pauseTime = 3,
-            gotoId = 3L,
-            keepsScreenOn = true,
-            hasPreBeeps = true,
-        )
-    )
     val p1 = FotoTimerProcessIdAndName(1, "Process 1")
     val p2 = FotoTimerProcessIdAndName(2, "Process 2")
     val processIdsAndNames: MutableList<FotoTimerProcessIdAndName> =

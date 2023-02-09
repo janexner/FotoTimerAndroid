@@ -7,7 +7,6 @@ import javax.inject.Singleton
 
 // Declares the DAO as a private property in the constructor. Pass in the DAO
 // instead of the whole database, because you only need access to the DAO
-@Singleton
 class FotoTimerProcessRepository @Inject constructor(private val fotoTimerProcessDAO: FotoTimerProcessDAO) {
 
     // Room executes all queries on a separate thread.
@@ -24,6 +23,9 @@ class FotoTimerProcessRepository @Inject constructor(private val fotoTimerProces
     suspend fun loadIdsAndNamesForAllProcesses(): List<FotoTimerProcessIdAndName> {
         return fotoTimerProcessDAO.getIdsAndNamesOfAllProcesses()
     }
+
+    @WorkerThread
+    suspend fun getNumberOfProcesses() = fotoTimerProcessDAO.getNumberOfProcesses()
 
     // By default Room runs suspend queries off the main thread, therefore, we don't need to
     // implement anything else to ensure we're not doing long running database work

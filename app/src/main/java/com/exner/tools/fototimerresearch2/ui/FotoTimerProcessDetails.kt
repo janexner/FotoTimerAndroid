@@ -13,10 +13,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.preference.PreferenceManager
 import com.exner.tools.fototimerresearch2.R
 import com.exner.tools.fototimerresearch2.data.FotoTimerSampleProcess
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessListViewModel
+import com.exner.tools.fototimerresearch2.data.model.FotoTimerSingleProcessViewModel
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimerresearch2.ui.destinations.FotoTimerRunningProcessDestination
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
@@ -26,11 +28,11 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination
 @Composable
 fun FotoTimerProcessDetails(
+    fotoTimerSingleProcessViewModel: FotoTimerSingleProcessViewModel = hiltViewModel(),
     navigator: DestinationsNavigator,
     processId: Long,
-    fotoTimerProcessListViewModel: FotoTimerProcessListViewModel,
 ) {
-    val ftProcess = fotoTimerProcessListViewModel.getProcessById(processId)
+    val ftProcess = fotoTimerSingleProcessViewModel.getAsFotoTimerProcess()
 
     // lock screen rotation
     LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
@@ -42,11 +44,7 @@ fun FotoTimerProcessDetails(
     ) {
         if (null != ftProcess) {
             // if this process auto chains, let's find the name of the next process, too
-            val nextProcess = ftProcess.gotoId?.let { fotoTimerProcessListViewModel.getProcessById(it) }
-            var nextName: String? = null
-            if (null != nextProcess) {
-                nextName = nextProcess.name
-            }
+            val nextName = ftProcess.gotoId?.let { fotoTimerSingleProcessViewModel.getNameOfNextProcess() }
             ExistingProcessDetails(ftProcess, nextName)
         } else {
             HeaderText(text = "This process does not exist!")

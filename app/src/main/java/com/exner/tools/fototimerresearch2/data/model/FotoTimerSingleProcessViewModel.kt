@@ -3,52 +3,43 @@ package com.exner.tools.fototimerresearch2.data.model
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.exner.tools.fototimerresearch2.data.FotoTimerSampleProcess
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
+import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcessRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
-class FotoTimerSingleProcessViewModel : ViewModel() {
-    var name: String by mutableStateOf("Process Name")
-    var processTime: String by mutableStateOf("30")
-    var intervalTime: String by mutableStateOf("10")
-    var hasSoundStart: Boolean by mutableStateOf(true)
-    var soundStartId: Long? by mutableStateOf(1L)
-    var hasSoundEnd: Boolean by mutableStateOf(true)
-    var soundEndId: Long? by mutableStateOf(2L)
-    var hasSoundInterval: Boolean by mutableStateOf(true)
-    var soundIntervalId: Long? by mutableStateOf(3L)
-    var hasSoundMetronome: Boolean by mutableStateOf(true)
-    var hasLeadIn: Boolean by mutableStateOf(true)
-    var leadInSeconds: String by mutableStateOf("5")
-    var hasAutoChain: Boolean by mutableStateOf(true)
-    var hasPauseBeforeChain: Boolean? by mutableStateOf(true)
-    var pauseTime: String by mutableStateOf("3")
-    var gotoId: Long? by mutableStateOf(null)
-    var keepsScreenOn: Boolean by mutableStateOf(true)
-    var hasPreBeeps: Boolean by mutableStateOf(false)
-    var uid: Long by mutableStateOf(-1L)
+@HiltViewModel
+class FotoTimerSingleProcessViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
+    private val repository: FotoTimerProcessRepository,
+) : ViewModel() {
+    private val processId = savedStateHandle.get<Long>("processId")
+    private val initProcess = if (null != processId && processId >= 0L) getProcessById(processId) else null
+    private val newProcess = FotoTimerSampleProcess.getFotoTimerSampleProcess()
+    var name: String by mutableStateOf(initProcess?.name ?: newProcess.name)
+    var processTime: String by mutableStateOf((initProcess?.processTime ?: newProcess.processTime).toString())
+    var intervalTime: String by mutableStateOf((initProcess?.intervalTime ?: newProcess.intervalTime).toString())
+    var hasSoundStart: Boolean by mutableStateOf(initProcess?.hasSoundStart ?: newProcess.hasSoundStart)
+    var soundStartId: Long? by mutableStateOf(initProcess?.soundStartId ?: newProcess.soundStartId)
+    var hasSoundEnd: Boolean by mutableStateOf(initProcess?.hasSoundEnd ?: newProcess.hasSoundEnd)
+    var soundEndId: Long? by mutableStateOf(initProcess?.soundEndId ?: newProcess.soundEndId)
+    var hasSoundInterval: Boolean by mutableStateOf(initProcess?.hasSoundInterval ?: newProcess.hasSoundInterval)
+    var soundIntervalId: Long? by mutableStateOf(initProcess?.soundIntervalId ?: newProcess.soundIntervalId)
+    var hasSoundMetronome: Boolean by mutableStateOf(initProcess?.hasSoundMetronome ?: newProcess.hasSoundMetronome)
+    var hasLeadIn: Boolean by mutableStateOf(initProcess?.hasLeadIn ?: newProcess.hasLeadIn)
+    var leadInSeconds: String by mutableStateOf((initProcess?.leadInSeconds ?: newProcess.leadInSeconds).toString())
+    var hasAutoChain: Boolean by mutableStateOf(initProcess?.hasAutoChain ?: newProcess.hasAutoChain)
+    var hasPauseBeforeChain: Boolean? by mutableStateOf(initProcess?.hasPauseBeforeChain ?: newProcess.hasPauseBeforeChain)
+    var pauseTime: String by mutableStateOf((initProcess?.pauseTime ?: newProcess.pauseTime).toString())
+    var gotoId: Long? by mutableStateOf(initProcess?.gotoId)
+    var keepsScreenOn: Boolean by mutableStateOf(initProcess?.keepsScreenOn ?: newProcess.keepsScreenOn)
+    var hasPreBeeps: Boolean by mutableStateOf(initProcess?.hasPreBeeps ?: newProcess.hasPreBeeps)
+    var uid: Long by mutableStateOf(initProcess?.uid ?: newProcess.uid)
         private set
-
-    fun setVarsFromProcess(initialProcess: FotoTimerProcess) {
-        name = initialProcess.name
-        processTime = initialProcess.processTime.toString()
-        intervalTime = initialProcess.intervalTime.toString()
-        hasSoundStart = initialProcess.hasSoundStart
-        soundStartId = initialProcess.soundStartId
-        hasSoundEnd = initialProcess.hasSoundEnd
-        soundEndId = initialProcess.soundEndId
-        hasSoundInterval = initialProcess.hasSoundInterval
-        soundIntervalId = initialProcess.soundIntervalId
-        hasSoundMetronome = initialProcess.hasSoundMetronome
-        hasLeadIn = initialProcess.hasLeadIn
-        leadInSeconds = initialProcess.leadInSeconds.toString()
-        hasAutoChain = initialProcess.hasAutoChain
-        hasPauseBeforeChain = initialProcess.hasPauseBeforeChain
-        pauseTime = initialProcess.pauseTime.toString()
-        gotoId = initialProcess.gotoId
-        keepsScreenOn = initialProcess.keepsScreenOn
-        hasPreBeeps = initialProcess.hasPreBeeps
-        uid = initialProcess.uid
-    }
 
     fun getAsFotoTimerProcess(): FotoTimerProcess {
         return FotoTimerProcess(
@@ -72,5 +63,17 @@ class FotoTimerSingleProcessViewModel : ViewModel() {
             hasPreBeeps = hasPreBeeps,
             uid = uid,
         )
+    }
+
+    private fun getProcessById(id: Long): FotoTimerProcess? = runBlocking { repository.loadProcessById(id) }
+
+    fun getNameOfNextProcess(): String? {
+        if (null != gotoId && gotoId!! >= 0) {
+            val nextProcess = getProcessById(gotoId!!)
+            if (nextProcess != null) {
+                return nextProcess.name
+            }
+        }
+        return null
     }
 }

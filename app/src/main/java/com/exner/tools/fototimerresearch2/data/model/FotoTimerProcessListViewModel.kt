@@ -11,9 +11,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FotoTimerProcessListViewModel @Inject constructor(
-    val savedStateHandle: SavedStateHandle,
-    val repository: FotoTimerProcessRepository
-    ) : ViewModel() {
+    private val savedStateHandle: SavedStateHandle,
+    private val repository: FotoTimerProcessRepository
+) : ViewModel() {
 
     // Using LiveData and caching what allWords returns has several benefits:
     // - We can put an observer on the data (instead of polling for changes) and only update the
