@@ -17,7 +17,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.preference.PreferenceManager
 import com.exner.tools.fototimerresearch2.R
 import com.exner.tools.fototimerresearch2.data.FotoTimerSampleProcess
-import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessListViewModel
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerSingleProcessViewModel
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimerresearch2.ui.destinations.FotoTimerRunningProcessDestination
@@ -52,7 +51,7 @@ fun FotoTimerProcessDetails(
         // bottom - start button
         Surface(modifier = Modifier.weight(0.25f)) {
             FilledTonalButton(
-                onClick = { navigator.navigate(FotoTimerRunningProcessDestination()) }, // TODO
+                onClick = { navigator.navigate(FotoTimerRunningProcessDestination(processId)) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
                 enabled = (null != ftProcess)

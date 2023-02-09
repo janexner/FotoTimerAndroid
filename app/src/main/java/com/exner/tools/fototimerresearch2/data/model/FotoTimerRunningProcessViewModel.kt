@@ -5,25 +5,32 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.exner.tools.fototimerresearch2.data.FotoTimerSampleProcess
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
+import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcessRepository
 import com.exner.tools.fototimerresearch2.sound.FotoTimerSoundPoolHolder
 import com.exner.tools.fototimerresearch2.sound.SoundStuff
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Runnable
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.*
+import javax.inject.Inject
 import kotlin.math.ceil
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
-class FotoTimerRunningProcessViewModel(
-    private val process: FotoTimerProcess,
-    onStartNextProcess: () -> Unit
+@HiltViewModel
+class FotoTimerRunningProcessViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
+    private val repository: FotoTimerProcessRepository,
 ) : ViewModel() {
+    // get the process we are about to run
+    private val processId = savedStateHandle.get<Long>("processId")
+    private val process = processId?.let { getProcessById(it) } ?: FotoTimerSampleProcess.getFotoTimerSampleProcess()
+
     // ticks per "loop" - 50L would b 0.05s, roughly
     private val LOOP_TIME: Duration = 50.milliseconds
     private val TICKS_PER_SECOND = 1000L
@@ -136,7 +143,7 @@ class FotoTimerRunningProcessViewModel(
             // 4 - chain
             // if there is a next process, start it
             if (process.hasAutoChain && null != process.gotoId && process.gotoId >= 0L) {
-                onStartNextProcess.invoke()
+                // onStartNextProcess.invoke()
             }
         }
     }
@@ -220,20 +227,7 @@ class FotoTimerRunningProcessViewModel(
     fun cancelRunner() {
         counterState.state = FotoTimerCounterState.CANCELLED
     }
-}
 
-@Suppress("UNCHECKED_CAST")
-class FotoTimerRunningProcessViewModelFactory(
-    private val process: FotoTimerProcess,
-    private val onStartNextProcess: () -> Unit
-) :
-    ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+    private fun getProcessById(id: Long): FotoTimerProcess? = runBlocking { repository.loadProcessById(id) }
 
-        if (modelClass.isAssignableFrom(FotoTimerRunningProcessViewModel::class.java)) {
-            return FotoTimerRunningProcessViewModel(process, onStartNextProcess) as T
-        }
-
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
 }

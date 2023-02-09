@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.preference.PreferenceManager
 import com.exner.tools.fototimerresearch2.data.FotoTimerSampleProcess
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerCounterState
@@ -29,18 +30,12 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 
-@RootNavGraph
-@NavGraph
-annotation class RunningNavGraph(
-    val start: Boolean = false
-)
-
-@RunningNavGraph(start = true)
 @Destination
 @Composable
 fun FotoTimerRunningProcess(
-    runningProcessViewModel: FotoTimerRunningProcessViewModel,
-    navigator: DestinationsNavigator
+    runningProcessViewModel: FotoTimerRunningProcessViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator,
+    processId: Long,
 ) {
     // this screen should stay visible, maybe
     if (runningProcessViewModel.keepsScreenOn) {
@@ -179,27 +174,5 @@ fun FotoTimerRunningProcess(
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Preview(
-    showBackground = true,
-    device = "spec:width=411dp,height=891dp,dpi=420,isRound=false,chinSize=0dp,orientation=landscape"
-)
-@Preview(showSystemUi = true, device = Devices.TABLET)
-@Composable
-fun FTRPPreview() {
-    FotoTimerTheme {
-        FotoTimerRunningProcess(
-            runningProcessViewModel =
-            FotoTimerRunningProcessViewModel(
-                process = FotoTimerSampleProcess.getFotoTimerSampleProcess(
-                    "Sample Process",
-                ),
-                onStartNextProcess = {}
-            ),
-            navigator = EmptyDestinationsNavigator
-        )
     }
 }
