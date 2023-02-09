@@ -7,12 +7,9 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.exner.tools.fototimerresearch2.ui.*
 import com.exner.tools.fototimerresearch2.ui.destinations.*
 import com.exner.tools.fototimerresearch2.ui.destinations.FotoTimerProcessDetailsDestination.argsFrom
@@ -77,7 +74,7 @@ private fun FotoTimerTopBar(
                 FotoTimerProcessListDestination -> {
                     IconButton(onClick = {
                         navController.navigate(
-                            FotoTimerProcessEditDestination()
+                            FotoTimerProcessEditDestination(-1)
                         )
                     }) {
                         Icon(
@@ -95,21 +92,20 @@ private fun FotoTimerTopBar(
                     }
                 }
                 FotoTimerProcessDetailsDestination -> {
-                    val processId =
-                        argsFrom(navController.currentBackStackEntry!!)?.processId.let {
-                            IconButton(onClick = {
-                                navController.navigate(
-                                    FotoTimerProcessEditDestination(
-                                        it!!
-                                    )
+                    argsFrom(navController.currentBackStackEntry!!)?.processId.let {
+                        IconButton(onClick = {
+                            navController.navigate(
+                                FotoTimerProcessEditDestination(
+                                    it!!
                                 )
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Filled.Edit,
-                                    contentDescription = "Edit Process"
-                                )
-                            }
+                            )
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.Edit,
+                                contentDescription = "Edit Process"
+                            )
                         }
+                    }
                     IconButton(onClick = {
                         navController.navigate(FotoTimerSettingsDestination())
                     }) {
@@ -120,6 +116,10 @@ private fun FotoTimerTopBar(
                     }
                 }
                 FotoTimerSettingsDestination -> {
+                    // no icons
+                }
+                FotoTimerRunningProcessDestination -> {
+                    // no icons
                 }
                 else -> {
                     IconButton(onClick = {
