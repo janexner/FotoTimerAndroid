@@ -207,7 +207,9 @@ class FotoTimerRunningProcessViewModel @Inject constructor(
                 }
             }
             // play any sounds?
-            FotoTimerSoundPoolHolder.playSound(soundId)
+            if (soundId != SoundStuff.SOUND_ID_NO_SOUND) {
+                FotoTimerSoundPoolHolder.playSound(soundId)
+            }
         }
     }
 
