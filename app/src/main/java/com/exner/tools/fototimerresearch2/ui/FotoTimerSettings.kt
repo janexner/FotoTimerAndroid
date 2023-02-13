@@ -268,6 +268,15 @@ private fun ExpertSettingsDefaultTimes(sharedSettings: SharedPreferences) {
                     .apply()
             },
         ) { Text(text = "5") }
+        var pauseBeatsLeadIn by remember { mutableStateOf(sharedSettings.getBoolean("preference_pause_beats_lead_in", true)) }
+        TextAndSwitch(
+            text = "Pause 'beats' Lead-in",
+            checked = pauseBeatsLeadIn,
+            onCheckedChange = {
+                pauseBeatsLeadIn = it
+                sharedSettings.edit().putBoolean("preference_pause_beats_lead_in", pauseBeatsLeadIn).apply()
+            }
+        )
     }
 }
 

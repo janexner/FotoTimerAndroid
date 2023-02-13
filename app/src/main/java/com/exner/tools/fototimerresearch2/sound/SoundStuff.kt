@@ -8,4 +8,5 @@ object SoundStuff {
     const val SOUND_ID_METRONOME: Long = 4
     const val SOUND_ID_LEAD_IN: Long = 5
     const val SOUND_ID_PRE_BEEPS: Long = 6
+    const val SOUND_ID_TICK_WHILE_CHAINING: Long = 7
 }

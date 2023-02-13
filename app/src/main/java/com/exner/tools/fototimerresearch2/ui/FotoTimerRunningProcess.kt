@@ -16,26 +16,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.preference.PreferenceManager
-import com.exner.tools.fototimerresearch2.data.FotoTimerSampleProcess
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerCounterState
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerRunningProcessViewModel
 import com.exner.tools.fototimerresearch2.ui.destinations.FotoTimerProcessDetailsDestination
 import com.exner.tools.fototimerresearch2.ui.destinations.FotoTimerProcessLauncherDestination
-import com.exner.tools.fototimerresearch2.ui.destinations.FotoTimerProcessListDestination
-import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.NavGraph
-import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
-import com.ramcosta.composedestinations.navigation.navigate
-import com.ramcosta.composedestinations.navigation.popUpTo
-import com.ramcosta.composedestinations.result.ResultBackNavigator
 
 @Destination
 @Composable
@@ -56,7 +45,13 @@ fun FotoTimerRunningProcess(
         }
         FotoTimerCounterState.CHAINING -> {
             Log.i("jexner FTR", "will chain!")
-            navigator.navigate(FotoTimerProcessLauncherDestination(runningProcessViewModel.processGotoId!!)) {
+            navigator.navigate(
+                FotoTimerProcessLauncherDestination(
+                    runningProcessViewModel.processGotoId!!,
+                    FotoTimerCounterState.CHAINING,
+                    runningProcessViewModel.pauseTime
+                )
+            ) {
                 popUpTo(FotoTimerProcessLauncherDestination.route) {
                     inclusive = true
                 }
@@ -126,7 +121,11 @@ fun FotoTimerRunningProcess(
                                 FilledTonalButton(
                                     onClick = {
                                         runningProcessViewModel.cancelRunner()
-                                        navigator.navigate(FotoTimerProcessDetailsDestination(processId)) {
+                                        navigator.navigate(
+                                            FotoTimerProcessDetailsDestination(
+                                                processId
+                                            )
+                                        ) {
                                             popUpTo(FotoTimerProcessDetailsDestination.route) {
                                                 inclusive = true
                                             }

@@ -1,25 +1,24 @@
 package com.exner.tools.fototimerresearch2.data.model
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.SystemClock
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.preference.PreferenceManager
 import com.exner.tools.fototimerresearch2.data.FotoTimerSampleProcess
+import com.exner.tools.fototimerresearch2.data.model.FotoTimerLoopValues.FACTOR_MILLIS
+import com.exner.tools.fototimerresearch2.data.model.FotoTimerLoopValues.LOOP_TIME
+import com.exner.tools.fototimerresearch2.data.model.FotoTimerLoopValues.TICKS_PER_DECISECOND
+import com.exner.tools.fototimerresearch2.data.model.FotoTimerLoopValues.TICKS_PER_SECOND
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcessRepository
 import com.exner.tools.fototimerresearch2.sound.FotoTimerSoundPoolHolder
 import com.exner.tools.fototimerresearch2.sound.SoundStuff
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import javax.inject.Inject
 import kotlin.math.ceil
@@ -36,12 +35,7 @@ class FotoTimerRunningProcessViewModel @Inject constructor(
     // get the process we are about to run
     private val processId = savedStateHandle.get<Long>("processId")
     private val process = processId?.let { getProcessById(it) } ?: FotoTimerSampleProcess.getFotoTimerSampleProcess()
-
-    // ticks per "loop" - 50L would b 0.05s, roughly
-    private val LOOP_TIME: Duration = 50.milliseconds
-    private val TICKS_PER_SECOND = 1000L
-    private val TICKS_PER_DECISECOND = 100L
-    private val FACTOR_MILLIS = 1000L
+    val pauseTime = process.pauseTime
 
     // ticks at the beginning of all of this
     private var startTicks: Long = SystemClock.elapsedRealtime()
@@ -211,10 +205,6 @@ class FotoTimerRunningProcessViewModel @Inject constructor(
                 FotoTimerSoundPoolHolder.playSound(soundId)
             }
         }
-    }
-
-    fun chainToNextProcess(processId: Long) {
-
     }
 
     fun setTimeLeftUntilEndOfProcessCustom(newTime: Long) {
