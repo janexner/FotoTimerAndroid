@@ -47,9 +47,9 @@ fun FotoTimerRunningProcess(
             Log.i("jexner FTR", "will chain!")
             navigator.navigate(
                 FotoTimerProcessLauncherDestination(
-                    runningProcessViewModel.processGotoId!!,
-                    FotoTimerCounterState.CHAINING,
-                    runningProcessViewModel.pauseTime
+                    processId = runningProcessViewModel.processGotoId!!,
+                    nextState = FotoTimerCounterState.CHAINING,
+                    pause = runningProcessViewModel.pauseTime ?: 0
                 )
             ) {
                 popUpTo(FotoTimerProcessLauncherDestination.route) {

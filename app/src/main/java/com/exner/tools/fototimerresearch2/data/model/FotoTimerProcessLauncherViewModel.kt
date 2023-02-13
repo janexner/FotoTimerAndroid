@@ -61,7 +61,7 @@ class FotoTimerProcessLauncherViewModel @Inject constructor(
         private set
     var processGotoId by mutableStateOf(process?.gotoId ?: -1L)
         private set
-    var pauseTime by mutableStateOf(process?.pauseTime ?: 0)
+    var pauseTime by mutableStateOf(pause ?: 0)
         private set
     var timeLeftUntilEndOfChain by mutableStateOf(Duration.ZERO)
     var elapsedChainTime by mutableStateOf(Duration.ZERO)
@@ -74,7 +74,9 @@ class FotoTimerProcessLauncherViewModel @Inject constructor(
         // get a couple of values right before we loop
         var leadInOrPauseTime = 0.seconds
         if (nextState == FotoTimerCounterState.LEADIN) {
-            leadInOrPauseTime = (process?.leadInSeconds ?: 0).seconds
+            if (process?.hasLeadIn == true) {
+                leadInOrPauseTime = (process.leadInSeconds ?: 0).seconds
+            }
         } else if (nextState == FotoTimerCounterState.CHAINING) {
             leadInOrPauseTime = (pause ?: 0).seconds
         }
@@ -162,10 +164,9 @@ class FotoTimerProcessLauncherViewModel @Inject constructor(
                 // all counters are done!
                 counterState.state = FotoTimerCounterState.COMPLETED
             } else {
-                var msecs = Duration.ZERO
                 if (counterState.nextDisplay <= nextcount) {
                     // a decisecond
-                    msecs = (nextcount - counterState.countBase).milliseconds
+                    var msecs = (nextcount - counterState.countBase).milliseconds
 
                     // update display
                     if (Duration.ZERO == msecs) {

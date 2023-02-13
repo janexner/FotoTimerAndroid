@@ -119,32 +119,11 @@ fun FotoTimerProcessLauncher(
                                 )
                             ) {
                                 // show huge cancel button
-                                FilledTonalButton(
-                                    onClick = {
-                                        fotoTimerProcessLauncherViewModel.cancelRunner()
-                                        navigator.navigate(
-                                            FotoTimerProcessDetailsDestination(
-                                                processId
-                                            )
-                                        ) {
-                                            popUpTo(FotoTimerProcessDetailsDestination.route) {
-                                                inclusive = true
-                                            }
-                                        }
-                                    },
-                                    shape = RoundedCornerShape(16.dp),
-                                    modifier = Modifier
-                                        .fillMaxHeight()
-                                        .fillMaxWidth(0.3f)
-                                        .align(Alignment.Center),
-                                    enabled = fotoTimerProcessLauncherViewModel.counterState.state == FotoTimerCounterState.COUNTING
-                                ) {
-                                    Text(
-                                        text = "Stop",
-                                        textAlign = TextAlign.Center,
-                                        style = MaterialTheme.typography.bodyLarge,
-                                    )
-                                }
+                                HugeCancelButton(
+                                    fotoTimerProcessLauncherViewModel,
+                                    navigator,
+                                    processId
+                                )
                             }
                         }
                         // show additional information (next process(es))
@@ -181,7 +160,7 @@ fun FotoTimerProcessLauncher(
                     duration = fotoTimerProcessLauncherViewModel.elapsedChainTime,
                 )
                 Text(
-                    text = "Interval Time (total ${fotoTimerProcessLauncherViewModel.pauseTime})",
+                    text = "Wait Time (total ${fotoTimerProcessLauncherViewModel.pauseTime})",
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Spacer(modifier = Modifier.weight(0.001f))
@@ -189,28 +168,42 @@ fun FotoTimerProcessLauncher(
                 Spacer(modifier = Modifier.weight(0.01f))
                 if (!sharedSettings.getBoolean("preference_stop_is_everywhere", false)) {
                     // show huge cancel button
-                    FilledTonalButton(
-                        onClick = {
-                            fotoTimerProcessLauncherViewModel.cancelRunner()
-                            navigator.navigate(FotoTimerProcessDetailsDestination(processId)) {
-                                popUpTo(FotoTimerProcessDetailsDestination.route) {
-                                    inclusive = true
-                                }
-                            }
-                        },
-                        shape = RoundedCornerShape(16.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(0.5f),
-                        enabled = fotoTimerProcessLauncherViewModel.counterState.state == FotoTimerCounterState.COUNTING
-                    ) {
-                        Text(
-                            text = "Stop",
-                            style = MaterialTheme.typography.headlineLarge,
-                        )
-                    }
+                    HugeCancelButton(fotoTimerProcessLauncherViewModel, navigator, processId)
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun HugeCancelButton(
+    fotoTimerProcessLauncherViewModel: FotoTimerProcessLauncherViewModel,
+    navigator: DestinationsNavigator,
+    processId: Long
+) {
+    FilledTonalButton(
+        onClick = {
+            fotoTimerProcessLauncherViewModel.cancelRunner()
+            navigator.navigate(
+                FotoTimerProcessDetailsDestination(
+                    processId
+                )
+            ) {
+                popUpTo(FotoTimerProcessDetailsDestination.route) {
+                    inclusive = true
+                }
+            }
+        },
+        shape = RoundedCornerShape(16.dp),
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth(0.3f),
+        enabled = fotoTimerProcessLauncherViewModel.counterState.state == FotoTimerCounterState.CHAINING || fotoTimerProcessLauncherViewModel.counterState.state == FotoTimerCounterState.LEADIN
+    ) {
+        Text(
+            text = "Stop",
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.bodyLarge,
+        )
     }
 }

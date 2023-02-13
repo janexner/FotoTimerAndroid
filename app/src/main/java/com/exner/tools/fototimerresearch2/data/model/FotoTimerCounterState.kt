@@ -44,8 +44,13 @@ class FotoTimerCounterStateHolder {
         startProcessId = processId
     }
 
-    fun initAtStartOfChain(chainTime: Duration, counterState: Int, processId: Long, nextProcessId: Long) {
-            state = counterState
+    fun initAtStartOfChain(
+        chainTime: Duration,
+        counterState: Int,
+        processId: Long,
+        nextProcessId: Long
+    ) {
+        state = counterState
         countBase = SystemClock.elapsedRealtime()
         nextFinish = countBase + chainTime.inWholeMilliseconds
         nextDisplay = countBase + 100L
@@ -55,7 +60,7 @@ class FotoTimerCounterStateHolder {
 }
 
 object FotoTimerLoopValues {
-    // ticks per "loop" - 50L would b 0.05s, roughly
+    // ticks per "loop" - 50L would be 0.05s, roughly
     val LOOP_TIME: Duration = 50.milliseconds
     val TICKS_PER_SECOND = 1000L
     val TICKS_PER_DECISECOND = 100L

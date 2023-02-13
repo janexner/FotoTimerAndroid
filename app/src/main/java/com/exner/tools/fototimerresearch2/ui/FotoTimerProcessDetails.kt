@@ -20,6 +20,7 @@ import com.exner.tools.fototimerresearch2.data.FotoTimerSampleProcess
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerCounterState
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerSingleProcessViewModel
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
+import com.exner.tools.fototimerresearch2.ui.destinations.FotoTimerProcessLauncherDestination
 import com.exner.tools.fototimerresearch2.ui.theme.FotoTimerTheme
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -56,7 +57,7 @@ fun FotoTimerProcessDetails(
                     navigator.navigate(
                         FotoTimerProcessLauncherDestination(
                             processId = processId,
-                            counterState = FotoTimerCounterState.LEADIN,
+                            nextState = FotoTimerCounterState.LEADIN,
                             pause = 0 // not needed here, so set to zero
                         )
                     )
