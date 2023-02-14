@@ -109,7 +109,10 @@ fun FotoTimerProcessEditor(
                     enabled = modified,
                     modifier = Modifier.width(100.dp)
                 ) {
-                    ButtonText(text = "Save")
+                    Text(
+                        text = "Save",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
             }
         }

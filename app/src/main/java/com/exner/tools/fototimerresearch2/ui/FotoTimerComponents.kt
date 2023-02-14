@@ -54,7 +54,8 @@ fun ButtonText(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text,
         style = MaterialTheme.typography.headlineLarge,
-        modifier = modifier
+        textAlign = TextAlign.Center,
+        modifier = modifier,
     )
 }
 

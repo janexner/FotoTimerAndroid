@@ -49,7 +49,7 @@ private fun FotoTimerTopBar(
     destination: Destination?,
     navController: NavHostController
 ) {
-    CenterAlignedTopAppBar(
+    TopAppBar(
         title = { Text(text = "Foto Timer") },
         navigationIcon = {
             when (destination) {
