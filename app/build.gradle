@@ -11,11 +11,11 @@ plugins {
 }
 
 android {
-    namespace "com.exner.tools.fototimerresearch2"
+    namespace "com.exner.tools.fototimer"
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.exner.tools.fototimerresearch2"
+        applicationId "com.exner.tools.fototimer"
         minSdk 29
         targetSdk 33
         versionCode 1
@@ -55,7 +55,6 @@ android {
         }
     }
     buildToolsVersion '34.0.0 rc1'
-    namespace 'com.exner.tools.fototimerresearch2'
 
     // compose destinations
     applicationVariants.all { variant ->
