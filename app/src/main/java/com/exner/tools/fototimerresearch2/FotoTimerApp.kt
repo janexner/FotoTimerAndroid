@@ -95,6 +95,7 @@ private fun FotoTimerTopBar(
                         )
                     }
                     SettingsActionIconButton(navController)
+                    AboutActionIconButton(navController = navController)
                 }
                 FotoTimerProcessDetailsDestination -> {
                     argsFrom(navController.currentBackStackEntry!!).processId.let {
@@ -112,6 +113,7 @@ private fun FotoTimerTopBar(
                         }
                     }
                     SettingsActionIconButton(navController)
+                    AboutActionIconButton(navController = navController)
                 }
                 FotoTimerSettingsDestination -> {
                     AboutActionIconButton(navController)
