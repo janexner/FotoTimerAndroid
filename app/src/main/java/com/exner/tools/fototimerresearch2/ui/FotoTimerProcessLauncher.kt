@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.preference.PreferenceManager
@@ -199,10 +198,6 @@ private fun HugeCancelButton(
             .fillMaxWidth(0.3f),
         enabled = fotoTimerProcessLauncherViewModel.counterState.state == FotoTimerCounterState.CHAINING || fotoTimerProcessLauncherViewModel.counterState.state == FotoTimerCounterState.LEADIN
     ) {
-        Text(
-            text = "Stop",
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.bodyLarge,
-        )
+        ButtonText(text = "Stop")
     }
 }

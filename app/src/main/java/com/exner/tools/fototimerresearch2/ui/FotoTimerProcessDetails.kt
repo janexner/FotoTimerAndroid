@@ -62,7 +62,7 @@ fun FotoTimerProcessDetails(
                 shape = RoundedCornerShape(16.dp),
                 enabled = true
             ) {
-                Text(text = "Start", style = MaterialTheme.typography.headlineLarge)
+                ButtonText(text = "Start")
             }
         }
     }

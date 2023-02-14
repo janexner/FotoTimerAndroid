@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.preference.PreferenceManager
@@ -138,11 +137,7 @@ fun FotoTimerRunningProcess(
                                         .align(Alignment.Center),
                                     enabled = runningProcessViewModel.counterState.state == FotoTimerCounterState.COUNTING
                                 ) {
-                                    Text(
-                                        text = "Stop",
-                                        textAlign = TextAlign.Center,
-                                        style = MaterialTheme.typography.bodyLarge,
-                                    )
+                                    ButtonText(text = "Stop")
                                 }
                             }
                             Text(
@@ -216,10 +211,7 @@ fun FotoTimerRunningProcess(
                             .fillMaxHeight(0.5f),
                         enabled = runningProcessViewModel.counterState.state == FotoTimerCounterState.COUNTING
                     ) {
-                        Text(
-                            text = "Stop",
-                            style = MaterialTheme.typography.headlineLarge,
-                        )
+                        ButtonText(text = "Stop")
                     }
                 }
             }

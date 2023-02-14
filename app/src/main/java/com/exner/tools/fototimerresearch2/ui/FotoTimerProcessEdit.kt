@@ -10,13 +10,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.preference.PreferenceManager
-import com.exner.tools.fototimerresearch2.data.FotoTimerSampleProcess
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerProcessListViewModel
 import com.exner.tools.fototimerresearch2.data.model.FotoTimerSingleProcessViewModel
 import com.exner.tools.fototimerresearch2.data.persistence.FotoTimerProcess
@@ -111,11 +109,7 @@ fun FotoTimerProcessEditor(
                     enabled = modified,
                     modifier = Modifier.width(100.dp)
                 ) {
-                    Text(
-                        text = "Save",
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Center,
-                    )
+                    ButtonText(text = "Save")
                 }
             }
         }
@@ -299,10 +293,8 @@ fun FotoTimerProcessEditor(
             // navigate back
             navigator.popBackStack()
         }) {
-            Text(
+            ButtonText(
                 text = "Save Process",
-                style = MaterialTheme.typography.headlineSmall,
-                textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
         }

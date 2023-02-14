@@ -49,6 +49,15 @@ fun SmallBodyText(text: String) {
     )
 }
 
+@Composable
+fun ButtonText(text: String, modifier: Modifier = Modifier) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.headlineLarge,
+        modifier = modifier
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TextAndSwitch(
