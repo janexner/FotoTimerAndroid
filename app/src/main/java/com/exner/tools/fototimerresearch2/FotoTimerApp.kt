@@ -2,10 +2,7 @@ package com.exner.tools.fototimerresearch2
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -61,11 +58,13 @@ private fun FotoTimerTopBar(
                 }
                 FotoTimerRunningProcessDestination -> {
                     // go back, but all the way to the list!
-                    IconButton(onClick = { navController.navigate(FotoTimerProcessListDestination) {
-                        popUpTo(FotoTimerProcessListDestination.route) {
-                            inclusive = true
+                    IconButton(onClick = {
+                        navController.navigate(FotoTimerProcessListDestination) {
+                            popUpTo(FotoTimerProcessListDestination.route) {
+                                inclusive = true
+                            }
                         }
-                    } }) {
+                    }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "Back"
@@ -95,14 +94,7 @@ private fun FotoTimerTopBar(
                             contentDescription = "Add Process"
                         )
                     }
-                    IconButton(onClick = {
-                        navController.navigate(FotoTimerSettingsDestination())
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.Settings,
-                            contentDescription = "Settings"
-                        )
-                    }
+                    SettingsActionIconButton(navController)
                 }
                 FotoTimerProcessDetailsDestination -> {
                     argsFrom(navController.currentBackStackEntry!!).processId.let {
@@ -119,32 +111,43 @@ private fun FotoTimerTopBar(
                             )
                         }
                     }
-                    IconButton(onClick = {
-                        navController.navigate(FotoTimerSettingsDestination())
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.Settings,
-                            contentDescription = "Settings"
-                        )
-                    }
+                    SettingsActionIconButton(navController)
                 }
                 FotoTimerSettingsDestination -> {
-                    // no icons
+                    AboutActionIconButton(navController)
                 }
                 FotoTimerRunningProcessDestination -> {
                     // no icons
                 }
+                FotoTimerAboutDestination -> {
+                    // no icons
+                }
                 else -> {
-                    IconButton(onClick = {
-                        navController.navigate(FotoTimerSettingsDestination())
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.Settings,
-                            contentDescription = "Settings"
-                        )
-                    }
+                    SettingsActionIconButton(navController)
+                    AboutActionIconButton(navController)
                 }
             }
         }
     )
+}
+
+@Composable
+private fun AboutActionIconButton(navController: NavHostController) {
+    IconButton(onClick = {
+        navController.navigate(FotoTimerAboutDestination())
+    }) {
+        Icon(imageVector = Icons.Filled.Info, contentDescription = "About Foto Timer")
+    }
+}
+
+@Composable
+private fun SettingsActionIconButton(navController: NavHostController) {
+    IconButton(onClick = {
+        navController.navigate(FotoTimerSettingsDestination())
+    }) {
+        Icon(
+            imageVector = Icons.Filled.Settings,
+            contentDescription = "Settings"
+        )
+    }
 }

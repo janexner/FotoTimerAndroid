@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId "com.exner.tools.fototimerresearch2"
-        minSdk 26
+        minSdk 29
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -97,6 +97,7 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:2.5.3"
     implementation "androidx.navigation:navigation-ui-ktx:2.5.3"
     implementation "androidx.preference:preference-ktx:1.2.0"
+    implementation "androidx.webkit:webkit:1.6.0"
     implementation 'androidx.window:window:1.0.0'
 
     // hilt
