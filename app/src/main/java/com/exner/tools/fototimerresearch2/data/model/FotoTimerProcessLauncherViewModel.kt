@@ -28,9 +28,9 @@ import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class FotoTimerProcessLauncherViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val repository: FotoTimerProcessRepository,
-    private val sharedPreferences: SharedPreferences,
+    sharedPreferences: SharedPreferences,
 ) : ViewModel() {
     // get the process we are about to run, and how
     private val processId = savedStateHandle.get<Long>("processId")
@@ -59,13 +59,12 @@ class FotoTimerProcessLauncherViewModel @Inject constructor(
     // vars that are used in Screens
     var processName by mutableStateOf(process?.name ?: "No Process")
         private set
-    var processGotoId by mutableStateOf(process?.gotoId ?: -1L)
+    private var processGotoId by mutableStateOf(process?.gotoId ?: -1L)
         private set
     var pauseTime by mutableStateOf(pause ?: 0)
         private set
-    var timeLeftUntilEndOfChain by mutableStateOf(Duration.ZERO)
+    private var timeLeftUntilEndOfChain by mutableStateOf(Duration.ZERO)
     var elapsedChainTime by mutableStateOf(Duration.ZERO)
-
 
     init {
         Log.i("jexner FTPLVM", "init... $processId, $nextState")

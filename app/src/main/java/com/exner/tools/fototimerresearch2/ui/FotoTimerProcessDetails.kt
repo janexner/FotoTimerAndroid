@@ -42,14 +42,10 @@ fun FotoTimerProcessDetails(
             .padding(8.dp)
             .fillMaxSize()
     ) {
-        if (null != ftProcess) {
-            // if this process auto chains, let's find the name of the next process, too
-            val nextName =
-                ftProcess.gotoId?.let { fotoTimerSingleProcessViewModel.getNameOfNextProcess() }
-            ExistingProcessDetails(ftProcess, nextName)
-        } else {
-            HeaderText(text = "This process does not exist!")
-        }
+        // if this process auto chains, let's find the name of the next process, too
+        val nextName =
+            ftProcess.gotoId?.let { fotoTimerSingleProcessViewModel.getNameOfNextProcess() }
+        ExistingProcessDetails(ftProcess, nextName)
         // bottom - start button
         Surface(modifier = Modifier.weight(0.25f)) {
             FilledTonalButton(
@@ -64,7 +60,7 @@ fun FotoTimerProcessDetails(
                 },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                enabled = (null != ftProcess)
+                enabled = true
             ) {
                 Text(text = "Start", style = MaterialTheme.typography.headlineLarge)
             }

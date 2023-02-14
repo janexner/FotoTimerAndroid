@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FotoTimerSingleProcessViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val repository: FotoTimerProcessRepository,
 ) : ViewModel() {
     private val processId = savedStateHandle.get<Long>("processId")
@@ -44,8 +44,8 @@ class FotoTimerSingleProcessViewModel @Inject constructor(
     fun getAsFotoTimerProcess(): FotoTimerProcess {
         return FotoTimerProcess(
             name = name,
-            processTime = processTime.toLongOrNull() ?: 30L,
-            intervalTime = intervalTime.toLongOrNull() ?: 10L,
+            processTime = processTime.toLongOrNull() ?: newProcess.processTime,
+            intervalTime = intervalTime.toLongOrNull() ?: newProcess.intervalTime,
             hasSoundStart = hasSoundStart,
             soundStartId = soundStartId,
             hasSoundEnd = hasSoundEnd,
@@ -54,10 +54,10 @@ class FotoTimerSingleProcessViewModel @Inject constructor(
             soundIntervalId = soundIntervalId,
             hasSoundMetronome = hasSoundMetronome,
             hasLeadIn = hasLeadIn,
-            leadInSeconds = leadInSeconds.toIntOrNull() ?: 5,
+            leadInSeconds = leadInSeconds.toIntOrNull() ?: newProcess.leadInSeconds,
             hasAutoChain = hasAutoChain,
             hasPauseBeforeChain = hasPauseBeforeChain,
-            pauseTime = pauseTime.toIntOrNull() ?: 3,
+            pauseTime = pauseTime.toIntOrNull() ?: newProcess.pauseTime,
             gotoId = gotoId,
             keepsScreenOn = keepsScreenOn,
             hasPreBeeps = hasPreBeeps,

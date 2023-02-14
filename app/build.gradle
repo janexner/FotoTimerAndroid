@@ -25,14 +25,6 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += [
-                        "room.schemaLocation": "$projectDir/src/main/assets/schemas".toString(),
-                        "room.incremental"   : "true"
-                ]
-            }
-        }
     }
 
     buildTypes {
@@ -45,11 +37,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '11'
     }
     buildFeatures {
         compose true
@@ -75,73 +67,70 @@ android {
     }
 }
 
-dependencies {
+kotlin {
+    jvmToolchain(11)
+}
 
-    implementation 'androidx.core:core-ktx:1.9.0'
+dependencies {
+    // now sorted by https://developer.android.com/jetpack/androidx/releases
+
+    // jetpack
+    implementation "androidx.activity:activity-ktx:1.6.1"
     implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation "androidx.compose.foundation:foundation:1.3.1"
+    implementation "androidx.compose.foundation:foundation-layout:1.3.1"
+    implementation "androidx.compose.material:material-icons-core:1.3.1"
+    implementation "androidx.compose.material3:material3:1.0.1"
+    implementation "androidx.compose.material3:material3-window-size-class:1.0.1"
+    implementation "androidx.compose.runtime:runtime:1.3.3"
+    implementation "androidx.compose.runtime:runtime-livedata:1.3.3"
+    implementation "androidx.compose.ui:ui:1.3.3"
+    implementation "androidx.compose.ui:ui-tooling:1.3.3"
+    implementation "androidx.compose.ui:ui-tooling-preview:1.3.3"
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.5.1"
+    implementation "androidx.navigation:navigation-compose:2.5.3"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.5.3"
+    implementation "androidx.navigation:navigation-ui-ktx:2.5.3"
+    implementation "androidx.preference:preference-ktx:1.2.0"
     implementation 'androidx.window:window:1.0.0'
 
-    implementation "androidx.preference:preference-ktx:$preference_version"
+    // hilt
+    implementation "com.google.dagger:hilt-android:2.45"
+    kapt "com.google.dagger:hilt-compiler:2.45"
+    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
     // Room components
-    implementation "androidx.room:room-ktx:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
-    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-runtime:2.5.0"
+    annotationProcessor "androidx.room:room-compiler:2.5.0"
+    ksp "androidx.room:room-compiler:2.5.0"
+    implementation "androidx.room:room-ktx:2.5.0"
 
-    // Lifecycle components
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
-
+    // others
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
+    implementation "com.google.android.material:material:1.8.0"
 
-    // Compose
-    implementation "com.google.android.material:material:$material_version"
-    implementation "androidx.activity:activity-compose:$activity_version"
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    // compose destinations
+    implementation "io.github.raamcosta.compose-destinations:core:1.8.33-beta"
+    ksp "io.github.raamcosta.compose-destinations:ksp:1.8.33-beta"
 
-    implementation "androidx.navigation:navigation-compose:$nav_version"
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-
-    implementation "androidx.compose.foundation:foundation:$compose_foundation_version"
-    implementation "androidx.compose.foundation:foundation-layout:$compose_foundation_version"
-
-    implementation "androidx.compose.runtime:runtime:$compose_runtime_version"
-    implementation "androidx.compose.runtime:runtime-livedata:$compose_runtime_version"
-
-    implementation "androidx.compose.ui:ui:$compose_ui_version"
-    implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
-    implementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
-
-    implementation "androidx.compose.material3:material3:$m3compose_version"
-    implementation "androidx.compose.material3:material3-window-size-class:$m3compose_version"
-    implementation "androidx.compose.material:material-icons-core:$m2compose_version"
-
-    implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
-
+    // testing, which I don't do
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ui_version"
-    debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
-    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
-
-    // compose destinations
-    implementation "io.github.raamcosta.compose-destinations:core:$compose_destinations_version"
-    ksp "io.github.raamcosta.compose-destinations:ksp:$compose_destinations_version"
-
-    // hilt
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-compiler:$hilt_version"
-    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:1.3.3"
+    debugImplementation "androidx.compose.ui:ui-tooling:1.3.3"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:1.3.3"
     // For instrumentation tests
-    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
-    kaptAndroidTest "com.google.dagger:hilt-compiler:$hilt_version"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:2.45"
+    kaptAndroidTest "com.google.dagger:hilt-compiler:2.45"
     // For local unit tests
-    testImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
-    kaptTest "com.google.dagger:hilt-compiler:$hilt_version"
+    testImplementation "com.google.dagger:hilt-android-testing:2.45"
+    kaptTest "com.google.dagger:hilt-compiler:2.45"
 }
 
 kapt {
@@ -150,4 +139,9 @@ kapt {
 
 hilt {
     enableAggregatingTask = true
+}
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/src/main/assets/schemas")
+    arg("room.incremental"   , "true")
 }

@@ -43,30 +43,8 @@ fun FotoTimerProcessEdit(
 
     // read the process, if it exists
     val uid = processId?.toLong() ?: -1
-    var tmpProcess: FotoTimerProcess? = ftpViewModel.getProcessById(uid)
-    var thisProcessIsNew = false
-
-    // do we need to build one?
-    if (null == tmpProcess) {
-        thisProcessIsNew = true
-        // build one
-        val context = LocalContext.current
-        val sharedSettings = PreferenceManager.getDefaultSharedPreferences(context)
-        tmpProcess = FotoTimerSampleProcess.getFotoTimerSampleProcess(
-            "New Process",
-            sharedSettings.getLong("preference_process_time", 30L),
-            sharedSettings.getLong("preference_interval_time", 10L),
-            false,
-            1,
-            false,
-            2,
-            false,
-            3,
-            leadInSeconds = sharedSettings.getInt("preference_lead_in_time", 5),
-            pauseTime = sharedSettings.getInt("preference_pause_time", 0),
-            keepsScreenOn = sharedSettings.getBoolean("preference_screen_on", true)
-        )
-    }
+    val tmpProcess: FotoTimerProcess? = ftpViewModel.getProcessById(uid)
+    val thisProcessIsNew = null == tmpProcess
 
     // while we're here, let's get the list of all available processes for goto
     val processIdsAndNames = ftpViewModel.getIdsAndNamesOfAllProcesses()
