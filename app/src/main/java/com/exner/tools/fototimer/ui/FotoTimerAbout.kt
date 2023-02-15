@@ -46,14 +46,13 @@ fun FotoTimerAbout() {
 @Composable
 fun AboutScreenElements() {
     Column {
-        HeaderText(text = "About Foto Timer")
-        Text(
-            text = "Foto Timer ${BuildConfig.VERSION_NAME}",
-            fontWeight = FontWeight.Bold,
+        HeaderText(
+            text = "About Foto Timer",
             modifier = Modifier.padding(8.dp)
         )
         Text(
-            text = "Foto Timer is a flexible timer for all sorts of repeating or timed tasks. It shows time left, and can sound audible alarms at different points.",
+            text = "Foto Timer ${BuildConfig.VERSION_NAME}",
+            fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(8.dp)
         )
     }

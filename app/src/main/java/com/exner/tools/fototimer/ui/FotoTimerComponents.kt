@@ -24,28 +24,29 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun HeaderText(text: String) {
+fun HeaderText(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text,
-        modifier = Modifier
-            .fillMaxWidth(),
-        style = MaterialTheme.typography.headlineSmall
+        style = MaterialTheme.typography.headlineSmall,
+        modifier = modifier.fillMaxWidth(),
     )
 }
 
 @Composable
-fun BodyText(text: String) {
+fun BodyText(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text,
-        style = MaterialTheme.typography.bodyLarge
+        style = MaterialTheme.typography.bodyLarge,
+        modifier = modifier,
     )
 }
 
 @Composable
-fun SmallBodyText(text: String) {
+fun SmallBodyText(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text,
-        style = MaterialTheme.typography.bodySmall
+        style = MaterialTheme.typography.bodySmall,
+        modifier = modifier,
     )
 }
 
