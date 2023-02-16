@@ -57,7 +57,7 @@ fun AboutScreenElements() {
         )
     }
     Spacer(modifier = Modifier.height(8.dp))
-    val url = "https://www.jan-exner.de/software/fototimer/about.html"
+    val url = "https://www.jan-exner.de/software/android/fototimer/about.html"
     AndroidView(factory = { context ->
         WebView(context).apply {
             layoutParams = ViewGroup.LayoutParams(
