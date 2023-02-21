@@ -286,7 +286,7 @@ fun FotoTimerProcessEditor(
         }
         // middle and bottom - filler and save button
         Spacer(modifier = Modifier.weight(0.5f))
-        FilledTonalButton(onClick = {
+        Button(onClick = {
             val process = processViewModel.getAsFotoTimerProcess()
             if (isThisNewProcess) {
                 ftpViewModel.insert(process)

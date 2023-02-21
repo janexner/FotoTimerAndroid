@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.Color
 // https://m3.material.io/styles/color/the-color-system/color-roles#134ac840-2020-47e3-bb01-8bba1385b0f9
 
 // but these are from https://m3.material.io/theme-builder#/custom
+// see below for my very own dark mode
 
 val md_theme_light_primary = Color(0xFF006685)
 val md_theme_light_onPrimary = Color(0xFFFFFFFF)
@@ -70,5 +71,8 @@ val md_theme_dark_surfaceTint = Color(0xFF6CD2FF)
 val md_theme_dark_outlineVariant = Color(0xFF40484C)
 val md_theme_dark_scrim = Color(0xFF000000)
 
-
 val seed = Color(0xFF5DB7DE)
+
+val jexner_theme_dark_red = Color(0xFFBA1A1A)
+val jexner_theme_dark_dark = Color(0xFF3E0808)
+val jexner_theme_dark_black = Color(0xFF000000)

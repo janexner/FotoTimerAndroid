@@ -42,6 +42,38 @@ private val LightColors = lightColorScheme(
 )
 
 
+private val RealDarkColors = darkColorScheme(
+    primary = jexner_theme_dark_black,
+    onPrimary = jexner_theme_dark_red,
+    primaryContainer = jexner_theme_dark_dark,
+    onPrimaryContainer = jexner_theme_dark_red,
+    secondary = jexner_theme_dark_black,
+    onSecondary = jexner_theme_dark_red,
+    secondaryContainer = jexner_theme_dark_black,
+    onSecondaryContainer = jexner_theme_dark_red,
+    tertiary = jexner_theme_dark_black,
+    onTertiary = jexner_theme_dark_red,
+    tertiaryContainer = jexner_theme_dark_black,
+    onTertiaryContainer = jexner_theme_dark_red,
+    error = jexner_theme_dark_black,
+    errorContainer = jexner_theme_dark_black,
+    onError = jexner_theme_dark_red,
+    onErrorContainer = jexner_theme_dark_red,
+    background = jexner_theme_dark_black,
+    onBackground = jexner_theme_dark_red,
+    surface = jexner_theme_dark_black,
+    onSurface = jexner_theme_dark_red,
+    surfaceVariant = jexner_theme_dark_black,
+    onSurfaceVariant = jexner_theme_dark_red,
+    outline = md_theme_dark_outline,
+    inverseOnSurface = md_theme_dark_inverseOnSurface,
+    inverseSurface = md_theme_dark_inverseSurface,
+    inversePrimary = md_theme_dark_inversePrimary,
+    surfaceTint = md_theme_dark_surfaceTint,
+    outlineVariant = md_theme_dark_outlineVariant,
+    scrim = jexner_theme_dark_black,
+)
+
 private val DarkColors = darkColorScheme(
     primary = md_theme_dark_primary,
     onPrimary = md_theme_dark_onPrimary,
@@ -86,7 +118,7 @@ fun FotoTimerTheme(
             val context = LocalContext.current
             if (currentDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-        currentDarkTheme -> DarkColors
+        currentDarkTheme -> RealDarkColors
         else -> LightColors
     }
     MaterialTheme(

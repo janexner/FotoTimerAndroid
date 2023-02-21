@@ -48,7 +48,7 @@ fun FotoTimerProcessDetails(
         ExistingProcessDetails(ftProcess, nextName)
         // bottom - start button
         Surface(modifier = Modifier.weight(0.25f)) {
-            FilledTonalButton(
+            Button(
                 onClick = {
                     navigator.navigate(
                         FotoTimerProcessLauncherDestination(

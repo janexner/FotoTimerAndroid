@@ -23,17 +23,15 @@ class MainActivity : ComponentActivity() {
         // load sounds
         FotoTimerSoundPoolHolder.loadSounds(this)
 
-        // are we in forced dark mode?
+        // are we in forced dark mode? Do we want dynamic colors?
         val sharedSettings = PreferenceManager.getDefaultSharedPreferences(this)
         val forceNightMode = sharedSettings.getBoolean("preference_night_mode", false)
+        val useDynamicColours = sharedSettings.getBoolean("preference_dynamic_color", true)
 
         setContent {
             FotoTimerTheme(
                 darkTheme = forceNightMode,
-                dynamicColor = sharedSettings.getBoolean(
-                    "preference_dynamic_color",
-                    true
-                )
+                dynamicColor = useDynamicColours,
             ) {
                 val windowSizeClass = calculateWindowSizeClass(activity = this)
                 val isCompact = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
