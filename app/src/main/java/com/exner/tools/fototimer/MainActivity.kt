@@ -29,7 +29,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             FotoTimerTheme(
-                darkTheme = forceNightMode
+                darkTheme = forceNightMode,
+                dynamicColor = sharedSettings.getBoolean(
+                    "preference_dynamic_color",
+                    true
+                )
             ) {
                 val windowSizeClass = calculateWindowSizeClass(activity = this)
                 val isCompact = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact

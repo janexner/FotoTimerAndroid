@@ -2,6 +2,7 @@ package com.exner.tools.fototimer.ui
 
 import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
+import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -297,10 +298,29 @@ private fun StandardSettingsColumn(
         }
         TextAndSwitch(
             text = "Night mode (needs a restart)",
-            checked = night
-        ) {
-            sharedSettings.edit().putBoolean("preference_night_mode", it).apply()
-            night = !night
+            checked = night,
+            onCheckedChange = {
+                sharedSettings.edit().putBoolean("preference_night_mode", it).apply()
+                night = !night
+            }
+        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            var dynamicColor by remember {
+                mutableStateOf(
+                    sharedSettings.getBoolean(
+                        "preference_dynamic_color",
+                        true
+                    )
+                )
+            }
+            TextAndSwitch(
+                text = "Dynamic colours (needs a restart)",
+                checked = dynamicColor,
+                onCheckedChange = {
+                    sharedSettings.edit().putBoolean("preference_dynamic_color", it).apply()
+                    dynamicColor = !dynamicColor
+                }
+            )
         }
         var keepScreenOn by remember {
             mutableStateOf(
