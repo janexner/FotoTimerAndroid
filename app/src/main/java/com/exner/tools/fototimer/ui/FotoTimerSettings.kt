@@ -30,6 +30,7 @@ sealed class SettingsTabs(val name: String) {
 fun FotoTimerSettings() {
     val context = LocalContext.current
     val sharedSettings = PreferenceManager.getDefaultSharedPreferences(context)
+
     var expertMode by remember {
         mutableStateOf(
             sharedSettings.getBoolean(
@@ -297,7 +298,7 @@ private fun StandardSettingsColumn(
             )
         }
         TextAndSwitch(
-            text = "Night mode (needs a restart)",
+            text = "Night mode (red on black)",
             checked = night,
             onCheckedChange = {
                 sharedSettings.edit().putBoolean("preference_night_mode", it).apply()

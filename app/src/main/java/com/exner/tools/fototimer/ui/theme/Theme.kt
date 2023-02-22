@@ -1,13 +1,13 @@
 package com.exner.tools.fototimer.ui.theme
 
 import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import androidx.preference.PreferenceManager
 
 private val LightColors = lightColorScheme(
     primary = md_theme_light_primary,
@@ -108,14 +108,15 @@ private val DarkColors = darkColorScheme(
 
 @Composable
 fun FotoTimerTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val currentDarkTheme by remember { mutableStateOf(darkTheme) }
+    val context = LocalContext.current
+    val sharedSettings = PreferenceManager.getDefaultSharedPreferences(context)
+    // are we in forced dark mode? Do we want dynamic colors?
+    val currentDarkTheme by remember { mutableStateOf(sharedSettings.getBoolean("preference_night_mode", false)) }
+    val dynamicColor by remember { mutableStateOf(sharedSettings.getBoolean("preference_dynamic_color", true)) }
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
             if (currentDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
         currentDarkTheme -> RealDarkColors

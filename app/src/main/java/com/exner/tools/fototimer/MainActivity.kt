@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import androidx.preference.PreferenceManager
 import com.exner.tools.fototimer.sound.FotoTimerSoundPoolHolder
 import com.exner.tools.fototimer.ui.LockScreenOrientation
 import com.exner.tools.fototimer.ui.theme.FotoTimerTheme
@@ -23,16 +22,8 @@ class MainActivity : ComponentActivity() {
         // load sounds
         FotoTimerSoundPoolHolder.loadSounds(this)
 
-        // are we in forced dark mode? Do we want dynamic colors?
-        val sharedSettings = PreferenceManager.getDefaultSharedPreferences(this)
-        val forceNightMode = sharedSettings.getBoolean("preference_night_mode", false)
-        val useDynamicColours = sharedSettings.getBoolean("preference_dynamic_color", true)
-
         setContent {
-            FotoTimerTheme(
-                darkTheme = forceNightMode,
-                dynamicColor = useDynamicColours,
-            ) {
+            FotoTimerTheme() {
                 val windowSizeClass = calculateWindowSizeClass(activity = this)
                 val isCompact = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
                 if (isCompact) {
