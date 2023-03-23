@@ -1,8 +1,8 @@
 package com.exner.tools.fototimer.ui
 
-import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
 import android.os.Build
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -10,12 +10,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.preference.PreferenceManager
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.exner.tools.fototimer.data.model.FotoTimerSettingsViewModel
 import com.exner.tools.fototimer.ui.theme.FotoTimerTheme
 import com.ramcosta.composedestinations.annotation.Destination
 
@@ -27,21 +28,16 @@ sealed class SettingsTabs(val name: String) {
 
 @Destination
 @Composable
-fun FotoTimerSettings() {
-    val context = LocalContext.current
-    val sharedSettings = PreferenceManager.getDefaultSharedPreferences(context)
+fun FotoTimerSettings(
+    settingsViewModel: FotoTimerSettingsViewModel = hiltViewModel()
+) {
+    val fotoTimerSettings by settingsViewModel.preferenceState.collectAsState()
 
-    var expertMode by remember {
-        mutableStateOf(
-            sharedSettings.getBoolean(
-                "preference_expert_mode",
-                false
-            )
-        )
-    }
+    Log.i("jexner Settings", "SVM: $settingsViewModel")
+
     // unlock screen rotation
     LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR)
-    var tabIndex by remember { mutableStateOf(0) }
+    var tabIndex by rememberSaveable { mutableStateOf(0) }
     val tabItems = listOf(SettingsTabs.UiTab, SettingsTabs.TimersTab, SettingsTabs.SoundsTab)
 
     // show vertically
@@ -63,17 +59,24 @@ fun FotoTimerSettings() {
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
             ) {
-                StandardSettingsColumn(sharedSettings = sharedSettings)
+                StandardSettingsColumn(
+                    fotoTimerSettings.nightMode,
+                    { settingsViewModel.setNightMode(it) },
+                    fotoTimerSettings.useDynamicColour,
+                    { settingsViewModel.setUseDynamicColour(it) },
+                    fotoTimerSettings.defaultKeepScreenOn,
+                    { settingsViewModel.setDefaultKeepScreenOn(it) },
+                )
                 TextAndSwitch(
                     text = "Expert mode (more options everywhere)",
-                    checked = expertMode
+                    checked = fotoTimerSettings.expertMode
                 ) {
-                    sharedSettings.edit().putBoolean("preference_expert_mode", it)
-                        .apply()
-                    expertMode = !expertMode
+                    settingsViewModel.setExpertMode(it)
                 }
-                AnimatedVisibility(visible = expertMode) {
-                    ExpertSettingsUI(sharedSettings)
+                AnimatedVisibility(visible = fotoTimerSettings.expertMode) {
+                    ExpertSettingsUI(
+                        fotoTimerSettings.stopIsEverywhere
+                    ) { settingsViewModel.setStopIsEverywhere(it) }
                 }
             }
             1 -> Column(
@@ -81,20 +84,24 @@ fun FotoTimerSettings() {
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
             ) {
-                AnimatedVisibility(visible = expertMode) {
+                AnimatedVisibility(visible = fotoTimerSettings.expertMode) {
                     Column(
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        ExpertSettingsDefaultTimes(sharedSettings)
+                        ExpertSettingsDefaultTimes(
+                            fotoTimerSettings.defaultProcessTime, { settingsViewModel.setDefaultProcessTime(it) },
+                            fotoTimerSettings.defaultIntervalTime, { settingsViewModel.setDefaultIntervalTime(it) },
+                            fotoTimerSettings.defaultLeadInTime, { settingsViewModel.setDefaultLeadInTime(it) },
+                            fotoTimerSettings.defaultPauseTime, { settingsViewModel.setDefaultPauseTime(it) },
+                            fotoTimerSettings.pauseBeatsLeadIn, { settingsViewModel.setPauseBeatsLeadIn(it) }
+                        )
                     }
                 }
                 TextAndSwitch(
                     text = "Expert mode (more options everywhere)",
-                    checked = expertMode
+                    checked = fotoTimerSettings.expertMode
                 ) {
-                    sharedSettings.edit().putBoolean("preference_expert_mode", it)
-                        .apply()
-                    expertMode = !expertMode
+                    settingsViewModel.setExpertMode(it)
                 }
             }
             2 -> Column(
@@ -102,20 +109,20 @@ fun FotoTimerSettings() {
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
             ) {
-                AnimatedVisibility(visible = expertMode) {
+                AnimatedVisibility(visible = fotoTimerSettings.expertMode) {
                     Column(
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        ExpertSettingsSound(sharedSettings)
+                        ExpertSettingsSound(
+                            fotoTimerSettings.numberOfPreBeeps
+                        ) { settingsViewModel.setNumberOfPreBeeps(it) }
                     }
                 }
                 TextAndSwitch(
                     text = "Expert mode (more options everywhere)",
-                    checked = expertMode
+                    checked = fotoTimerSettings.expertMode
                 ) {
-                    sharedSettings.edit().putBoolean("preference_expert_mode", it)
-                        .apply()
-                    expertMode = !expertMode
+                    settingsViewModel.setExpertMode(it)
                 }
             }
         }
@@ -130,153 +137,93 @@ fun FotoTimerSettings() {
 }
 
 @Composable
-private fun ExpertSettingsUI(sharedSettings: SharedPreferences) {
+private fun ExpertSettingsUI(
+    stopIsEverywhere: Boolean, updateStopIsEverywhere: (Boolean) -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        var stopIsEverywhere by remember {
-            mutableStateOf(
-                sharedSettings.getBoolean("preference_stop_is_everywhere", false)
-            )
-        }
         TextAndSwitch(
             text = "Running timer can be stopped by tapping anywhere on the screen",
             checked = stopIsEverywhere
         ) {
-            sharedSettings.edit().putBoolean("preference_stop_is_everywhere", it).apply()
-            stopIsEverywhere = it
+            updateStopIsEverywhere(it)
         }
     }
 }
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-private fun ExpertSettingsSound(sharedSettings: SharedPreferences) {
+private fun ExpertSettingsSound(
+    preBeeps: Int, setPreBeeps: (Int) -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        var preBeepsText by remember {
-            mutableStateOf(
-                (sharedSettings.getInt(
-                    "preference_pre_beeps",
-                    4
-                )).toString()
-            )
-        }
         OutlinedTextField(
-            value = preBeepsText,
+            value = preBeeps.toString(),
             label = { Text(text = "Pre-beeps (small beeps before the interval)") },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             onValueChange = {
-                preBeepsText = it
-                sharedSettings.edit()
-                    .putInt("preference_pre_beeps", preBeepsText.toIntOrNull() ?: 0)
-                    .apply()
+                val newPreBeeps = it.toIntOrNull() ?: 0
+                setPreBeeps(newPreBeeps)
             },
-            placeholder = { Text(text = "30") },
+            placeholder = { Text(text = "4") },
             textStyle = MaterialTheme.typography.bodyLarge
         )
     }
 }
 
 @Composable
-private fun ExpertSettingsDefaultTimes(sharedSettings: SharedPreferences) {
+private fun ExpertSettingsDefaultTimes(
+    processTime: Long, setProcessTime: (Long) -> Unit,
+    intervalTime: Long, setIntervalTime: (Long) -> Unit,
+    leadInTime: Long, setLeadInTime: (Long) -> Unit,
+    pauseTime: Int, setPauseTime: (Int) -> Unit,
+    pauseBeatsLeadIn: Boolean, setPauseBeatsLeadIn: (Boolean) -> Unit,
+) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        var processTimeText by remember {
-            mutableStateOf(
-                (sharedSettings.getLong(
-                    "preference_process_time",
-                    30L
-                )).toString()
-            )
-        }
         TextFieldForTimes(
-            value = processTimeText,
+            value = processTime.toString(),
             label = { Text(text = "Default Process time") },
             onValueChange = {
-                processTimeText = it
-                sharedSettings.edit()
-                    .putLong(
-                        "preference_process_time",
-                        processTimeText.toLongOrNull() ?: 0L
-                    )
-                    .apply()
+                val newProcessTime = it.toLongOrNull() ?: 0
+                setProcessTime(newProcessTime)
             }
         ) { Text(text = "30") }
-        var intervalTimeText by remember {
-            mutableStateOf(
-                (sharedSettings.getLong(
-                    "preference_interval_time",
-                    10L
-                )).toString()
-            )
-        }
         TextFieldForTimes(
-            value = intervalTimeText,
+            value = intervalTime.toString(),
             label = { Text(text = "Default Interval time") },
             onValueChange = {
-                intervalTimeText = it
-                sharedSettings.edit()
-                    .putLong(
-                        "preference_interval_time",
-                        intervalTimeText.toLongOrNull() ?: 0L
-                    )
-                    .apply()
+                val newIntervalTime = it.toLongOrNull() ?: 0
+                setIntervalTime(newIntervalTime)
             },
         ) { Text(text = "10") }
-        var leadInTimeText by remember {
-            mutableStateOf(
-                (sharedSettings.getLong(
-                    "preference_lead_in_time",
-                    0L
-                )).toString()
-            )
-        }
         TextFieldForTimes(
-            value = leadInTimeText,
+            value = leadInTime.toString(),
             label = { Text(text = "Default Lead-in time") },
             onValueChange = {
-                leadInTimeText = it
-                sharedSettings.edit()
-                    .putLong(
-                        "preference_lead_in_time",
-                        leadInTimeText.toLongOrNull() ?: 0L
-                    )
-                    .apply()
+                val newLeadInTime = it.toLongOrNull() ?: 0
+                setLeadInTime(newLeadInTime)
             },
         ) { Text(text = "0") }
-        var pauseTimeText by remember {
-            mutableStateOf(
-                (sharedSettings.getLong(
-                    "preference_pause_time",
-                    5L
-                )).toString()
-            )
-        }
         TextFieldForTimes(
-            value = pauseTimeText,
+            value = pauseTime.toString(),
             label = { Text(text = "Default Pause time") },
             onValueChange = {
-                pauseTimeText = it
-                sharedSettings.edit()
-                    .putLong(
-                        "preference_pause_time",
-                        pauseTimeText.toLongOrNull() ?: 0L
-                    )
-                    .apply()
+                val newPauseTime = it.toIntOrNull() ?: 0
+                setPauseTime(newPauseTime)
             },
         ) { Text(text = "5") }
-        var pauseBeatsLeadIn by remember { mutableStateOf(sharedSettings.getBoolean("preference_pause_beats_lead_in", true)) }
         TextAndSwitch(
             text = "Pause 'beats' Lead-in",
             checked = pauseBeatsLeadIn,
             onCheckedChange = {
-                pauseBeatsLeadIn = it
-                sharedSettings.edit().putBoolean("preference_pause_beats_lead_in", pauseBeatsLeadIn).apply()
+                setPauseBeatsLeadIn(it)
             }
         )
     }
@@ -284,59 +231,37 @@ private fun ExpertSettingsDefaultTimes(sharedSettings: SharedPreferences) {
 
 @Composable
 private fun StandardSettingsColumn(
-    sharedSettings: SharedPreferences,
+    nightMode: Boolean,
+    updateNightMode: (Boolean) -> Unit,
+    dynamicColor: Boolean,
+    updateDynamicColor: (Boolean) -> Unit,
+    keepScreenOn: Boolean,
+    updateKeepScreenOn: (Boolean) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        var night by remember {
-            mutableStateOf(
-                sharedSettings.getBoolean(
-                    "preference_night_mode",
-                    false
-                )
-            )
-        }
         TextAndSwitch(
             text = "Night mode (red on black)",
-            checked = night,
+            checked = nightMode,
             onCheckedChange = {
-                sharedSettings.edit().putBoolean("preference_night_mode", it).apply()
-                night = !night
+                updateNightMode(it)
             }
         )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            var dynamicColor by remember {
-                mutableStateOf(
-                    sharedSettings.getBoolean(
-                        "preference_dynamic_color",
-                        true
-                    )
-                )
-            }
             TextAndSwitch(
                 text = "Dynamic colours (needs a restart)",
                 checked = dynamicColor,
                 onCheckedChange = {
-                    sharedSettings.edit().putBoolean("preference_dynamic_color", it).apply()
-                    dynamicColor = !dynamicColor
+                    updateDynamicColor(it)
                 }
-            )
-        }
-        var keepScreenOn by remember {
-            mutableStateOf(
-                sharedSettings.getBoolean(
-                    "preference_screen_on",
-                    true
-                )
             )
         }
         TextAndSwitch(
             text = "Default to keep screen on while counting",
             checked = keepScreenOn
         ) {
-            sharedSettings.edit().putBoolean("preference_screen_on", it).apply()
-            keepScreenOn = !keepScreenOn
+            updateKeepScreenOn(it)
         }
     }
 }
