@@ -19,7 +19,6 @@ class FotoTimerSettingsViewModel @Inject constructor(
 
     init {
         _preferencesState.value.expertMode = sharedPreferences.getBoolean("preference_expert_mode", false)
-        _preferencesState.value.nightMode = sharedPreferences.getBoolean("preference_night_mode", false)
         _preferencesState.value.useDynamicColour = sharedPreferences.getBoolean("preference_dynamic_color", true)
         _preferencesState.value.defaultKeepScreenOn = sharedPreferences.getBoolean("preference_screen_on", true)
         _preferencesState.value.stopIsEverywhere = sharedPreferences.getBoolean("preference_stop_is_everywhere", false)
@@ -38,19 +37,6 @@ class FotoTimerSettingsViewModel @Inject constructor(
                 expertMode = newExpertMode
             )
         }
-    }
-
-    fun setNightMode(newNightMode: Boolean) {
-        sharedPreferences.edit().putBoolean("preference_night_mode", newNightMode).apply()
-        _preferencesState.update { currentSettings ->
-            currentSettings.copy(
-                nightMode = newNightMode
-            )
-        }
-    }
-
-    fun getNightMode(): Boolean {
-        return _preferencesState.value.nightMode
     }
 
     fun setUseDynamicColour(newDynamicColour: Boolean) {

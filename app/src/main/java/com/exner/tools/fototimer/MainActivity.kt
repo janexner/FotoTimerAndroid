@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
@@ -34,7 +35,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val dynamicColour = settingsViewModel.getUseDynamicColour()
-            val darkTheme = settingsViewModel.getNightMode()
+            val darkTheme = isSystemInDarkTheme()
 
             FotoTimerTheme(
                 dynamicColor = dynamicColour,

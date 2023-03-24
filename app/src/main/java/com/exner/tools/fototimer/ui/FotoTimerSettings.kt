@@ -60,8 +60,6 @@ fun FotoTimerSettings(
                     .verticalScroll(rememberScrollState())
             ) {
                 StandardSettingsColumn(
-                    fotoTimerSettings.nightMode,
-                    { settingsViewModel.setNightMode(it) },
                     fotoTimerSettings.useDynamicColour,
                     { settingsViewModel.setUseDynamicColour(it) },
                     fotoTimerSettings.defaultKeepScreenOn,
@@ -231,8 +229,6 @@ private fun ExpertSettingsDefaultTimes(
 
 @Composable
 private fun StandardSettingsColumn(
-    nightMode: Boolean,
-    updateNightMode: (Boolean) -> Unit,
     dynamicColor: Boolean,
     updateDynamicColor: (Boolean) -> Unit,
     keepScreenOn: Boolean,
@@ -241,13 +237,6 @@ private fun StandardSettingsColumn(
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        TextAndSwitch(
-            text = "Night mode (red on black)",
-            checked = nightMode,
-            onCheckedChange = {
-                updateNightMode(it)
-            }
-        )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             TextAndSwitch(
                 text = "Dynamic colours (needs a restart)",
