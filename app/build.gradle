@@ -54,7 +54,7 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
-    buildToolsVersion '34.0.0 rc1'
+    buildToolsVersion '34.0.0 rc2'
 
     // compose destinations
     applicationVariants.all { variant ->
@@ -112,7 +112,7 @@ dependencies {
     implementation "androidx.room:room-ktx:2.5.1"
 
     // others
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0'
     implementation "com.google.android.material:material:1.8.0"
 
     // compose destinations
