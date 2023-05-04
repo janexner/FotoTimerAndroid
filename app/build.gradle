@@ -3,11 +3,11 @@ plugins {
     id 'com.google.dagger.hilt.android'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.8.20'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.8.21'
     id 'org.jetbrains.kotlin.android'
 
     // compose destinations
-    id 'com.google.devtools.ksp' version '1.8.20-1.0.10'
+    id 'com.google.devtools.ksp' version '1.8.21-1.0.11'
 }
 
 android {
@@ -37,17 +37,17 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '11'
+        jvmTarget = '17'
     }
     buildFeatures {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion "1.4.5"
+        kotlinCompilerExtensionVersion "1.4.7"
         // see https://developer.android.com/jetpack/androidx/releases/compose-kotlin
     }
     packagingOptions {
@@ -68,25 +68,25 @@ android {
 }
 
 kotlin {
-    jvmToolchain(11)
+    jvmToolchain(17)
 }
 
 dependencies {
     // now sorted by https://developer.android.com/jetpack/androidx/releases
 
     // jetpack
-    implementation "androidx.activity:activity-ktx:1.7.0"
+    implementation "androidx.activity:activity-ktx:1.7.1"
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation "androidx.compose.foundation:foundation:1.4.1"
-    implementation "androidx.compose.foundation:foundation-layout:1.4.1"
-    implementation "androidx.compose.material:material-icons-core:1.4.1"
+    implementation "androidx.compose.foundation:foundation:1.4.2"
+    implementation "androidx.compose.foundation:foundation-layout:1.4.2"
+    implementation "androidx.compose.material:material-icons-core:1.4.2"
     implementation "androidx.compose.material3:material3:1.0.1"
     implementation "androidx.compose.material3:material3-window-size-class:1.0.1"
-    implementation "androidx.compose.runtime:runtime:1.4.1"
-    implementation "androidx.compose.runtime:runtime-livedata:1.4.1"
-    implementation "androidx.compose.ui:ui:1.4.1"
-    implementation "androidx.compose.ui:ui-tooling:1.4.1"
-    implementation "androidx.compose.ui:ui-tooling-preview:1.4.1"
+    implementation "androidx.compose.runtime:runtime:1.4.2"
+    implementation "androidx.compose.runtime:runtime-livedata:1.4.2"
+    implementation "androidx.compose.ui:ui:1.4.2"
+    implementation "androidx.compose.ui:ui-tooling:1.4.2"
+    implementation "androidx.compose.ui:ui-tooling-preview:1.4.2"
     implementation 'androidx.core:core-ktx:1.10.0'
     implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
@@ -101,14 +101,14 @@ dependencies {
     implementation 'androidx.window:window:1.0.0'
 
     // hilt
-    implementation "com.google.dagger:hilt-android:2.45"
+    implementation "com.google.dagger:hilt-android:2.46"
     implementation 'androidx.datastore:datastore-core:1.0.0'
-    kapt "com.google.dagger:hilt-compiler:2.45"
+    kapt "com.google.dagger:hilt-compiler:2.46"
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
     // Room components
     implementation "androidx.room:room-runtime:2.5.1"
-    kapt "androidx.room:room-compiler:2.5.1"
+    annotationProcessor "androidx.room:room-compiler:2.5.1"
     ksp "androidx.room:room-compiler:2.5.1"
     implementation "androidx.room:room-ktx:2.5.1"
 
@@ -117,22 +117,22 @@ dependencies {
     implementation "com.google.android.material:material:1.8.0"
 
     // compose destinations
-    implementation 'io.github.raamcosta.compose-destinations:core:1.8.38-beta'
-    ksp 'io.github.raamcosta.compose-destinations:ksp:1.8.38-beta'
+    implementation 'io.github.raamcosta.compose-destinations:core:1.9.42-beta'
+    ksp 'io.github.raamcosta.compose-destinations:ksp:1.9.42-beta'
 
     // testing, which I don't do
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.4.1'
-    debugImplementation 'androidx.compose.ui:ui-tooling:1.4.1'
-    debugImplementation 'androidx.compose.ui:ui-test-manifest:1.4.1'
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.4.2'
+    debugImplementation 'androidx.compose.ui:ui-tooling:1.4.2'
+    debugImplementation 'androidx.compose.ui:ui-test-manifest:1.4.2'
     // For instrumentation tests
-    androidTestImplementation "com.google.dagger:hilt-android-testing:2.45"
-    kaptAndroidTest "com.google.dagger:hilt-compiler:2.45"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:2.46"
+    kaptAndroidTest "com.google.dagger:hilt-compiler:2.46"
     // For local unit tests
-    testImplementation "com.google.dagger:hilt-android-testing:2.45"
-    kaptTest "com.google.dagger:hilt-compiler:2.45"
+    testImplementation "com.google.dagger:hilt-android-testing:2.46"
+    kaptTest "com.google.dagger:hilt-compiler:2.46"
 }
 
 kapt {
