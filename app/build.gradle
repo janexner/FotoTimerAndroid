@@ -55,7 +55,7 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
-    buildToolsVersion '34.0.0 rc2'
+    buildToolsVersion '34.0.0 rc3'
 
     // compose destinations
     applicationVariants.all { variant ->
@@ -77,16 +77,16 @@ dependencies {
     // jetpack
     implementation "androidx.activity:activity-ktx:1.7.1"
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation "androidx.compose.foundation:foundation:1.4.2"
-    implementation "androidx.compose.foundation:foundation-layout:1.4.2"
-    implementation "androidx.compose.material:material-icons-core:1.4.2"
+    implementation "androidx.compose.foundation:foundation:1.4.3"
+    implementation "androidx.compose.foundation:foundation-layout:1.4.3"
+    implementation "androidx.compose.material:material-icons-core:1.4.3"
     implementation "androidx.compose.material3:material3:1.0.1"
     implementation "androidx.compose.material3:material3-window-size-class:1.0.1"
-    implementation "androidx.compose.runtime:runtime:1.4.2"
-    implementation "androidx.compose.runtime:runtime-livedata:1.4.2"
-    implementation "androidx.compose.ui:ui:1.4.2"
-    implementation "androidx.compose.ui:ui-tooling:1.4.2"
-    implementation "androidx.compose.ui:ui-tooling-preview:1.4.2"
+    implementation "androidx.compose.runtime:runtime:1.4.3"
+    implementation "androidx.compose.runtime:runtime-livedata:1.4.3"
+    implementation "androidx.compose.ui:ui:1.4.3"
+    implementation "androidx.compose.ui:ui-tooling:1.4.3"
+    implementation "androidx.compose.ui:ui-tooling-preview:1.4.3"
     implementation 'androidx.core:core-ktx:1.10.0'
     implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
@@ -124,14 +124,14 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.4.2'
-    debugImplementation 'androidx.compose.ui:ui-tooling:1.4.2'
-    debugImplementation 'androidx.compose.ui:ui-test-manifest:1.4.2'
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.4.3'
+    debugImplementation 'androidx.compose.ui:ui-tooling:1.4.3'
+    debugImplementation 'androidx.compose.ui:ui-test-manifest:1.4.3'
     // For instrumentation tests
-    androidTestImplementation "com.google.dagger:hilt-android-testing:2.46"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:2.45"
     kaptAndroidTest "com.google.dagger:hilt-compiler:2.46"
     // For local unit tests
-    testImplementation "com.google.dagger:hilt-android-testing:2.46"
+    testImplementation "com.google.dagger:hilt-android-testing:2.45"
     kaptTest "com.google.dagger:hilt-compiler:2.46"
 }
 
