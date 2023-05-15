@@ -68,7 +68,7 @@ fun TextAndSwitch(
     onCheckedChange: ((Boolean) -> Unit)?
 ) {
     ListItem(
-        headlineText = {
+        headlineContent = {
             Text(
                 text = text,
                 maxLines = 3,

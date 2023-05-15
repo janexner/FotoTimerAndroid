@@ -54,8 +54,8 @@ fun FotoTimerProcessList(
                         supText += ". Next: ${ftProcess.gotoId}"
                     }
                     ListItem(
-                        headlineText = { HeaderText(text = ftProcess.name) },
-                        supportingText = { BodyText(text = supText) }
+                        headlineContent = { HeaderText(text = ftProcess.name) },
+                        supportingContent = { BodyText(text = supText) }
                     )
                 }
             }

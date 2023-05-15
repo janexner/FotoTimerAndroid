@@ -90,8 +90,8 @@ fun ExistingProcessDetails(
         )
         if (process.keepsScreenOn && expertMode) {
             ListItem(
-                headlineText = { SmallBodyText(text = "UI") },
-                supportingText = { BodyText(text = "Screen will stay on") },
+                headlineContent = { SmallBodyText(text = "UI") },
+                supportingContent = { BodyText(text = "Screen will stay on") },
                 leadingContent = {
                     Icon(
                         painterResource(id = R.drawable.baseline_light_mode_24),
@@ -161,8 +161,8 @@ fun ProcessAudioData(
                 soundStatement += space + "every second ('metronome')"
             }
             ListItem(
-                headlineText = { SmallBodyText(text = "Sounds") },
-                supportingText = { BodyText(text = soundStatement) },
+                headlineContent = { SmallBodyText(text = "Sounds") },
+                supportingContent = { BodyText(text = soundStatement) },
                 leadingContent = {
                     Icon(
                         painterResource(id = R.drawable.ic_baseline_music_note_24),
@@ -174,8 +174,8 @@ fun ProcessAudioData(
     } else { // not expert mode
         if (hasSoundStart || hasSoundEnd || hasPreBeeps || hasSoundInterval || hasSoundMetronome) {
             ListItem(
-                headlineText = { SmallBodyText(text = "Sounds") },
-                supportingText = { BodyText(text = "Sound is on") },
+                headlineContent = { SmallBodyText(text = "Sounds") },
+                supportingContent = { BodyText(text = "Sound is on") },
                 leadingContent = {
                     Icon(
                         painterResource(id = R.drawable.ic_baseline_music_note_24),
@@ -194,8 +194,8 @@ fun ProcessTimerData(
     intervalTime: Long
 ) {
     ListItem(
-        headlineText = { SmallBodyText(text = "Times") },
-        supportingText = { BodyText(text = "The process runs for $processTime seconds, with an interval every $intervalTime seconds") },
+        headlineContent = { SmallBodyText(text = "Times") },
+        supportingContent = { BodyText(text = "The process runs for $processTime seconds, with an interval every $intervalTime seconds") },
         leadingContent = {
             Icon(
                 painterResource(id = R.drawable.ic_baseline_timer_24),
@@ -222,8 +222,8 @@ fun ProcessLeadInAndChainData(
     if (expertMode) {
         if (hasLeadIn && (null != leadInSeconds)) {
             ListItem(
-                headlineText = { SmallBodyText(text = "Before") },
-                supportingText = { BodyText(text = "There will be a $leadInSeconds second count down") },
+                headlineContent = { SmallBodyText(text = "Before") },
+                supportingContent = { BodyText(text = "There will be a $leadInSeconds second count down") },
                 leadingContent = {
                     Icon(
                         painterResource(id = R.drawable.ic_baseline_start_24),
@@ -239,8 +239,8 @@ fun ProcessLeadInAndChainData(
                 doneText += " There will be a pause of $pauseTime seconds before that."
             }
             ListItem(
-                headlineText = { SmallBodyText(text = "After") },
-                supportingText = { BodyText(text = doneText) },
+                headlineContent = { SmallBodyText(text = "After") },
+                supportingContent = { BodyText(text = doneText) },
                 leadingContent = {
                     Icon(
                         painterResource(id = R.drawable.ic_baseline_navigate_next_24),
@@ -252,8 +252,8 @@ fun ProcessLeadInAndChainData(
     } else {
         if (hasAutoChain && (null != gotoId) && (-1L < gotoId) && (null != nextName)) {
             ListItem(
-                headlineText = { SmallBodyText(text = "After") },
-                supportingText = { BodyText(text = "'$nextName' will be started next") },
+                headlineContent = { SmallBodyText(text = "After") },
+                supportingContent = { BodyText(text = "'$nextName' will be started next") },
                 leadingContent = {
                     Icon(
                         painterResource(id = R.drawable.ic_baseline_navigate_next_24),

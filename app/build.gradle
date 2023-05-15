@@ -80,14 +80,14 @@ dependencies {
     implementation "androidx.compose.foundation:foundation:1.4.3"
     implementation "androidx.compose.foundation:foundation-layout:1.4.3"
     implementation "androidx.compose.material:material-icons-core:1.4.3"
-    implementation "androidx.compose.material3:material3:1.0.1"
-    implementation "androidx.compose.material3:material3-window-size-class:1.0.1"
+    implementation 'androidx.compose.material3:material3:1.1.0'
+    implementation 'androidx.compose.material3:material3-window-size-class:1.1.0'
     implementation "androidx.compose.runtime:runtime:1.4.3"
     implementation "androidx.compose.runtime:runtime-livedata:1.4.3"
     implementation "androidx.compose.ui:ui:1.4.3"
     implementation "androidx.compose.ui:ui-tooling:1.4.3"
     implementation "androidx.compose.ui:ui-tooling-preview:1.4.3"
-    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
@@ -101,9 +101,9 @@ dependencies {
     implementation 'androidx.window:window:1.0.0'
 
     // hilt
-    implementation "com.google.dagger:hilt-android:2.46"
+    implementation 'com.google.dagger:hilt-android:2.46.1'
     implementation 'androidx.datastore:datastore-core:1.0.0'
-    kapt "com.google.dagger:hilt-compiler:2.46"
+    kapt 'com.google.dagger:hilt-compiler:2.46.1'
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
     // Room components
@@ -113,8 +113,8 @@ dependencies {
     implementation "androidx.room:room-ktx:2.5.1"
 
     // others
-    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0'
-    implementation "com.google.android.material:material:1.8.0"
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1'
+    implementation 'com.google.android.material:material:1.9.0'
 
     // compose destinations
     implementation 'io.github.raamcosta.compose-destinations:core:1.9.42-beta'
@@ -128,11 +128,11 @@ dependencies {
     debugImplementation 'androidx.compose.ui:ui-tooling:1.4.3'
     debugImplementation 'androidx.compose.ui:ui-test-manifest:1.4.3'
     // For instrumentation tests
-    androidTestImplementation "com.google.dagger:hilt-android-testing:2.45"
-    kaptAndroidTest "com.google.dagger:hilt-compiler:2.46"
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.46.1'
+    kaptAndroidTest 'com.google.dagger:hilt-compiler:2.46.1'
     // For local unit tests
-    testImplementation "com.google.dagger:hilt-android-testing:2.45"
-    kaptTest "com.google.dagger:hilt-compiler:2.46"
+    testImplementation 'com.google.dagger:hilt-android-testing:2.46.1'
+    kaptTest 'com.google.dagger:hilt-compiler:2.46.1'
 }
 
 kapt {
