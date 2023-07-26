@@ -3,11 +3,11 @@ plugins {
     id 'com.google.dagger.hilt.android'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.8.22'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.0'
     id 'org.jetbrains.kotlin.android'
 
     // compose destinations
-    id 'com.google.devtools.ksp' version '1.8.22-1.0.11'
+    id 'com.google.devtools.ksp' version '1.9.0-1.0.12'
 }
 
 android {
@@ -37,18 +37,12 @@ android {
             debuggable true
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = '17'
-    }
     buildFeatures {
         compose true
+        buildConfig true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion "1.4.8"
+        kotlinCompilerExtensionVersion "1.5.0"
         // see https://developer.android.com/jetpack/androidx/releases/compose-kotlin
     }
     packagingOptions {
@@ -56,7 +50,6 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
-    buildToolsVersion '34.0.0'
 
     // compose destinations
     applicationVariants.all { variant ->
@@ -102,9 +95,9 @@ dependencies {
     implementation 'androidx.window:window:1.1.0'
 
     // hilt
-    implementation 'com.google.dagger:hilt-android:2.46.1'
+    implementation 'com.google.dagger:hilt-android:2.47'
     implementation 'androidx.datastore:datastore-core:1.0.0'
-    kapt 'com.google.dagger:hilt-compiler:2.46.1'
+    kapt 'com.google.dagger:hilt-compiler:2.47'
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
     // Room components
@@ -118,8 +111,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.9.0'
 
     // compose destinations
-    implementation 'io.github.raamcosta.compose-destinations:core:1.9.42-beta'
-    ksp 'io.github.raamcosta.compose-destinations:ksp:1.9.42-beta'
+    implementation 'io.github.raamcosta.compose-destinations:core:1.9.50'
+    ksp 'io.github.raamcosta.compose-destinations:ksp:1.9.50'
 
     // testing, which I don't do
     testImplementation 'junit:junit:4.13.2'
@@ -129,11 +122,11 @@ dependencies {
     debugImplementation 'androidx.compose.ui:ui-tooling:1.4.3'
     debugImplementation 'androidx.compose.ui:ui-test-manifest:1.4.3'
     // For instrumentation tests
-    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.46.1'
-    kaptAndroidTest 'com.google.dagger:hilt-compiler:2.46.1'
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.47'
+    kaptAndroidTest 'com.google.dagger:hilt-compiler:2.47'
     // For local unit tests
-    testImplementation 'com.google.dagger:hilt-android-testing:2.46.1'
-    kaptTest 'com.google.dagger:hilt-compiler:2.46.1'
+    testImplementation 'com.google.dagger:hilt-android-testing:2.47'
+    kaptTest 'com.google.dagger:hilt-compiler:2.47'
 }
 
 kapt {
