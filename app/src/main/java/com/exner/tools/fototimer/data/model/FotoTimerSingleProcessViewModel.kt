@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.exner.tools.fototimer.data.FotoTimerSampleProcess
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcessRepository
+import com.exner.tools.fototimer.data.running.FotoTimerProcessStepsList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -40,6 +41,15 @@ class FotoTimerSingleProcessViewModel @Inject constructor(
     var hasPreBeeps: Boolean by mutableStateOf(initProcess?.hasPreBeeps ?: newProcess.hasPreBeeps)
     var uid: Long by mutableStateOf(initProcess?.uid ?: newProcess.uid)
         private set
+    var isReadyToBeStarted: Boolean by mutableStateOf(false)
+
+    init {
+        // create a process steps list
+        var processStepsList: FotoTimerProcessStepsList = FotoTimerProcessStepsList()
+        processStepsList.addProcess(getAsFotoTimerProcess())
+        isReadyToBeStarted = true
+        // TODO this should be done in parallel
+    }
 
     fun getAsFotoTimerProcess(): FotoTimerProcess {
         return FotoTimerProcess(
