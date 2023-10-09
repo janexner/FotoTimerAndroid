@@ -102,10 +102,10 @@ dependencies {
     implementation("androidx.window:window:1.1.0")
 
     // hilt
-    implementation("com.google.dagger:hilt-android:2.47")
+    implementation("com.google.dagger:hilt-android:2.48.1")
     implementation("androidx.datastore:datastore-core:1.0.0")
     implementation("androidx.core:core-ktx:1.12.0")
-    kapt("com.google.dagger:hilt-compiler:2.47")
+    kapt("com.google.dagger:hilt-compiler:2.48.1")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     // Room components
@@ -129,11 +129,11 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling:1.5.3")
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.5.3")
     // For instrumentation tests
-    androidTestImplementation("com.google.dagger:hilt-android-testing:2.47")
-    kaptAndroidTest("com.google.dagger:hilt-compiler:2.47")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.48.1")
+    kaptAndroidTest("com.google.dagger:hilt-compiler:2.48.1")
     // For local unit tests
-    testImplementation("com.google.dagger:hilt-android-testing:2.47")
-    kaptTest("com.google.dagger:hilt-compiler:2.47")
+    testImplementation("com.google.dagger:hilt-android-testing:2.48.1")
+    kaptTest("com.google.dagger:hilt-compiler:2.48.1")
 }
 
 kapt {
