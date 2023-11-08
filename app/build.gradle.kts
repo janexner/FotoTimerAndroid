@@ -3,11 +3,11 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("kotlin-android")
     id("kotlin-kapt")
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.10"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.20"
     id("org.jetbrains.kotlin.android")
 
     // compose destinations
-    id("com.google.devtools.ksp") version "1.9.10-1.0.13"
+    id("com.google.devtools.ksp") version "1.9.20-1.0.13"
     // before updating this, check compatibilities on https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility
     // and https://developer.android.com/jetpack/androidx/releases/compose-kotlin
 }
@@ -44,7 +44,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
+        kotlinCompilerExtensionVersion = "1.5.4"
         // see https://developer.android.com/jetpack/androidx/releases/compose-kotlin
     }
     packaging {
@@ -88,9 +88,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-common-java8:2.6.2")
-    implementation("androidx.navigation:navigation-compose:2.7.4")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.4")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.4")
+    implementation("androidx.navigation:navigation-compose:2.7.5")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.5")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.5")
     implementation("androidx.preference:preference-ktx:1.2.1")
     implementation("androidx.webkit:webkit:1.8.0")
     implementation("androidx.window:window:1.1.0")
@@ -100,7 +100,7 @@ dependencies {
     implementation("androidx.datastore:datastore-core:1.0.0")
     implementation("androidx.core:core-ktx:1.12.0")
     kapt("com.google.dagger:hilt-compiler:2.48.1")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     // Room components
     implementation("androidx.room:room-runtime:2.6.0")
