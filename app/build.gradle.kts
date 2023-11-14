@@ -7,9 +7,10 @@ plugins {
     id("org.jetbrains.kotlin.android")
 
     // compose destinations
-    id("com.google.devtools.ksp") version "1.9.20-1.0.13"
+    id("com.google.devtools.ksp") version "1.9.20-1.0.14"
     // before updating this, check compatibilities on https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility
     // and https://developer.android.com/jetpack/androidx/releases/compose-kotlin
+    // and, obv https://github.com/google/ksp/releases
 }
 
 android {
