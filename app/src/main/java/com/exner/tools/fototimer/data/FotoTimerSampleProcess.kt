@@ -5,8 +5,8 @@ import com.exner.tools.fototimer.data.persistence.FotoTimerProcess
 object FotoTimerSampleProcess {
     fun getFotoTimerSampleProcess(
         name: String = "Test Process 1",
-        processTime: Long = 30L,
-        intervalTime: Long = 10L,
+        processTime: Int = 30,
+        intervalTime: Int = 10,
         hasSoundStart: Boolean = true,
         soundStartId: Long = 0L,
         hasSoundEnd: Boolean = true,

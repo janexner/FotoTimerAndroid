@@ -1,10 +1,9 @@
 package com.exner.tools.fototimer.ui
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -21,7 +20,6 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @RootNavGraph(start = true)
 @Destination
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FotoTimerProcessList(
     fotoTimerProcessListViewModel: FotoTimerProcessListViewModel = hiltViewModel(),

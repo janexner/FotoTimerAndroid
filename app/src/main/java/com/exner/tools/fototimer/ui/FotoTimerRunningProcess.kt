@@ -2,9 +2,17 @@ package com.exner.tools.fototimer.ui
 
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
@@ -21,7 +29,6 @@ import androidx.preference.PreferenceManager
 import com.exner.tools.fototimer.data.model.FotoTimerCounterState
 import com.exner.tools.fototimer.data.model.FotoTimerRunningProcessViewModel
 import com.exner.tools.fototimer.ui.destinations.FotoTimerProcessDetailsDestination
-import com.exner.tools.fototimer.ui.destinations.FotoTimerProcessLauncherDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -32,31 +39,8 @@ fun FotoTimerRunningProcess(
     navigator: DestinationsNavigator,
     processId: Long,
 ) {
-    // are we done?
-    when (runningProcessViewModel.counterState.state) {
-        FotoTimerCounterState.COMPLETED -> {
-            Log.i("jexner FTR", "counterState completed")
-//            resultBackNavigator.navigateBack(result = true)
-        }
-        FotoTimerCounterState.CANCELLED -> {
-            Log.i("jexner FTR", "counterState cancelled")
-//            resultBackNavigator.navigateBack(result = false)
-        }
-        FotoTimerCounterState.CHAINING -> {
-            Log.i("jexner FTR", "will chain!")
-            navigator.navigate(
-                FotoTimerProcessLauncherDestination(
-                    processId = runningProcessViewModel.processGotoId!!,
-                    nextState = FotoTimerCounterState.CHAINING,
-                    pause = runningProcessViewModel.pauseTime ?: 0
-                )
-            ) {
-                popUpTo(FotoTimerProcessLauncherDestination.route) {
-                    inclusive = true
-                }
-            }
-        }
-    }
+    // TODO
+    // this whole file is TODO
 
     // this screen should stay visible, maybe
     if (runningProcessViewModel.keepsScreenOn) {

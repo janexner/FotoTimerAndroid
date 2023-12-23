@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.exner.tools.fototimer"
-        minSdk = 29
+        minSdk = 31
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -37,7 +37,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.4"
+        kotlinCompilerExtensionVersion = "1.5.6"
         // see https://developer.android.com/jetpack/androidx/releases/compose-kotlin
     }
     buildToolsVersion = "34.0.0"
