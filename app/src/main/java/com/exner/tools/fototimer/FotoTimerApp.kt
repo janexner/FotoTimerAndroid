@@ -2,14 +2,36 @@ package com.exner.tools.fototimer
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.BottomAppBarDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import com.exner.tools.fototimer.ui.*
-import com.exner.tools.fototimer.ui.destinations.*
-import com.exner.tools.fototimer.ui.destinations.FotoTimerProcessDetailsDestination.argsFrom
+import com.exner.tools.fototimer.ui.FotoTimerProcessDetails
+import com.exner.tools.fototimer.ui.NavGraphs
+import com.exner.tools.fototimer.ui.appCurrentDestinationAsState
+import com.exner.tools.fototimer.ui.destinations.Destination
+import com.exner.tools.fototimer.ui.destinations.FotoTimerAboutDestination
+import com.exner.tools.fototimer.ui.destinations.FotoTimerProcessDetailsDestination
+import com.exner.tools.fototimer.ui.destinations.FotoTimerProcessEditDestination
+import com.exner.tools.fototimer.ui.destinations.FotoTimerProcessListDestination
+import com.exner.tools.fototimer.ui.destinations.FotoTimerRunningProcessDestination
+import com.exner.tools.fototimer.ui.destinations.FotoTimerSettingsDestination
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.manualcomposablecalls.composable
 import com.ramcosta.composedestinations.navigation.navigate
@@ -39,6 +61,9 @@ fun FotoTimerApp() {
                     )
                 }
             }
+        },
+        bottomBar = {
+            FotoTimerBottomBar(destination, navController)
         }
     )
 }
@@ -56,6 +81,7 @@ private fun FotoTimerTopBar(
                 FotoTimerProcessListDestination -> {
                     // no back button here
                 }
+
                 FotoTimerRunningProcessDestination -> {
                     // go back, but all the way to the list!
                     IconButton(onClick = {
@@ -71,6 +97,7 @@ private fun FotoTimerTopBar(
                         )
                     }
                 }
+
                 else -> {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
@@ -83,50 +110,82 @@ private fun FotoTimerTopBar(
         },
         actions = {
             when (destination) {
-                FotoTimerProcessListDestination -> {
-                    IconButton(onClick = {
-                        navController.navigate(
-                            FotoTimerProcessEditDestination(-1)
-                        )
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.Add,
-                            contentDescription = "Add Process"
-                        )
-                    }
-                    SettingsActionIconButton(navController)
-                    AboutActionIconButton(navController = navController)
-                }
-                FotoTimerProcessDetailsDestination -> {
-                    argsFrom(navController.currentBackStackEntry!!).processId.let {
-                        IconButton(onClick = {
-                            navController.navigate(
-                                FotoTimerProcessEditDestination(
-                                    it
-                                )
-                            )
-                        }) {
-                            Icon(
-                                imageVector = Icons.Filled.Edit,
-                                contentDescription = "Edit Process"
-                            )
-                        }
-                    }
-                    SettingsActionIconButton(navController)
-                    AboutActionIconButton(navController = navController)
-                }
                 FotoTimerSettingsDestination -> {
                     AboutActionIconButton(navController)
                 }
+
                 FotoTimerRunningProcessDestination -> {
                     // no icons
                 }
+
                 FotoTimerAboutDestination -> {
                     // no icons
                 }
+
                 else -> {
                     SettingsActionIconButton(navController)
                     AboutActionIconButton(navController)
+                }
+            }
+        }
+    )
+}
+
+@Composable
+private fun FotoTimerBottomBar(
+    destination: Destination?,
+    navController: NavHostController
+) {
+    BottomAppBar(
+        actions = {
+            when (destination) {
+                FotoTimerProcessListDestination -> {
+                    // no icons
+                }
+                FotoTimerProcessDetailsDestination -> {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Start")
+                    }
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(imageVector = Icons.Filled.Edit, contentDescription = "Edit")
+                    }
+                }
+                FotoTimerProcessEditDestination -> {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(imageVector = Icons.Filled.Done, contentDescription = "Save")
+                    }
+                }
+                else -> {
+                    // no icons
+                }
+            }
+        },
+        floatingActionButton = {
+            when (destination) {
+                FotoTimerAboutDestination -> {
+                    // no floating action button
+                }
+                FotoTimerProcessEditDestination -> {
+                    // no fab
+                }
+                FotoTimerRunningProcessDestination -> {
+                    // no fab
+                }
+                FotoTimerSettingsDestination -> {
+                    // no fab
+                }
+                else -> {
+                    FloatingActionButton(
+                        onClick = {
+                            navController.navigate(
+                                FotoTimerProcessEditDestination(-1)
+                            )
+                        },
+                        containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
+                        elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
+                    ) {
+                        Icon(Icons.Filled.Add, "Add a process")
+                    }
                 }
             }
         }

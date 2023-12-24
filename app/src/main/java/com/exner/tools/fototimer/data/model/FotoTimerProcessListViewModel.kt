@@ -1,6 +1,10 @@
 package com.exner.tools.fototimer.data.model
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcessIdAndName
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcessRepository
@@ -26,6 +30,9 @@ class FotoTimerProcessListViewModel @Inject constructor(
 
     fun getIdsAndNamesOfAllProcesses(): List<FotoTimerProcessIdAndName> =
         runBlocking { repository.loadIdsAndNamesForAllProcesses() }
+
+    fun getRepository(): FotoTimerProcessRepository =
+        repository
 
     /**
      * Launching a new coroutine to insert the data in a non-blocking way

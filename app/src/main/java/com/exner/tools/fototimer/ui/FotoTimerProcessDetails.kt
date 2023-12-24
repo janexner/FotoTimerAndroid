@@ -1,6 +1,8 @@
 package com.exner.tools.fototimer.ui
 
+import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -26,20 +29,39 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.preference.PreferenceManager
 import com.exner.tools.fototimer.R
 import com.exner.tools.fototimer.data.FotoTimerSampleProcess
-import com.exner.tools.fototimer.data.model.FotoTimerSingleProcessViewModel
+import com.exner.tools.fototimer.data.model.FotoTimerProcessListViewModel
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcess
+import com.exner.tools.fototimer.data.running.FotoTimerProcessStepAction
+import com.exner.tools.fototimer.data.running.getAsFTProcessStepList
 import com.exner.tools.fototimer.ui.theme.FotoTimerTheme
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.coroutines.launch
 
+const val TAG = "FTPDetails"
+
+@SuppressLint("CoroutineCreationDuringComposition")
 @Destination
 @Composable
 fun FotoTimerProcessDetails(
-    fotoTimerSingleProcessViewModel: FotoTimerSingleProcessViewModel = hiltViewModel(),
+    processId: Long = -1,
+    fotoTimerProcessListViewModel: FotoTimerProcessListViewModel = hiltViewModel(),
     navigator: DestinationsNavigator,
-    processId: Long,
 ) {
-    val ftProcess = fotoTimerSingleProcessViewModel.getAsFotoTimerProcess()
+    // read the process, if it exists
+    val uid = processId
+    val ftProcess: FotoTimerProcess? = fotoTimerProcessListViewModel.getProcessById(uid)
+    // while we're here, let's get the list of all available processes for goto
+    val processIdsAndNames = fotoTimerProcessListViewModel.getIdsAndNamesOfAllProcesses()
+    val fotoTimerRepository = fotoTimerProcessListViewModel.getRepository()
+
+    // create actionslist list
+    val coroutineScope = rememberCoroutineScope()
+    var actionsListList: List<List<FotoTimerProcessStepAction>>
+    coroutineScope.launch {
+        actionsListList = getAsFTProcessStepList(fotoTimerRepository, uid)
+        Log.i(TAG, "actionsListList created: $actionsListList")
+    }
 
     // lock screen rotation
     LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
@@ -50,9 +72,18 @@ fun FotoTimerProcessDetails(
             .fillMaxSize()
     ) {
         // if this process auto chains, let's find the name of the next process, too
-        val nextName =
-            ftProcess.gotoId?.let { fotoTimerSingleProcessViewModel.getNameOfNextProcess() }
-        ExistingProcessDetails(ftProcess, nextName)
+        var nextName: String? = null
+        if (ftProcess !== null) {
+            if (ftProcess.gotoId !== null) {
+                processIdsAndNames.forEach { tupel ->
+                    if (tupel.uid == ftProcess.gotoId) {
+                        nextName = tupel.name
+                    }
+                }
+            }
+            ExistingProcessDetails(ftProcess, nextName)
+        }
+
         // bottom - start button
         Surface(modifier = Modifier.weight(0.25f)) {
             Button(
@@ -61,7 +92,7 @@ fun FotoTimerProcessDetails(
                 },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                enabled = fotoTimerSingleProcessViewModel.isReadyToBeStarted // only active once the steps list is ready
+                enabled = false // only active once the steps list is ready
             ) {
                 ButtonText(text = "Start")
             }
