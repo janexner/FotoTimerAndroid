@@ -5,5 +5,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination
 @Composable
-fun ProcessEdit() {
+fun ProcessEdit(
+    processId: Long
+) {
 }
