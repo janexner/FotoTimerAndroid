@@ -1,8 +1,6 @@
 package com.exner.tools.fototimer.ui
 
-import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +12,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -27,16 +24,12 @@ import com.exner.tools.fototimer.R
 import com.exner.tools.fototimer.data.FotoTimerSampleProcess
 import com.exner.tools.fototimer.data.model.FotoTimerProcessListViewModel
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcess
-import com.exner.tools.fototimer.data.running.FotoTimerProcessStepAction
-import com.exner.tools.fototimer.data.running.getAsFTProcessStepList
 import com.exner.tools.fototimer.ui.theme.FotoTimerTheme
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import kotlinx.coroutines.launch
 
 const val TAG = "FTPDetails"
 
-@SuppressLint("CoroutineCreationDuringComposition")
 @Destination
 @Composable
 fun FotoTimerProcessDetails(
@@ -49,15 +42,6 @@ fun FotoTimerProcessDetails(
     val ftProcess: FotoTimerProcess? = fotoTimerProcessListViewModel.getProcessById(uid)
     // while we're here, let's get the list of all available processes for goto
     val processIdsAndNames = fotoTimerProcessListViewModel.getIdsAndNamesOfAllProcesses()
-    val fotoTimerRepository = fotoTimerProcessListViewModel.getRepository()
-
-    // create actionslist list
-    val coroutineScope = rememberCoroutineScope()
-    var actionsListList: List<List<FotoTimerProcessStepAction>>
-    coroutineScope.launch {
-        actionsListList = getAsFTProcessStepList(fotoTimerRepository, uid)
-        Log.i(TAG, "actionsListList created: $actionsListList")
-    }
 
     // lock screen rotation
     LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)

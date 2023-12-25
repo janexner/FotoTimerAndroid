@@ -1,12 +1,27 @@
 package com.exner.tools.fototimer.ui
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
@@ -42,14 +57,13 @@ fun FotoTimerProcessEdit(
     // read the process, if it exists
     val uid = processId?.toLong() ?: -1
     val tmpProcess: FotoTimerProcess? = ftpViewModel.getProcessById(uid)
-    val thisProcessIsNew = null == tmpProcess
 
     // while we're here, let's get the list of all available processes for goto
     val processIdsAndNames = ftpViewModel.getIdsAndNamesOfAllProcesses()
 
     // OK, at this point we have a process, either existing, or fresh.
     // Now display the thing for editing
-    FotoTimerProcessEditor(spViewModel, processIdsAndNames, navigator, thisProcessIsNew)
+    FotoTimerProcessEditor(spViewModel, processIdsAndNames, navigator)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,8 +71,7 @@ fun FotoTimerProcessEdit(
 fun FotoTimerProcessEditor(
     processViewModel: FotoTimerSingleProcessViewModel,
     processIdsAndNames: List<FotoTimerProcessIdAndName>?,
-    navigator: DestinationsNavigator,
-    isThisNewProcess: Boolean
+    navigator: DestinationsNavigator
 ) {
     var nextProcessName: String by remember { mutableStateOf("") }
     if ((null != processViewModel.gotoId) && (-1L != processViewModel.gotoId)) {
@@ -98,23 +111,6 @@ fun FotoTimerProcessEditor(
                 singleLine = true,
                 modifier = Modifier.weight(0.75f)
             )
-            if (!isThisNewProcess) {
-                Spacer(modifier = Modifier.weight(0.05f))
-                FilledTonalButton(
-                    onClick = {
-                        val process = processViewModel.getAsFotoTimerProcess()
-                        ftpViewModel.update(process) // this button only for edit
-                        modified = false
-                    },
-                    enabled = modified,
-                    modifier = Modifier.width(100.dp)
-                ) {
-                    Text(
-                        text = "Save",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-            }
         }
         HeaderText(text = "Times")
         TextFieldForTimes(
@@ -288,7 +284,7 @@ fun FotoTimerProcessEditor(
         Spacer(modifier = Modifier.weight(0.5f))
         Button(onClick = {
             val process = processViewModel.getAsFotoTimerProcess()
-            if (isThisNewProcess) {
+            if (process.uid == -1L) {
                 ftpViewModel.insert(process)
             } else {
                 ftpViewModel.update(process)
@@ -325,8 +321,7 @@ fun FTEPreview() {
         FotoTimerProcessEditor(
             processViewModel = spViewModel,
             processIdsAndNames = processIdsAndNames,
-            navigator = EmptyDestinationsNavigator,
-            isThisNewProcess = false
+            navigator = EmptyDestinationsNavigator
         )
     }
 }

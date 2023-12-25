@@ -26,7 +26,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.preference.PreferenceManager
-import com.exner.tools.fototimer.data.model.FotoTimerCounterState
 import com.exner.tools.fototimer.data.model.FotoTimerRunningProcessViewModel
 import com.exner.tools.fototimer.ui.destinations.FotoTimerProcessDetailsDestination
 import com.ramcosta.composedestinations.annotation.Destination
@@ -67,7 +66,7 @@ fun FotoTimerRunningProcess(
                         )
                     ) {
                         clickable {
-                            runningProcessViewModel.cancelRunner()
+                            // runningProcessViewModel.cancelRunner()
                             navigator.navigate(FotoTimerProcessDetailsDestination(processId)) {
                                 popUpTo(FotoTimerProcessDetailsDestination.route) {
                                     inclusive = true
@@ -103,7 +102,7 @@ fun FotoTimerRunningProcess(
                                 // show huge cancel button
                                 Button(
                                     onClick = {
-                                        runningProcessViewModel.cancelRunner()
+                                        // runningProcessViewModel.cancelRunner()
                                         navigator.navigate(
                                             FotoTimerProcessDetailsDestination(
                                                 processId
@@ -119,13 +118,13 @@ fun FotoTimerRunningProcess(
                                         .fillMaxHeight()
                                         .fillMaxWidth(0.3f)
                                         .align(Alignment.Center),
-                                    enabled = runningProcessViewModel.counterState.state == FotoTimerCounterState.COUNTING
+                                    enabled = false
                                 ) {
                                     ButtonText(text = "Stop")
                                 }
                             }
                             Text(
-                                text = "Round ${runningProcessViewModel.counterState.roundNumber} of ${runningProcessViewModel.numberOfIntervals}",
+                                text = "Round 0 of ${runningProcessViewModel.numberOfIntervals}",
                                 style = MaterialTheme.typography.bodyLarge,
                                 modifier = Modifier.align(Alignment.CenterEnd)
                             )
@@ -148,7 +147,7 @@ fun FotoTimerRunningProcess(
                         )
                     ) {
                         clickable {
-                            runningProcessViewModel.cancelRunner()
+                            // runningProcessViewModel.cancelRunner()
                             navigator.navigate(FotoTimerProcessDetailsDestination(processId)) {
                                 popUpTo(FotoTimerProcessDetailsDestination.route) {
                                     inclusive = true
@@ -170,7 +169,7 @@ fun FotoTimerRunningProcess(
                 Spacer(modifier = Modifier.weight(0.001f))
                 MediumTimerAndIntervalText(
                     duration = runningProcessViewModel.timeLeftUntilEndOfProcess,
-                    intervalText = "${runningProcessViewModel.counterState.roundNumber} of ${runningProcessViewModel.numberOfIntervals}",
+                    intervalText = "0 of ${runningProcessViewModel.numberOfIntervals}",
                 )
                 Text(
                     text = "Process Time (total ${runningProcessViewModel.processTime})",
@@ -182,7 +181,7 @@ fun FotoTimerRunningProcess(
                     // show huge cancel button
                     Button(
                         onClick = {
-                            runningProcessViewModel.cancelRunner()
+                            // runningProcessViewModel.cancelRunner()
                             navigator.navigate(FotoTimerProcessDetailsDestination(processId)) {
                                 popUpTo(FotoTimerProcessDetailsDestination.route) {
                                     inclusive = true
@@ -193,7 +192,7 @@ fun FotoTimerRunningProcess(
                         modifier = Modifier
                             .fillMaxWidth()
                             .fillMaxHeight(0.5f),
-                        enabled = runningProcessViewModel.counterState.state == FotoTimerCounterState.COUNTING
+                        enabled = false
                     ) {
                         ButtonText(text = "Stop")
                     }

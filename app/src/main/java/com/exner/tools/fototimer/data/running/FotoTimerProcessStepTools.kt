@@ -3,7 +3,10 @@ package com.exner.tools.fototimer.data.running
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcessRepository
 
-suspend fun getAsFTProcessStepList(processDatabase: FotoTimerProcessRepository, uid: Long): List<List<FotoTimerProcessStepAction>> {
+suspend fun getAsFTProcessStepList(
+    processDatabase: FotoTimerProcessRepository,
+    uid: Long
+): List<List<FotoTimerProcessStepAction>> {
     val result = mutableListOf<List<FotoTimerProcessStepAction>>()
 
     // loop detection
@@ -66,7 +69,10 @@ suspend fun getAsFTProcessStepList(processDatabase: FotoTimerProcessRepository, 
     return result
 }
 
-fun getOneFTProcessStepList(process: FotoTimerProcess, considerLeadIn: Boolean = false): MutableList<List<FotoTimerProcessStepAction>> {
+fun getOneFTProcessStepList(
+    process: FotoTimerProcess,
+    considerLeadIn: Boolean = false
+): MutableList<List<FotoTimerProcessStepAction>> {
     val result = mutableListOf<List<FotoTimerProcessStepAction>>()
 
     // step length - only there so we can tweak it, if necessary
@@ -74,8 +80,8 @@ fun getOneFTProcessStepList(process: FotoTimerProcess, considerLeadIn: Boolean =
 
     // do we need steps for lead-in, and how many?
     if (considerLeadIn && process.hasLeadIn && process.leadInSeconds!! > 0) {
-        val howManySteps = process.leadInSeconds * 1000 / stepLengthInMilliseconds
-        for (i in 1..howManySteps) {
+        val howManyLeadInSteps = process.leadInSeconds * 1000 / stepLengthInMilliseconds
+        for (i in 1..howManyLeadInSteps) {
             val actionsList = mutableListOf<FotoTimerProcessStepAction>()
             // add actions as needed
             val ftpliAction = FotoTimerProcessLeadInDisplayStepAction(
@@ -166,13 +172,16 @@ fun getOneFTProcessStepList(process: FotoTimerProcess, considerLeadIn: Boolean =
     // does this process chain?
     if (process.hasAutoChain && process.gotoId!! >= 0) {
         if (process.hasPauseBeforeChain == true && process.pauseTime!! >= 0) {
-            val howManySteps = process.pauseTime * 1000 / stepLengthInMilliseconds
-            for (i in 1..howManySteps) {
+            val howManyChainSteps = process.pauseTime * 1000 / stepLengthInMilliseconds
+            for (i in 1..howManyChainSteps) {
                 val actionsList = mutableListOf<FotoTimerProcessStepAction>()
                 val ftppdAction =
-                    FotoTimerProcessPauseDisplayStepAction(process.name, i * stepLengthInMilliseconds / 1000)
+                    FotoTimerProcessPauseDisplayStepAction(
+                        process.name,
+                        i * stepLengthInMilliseconds / 1000
+                    )
                 actionsList.add(ftppdAction)
-                if (i == howManySteps) {
+                if (i == howManyChainSteps) {
                     val ftpchainAction = FotoTimerProcessGotoAction(
                         process.name,
                         process.gotoId
