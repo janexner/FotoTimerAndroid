@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
@@ -28,6 +29,7 @@ import com.exner.tools.fototimer.ui.appCurrentDestinationAsState
 import com.exner.tools.fototimer.ui.destinations.Destination
 import com.exner.tools.fototimer.ui.destinations.FotoTimerAboutDestination
 import com.exner.tools.fototimer.ui.destinations.FotoTimerProcessDetailsDestination
+import com.exner.tools.fototimer.ui.destinations.FotoTimerProcessDetailsDestination.argsFrom
 import com.exner.tools.fototimer.ui.destinations.FotoTimerProcessEditDestination
 import com.exner.tools.fototimer.ui.destinations.FotoTimerProcessListDestination
 import com.exner.tools.fototimer.ui.destinations.FotoTimerRunningProcessDestination
@@ -142,19 +144,36 @@ private fun FotoTimerBottomBar(
                 FotoTimerProcessListDestination -> {
                     // no icons
                 }
+
                 FotoTimerProcessDetailsDestination -> {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Start")
-                    }
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(imageVector = Icons.Filled.Edit, contentDescription = "Edit")
+                    argsFrom(navController.currentBackStackEntry!!).processId.let {
+                        IconButton(onClick = { /*TODO*/ }) {
+                            Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Start")
+                        }
+                        IconButton(onClick = {
+                            navController.navigate(
+                                FotoTimerProcessEditDestination(
+                                    it
+                                )
+                            )
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.Edit,
+                                contentDescription = "Edit"
+                            )
+                        }
+                        IconButton(onClick = { /*TODO*/ }) {
+                            Icon(imageVector = Icons.Filled.Delete, contentDescription = "Delete")
+                        }
                     }
                 }
+
                 FotoTimerProcessEditDestination -> {
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(imageVector = Icons.Filled.Done, contentDescription = "Save")
                     }
                 }
+
                 else -> {
                     // no icons
                 }
@@ -165,15 +184,19 @@ private fun FotoTimerBottomBar(
                 FotoTimerAboutDestination -> {
                     // no floating action button
                 }
+
                 FotoTimerProcessEditDestination -> {
                     // no fab
                 }
+
                 FotoTimerRunningProcessDestination -> {
                     // no fab
                 }
+
                 FotoTimerSettingsDestination -> {
                     // no fab
                 }
+
                 else -> {
                     FloatingActionButton(
                         onClick = {
