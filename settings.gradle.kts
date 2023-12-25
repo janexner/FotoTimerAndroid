@@ -1,5 +1,8 @@
-plugins {
-    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.5.0'
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+    }
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
@@ -8,5 +11,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "FotoTimer Research 2"
-include ':app'
+rootProject.name = "FotoTimer for Android"
+include(":app")
