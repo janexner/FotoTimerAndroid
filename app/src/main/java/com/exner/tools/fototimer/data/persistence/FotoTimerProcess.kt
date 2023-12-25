@@ -7,8 +7,8 @@ import androidx.room.PrimaryKey
 @Entity
 data class FotoTimerProcess (
     @ColumnInfo(name = "name") val name : String,
-    @ColumnInfo(name = "process_time") val processTime : Long = 30,
-    @ColumnInfo(name = "interval_time") val intervalTime: Long = 10,
+    @ColumnInfo(name = "process_time") val processTime : Int = 30,
+    @ColumnInfo(name = "interval_time") val intervalTime: Int = 10,
 
     @ColumnInfo(name = "has_sound_start") val hasSoundStart: Boolean = false,
     @ColumnInfo(name = "sound_start_id") val soundStartId: Long?,

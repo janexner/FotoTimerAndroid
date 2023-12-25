@@ -1,16 +1,25 @@
 package com.exner.tools.fototimer.ui
 
 import android.content.pm.ActivityInfo
-import android.os.Build
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
@@ -37,7 +46,7 @@ fun FotoTimerSettings(
 
     // unlock screen rotation
     LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR)
-    var tabIndex by rememberSaveable { mutableStateOf(0) }
+    var tabIndex by rememberSaveable { mutableIntStateOf(0) }
     val tabItems = listOf(SettingsTabs.UiTab, SettingsTabs.TimersTab, SettingsTabs.SoundsTab)
 
     // show vertically
@@ -151,7 +160,6 @@ private fun ExpertSettingsUI(
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 private fun ExpertSettingsSound(
     preBeeps: Int, setPreBeeps: (Int) -> Unit
 ) {
@@ -237,15 +245,13 @@ private fun StandardSettingsColumn(
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            TextAndSwitch(
-                text = "Dynamic colours (needs a restart)",
-                checked = dynamicColor,
-                onCheckedChange = {
-                    updateDynamicColor(it)
-                }
-            )
-        }
+        TextAndSwitch(
+            text = "Dynamic colours (needs a restart)",
+            checked = dynamicColor,
+            onCheckedChange = {
+                updateDynamicColor(it)
+            }
+        )
         TextAndSwitch(
             text = "Default to keep screen on while counting",
             checked = keepScreenOn

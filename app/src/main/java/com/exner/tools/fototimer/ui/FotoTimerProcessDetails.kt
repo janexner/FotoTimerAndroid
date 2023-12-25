@@ -1,11 +1,16 @@
 package com.exner.tools.fototimer.ui
 
 import android.content.pm.ActivityInfo
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -17,22 +22,26 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.preference.PreferenceManager
 import com.exner.tools.fototimer.R
 import com.exner.tools.fototimer.data.FotoTimerSampleProcess
-import com.exner.tools.fototimer.data.model.FotoTimerCounterState
-import com.exner.tools.fototimer.data.model.FotoTimerSingleProcessViewModel
+import com.exner.tools.fototimer.data.model.FotoTimerProcessListViewModel
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcess
-import com.exner.tools.fototimer.ui.destinations.FotoTimerProcessLauncherDestination
 import com.exner.tools.fototimer.ui.theme.FotoTimerTheme
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+const val TAG = "FTPDetails"
+
 @Destination
 @Composable
 fun FotoTimerProcessDetails(
-    fotoTimerSingleProcessViewModel: FotoTimerSingleProcessViewModel = hiltViewModel(),
+    processId: Long = -1,
+    fotoTimerProcessListViewModel: FotoTimerProcessListViewModel = hiltViewModel(),
     navigator: DestinationsNavigator,
-    processId: Long,
 ) {
-    val ftProcess = fotoTimerSingleProcessViewModel.getAsFotoTimerProcess()
+    // read the process, if it exists
+    val uid = processId
+    val ftProcess: FotoTimerProcess? = fotoTimerProcessListViewModel.getProcessById(uid)
+    // while we're here, let's get the list of all available processes for goto
+    val processIdsAndNames = fotoTimerProcessListViewModel.getIdsAndNamesOfAllProcesses()
 
     // lock screen rotation
     LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
@@ -43,27 +52,16 @@ fun FotoTimerProcessDetails(
             .fillMaxSize()
     ) {
         // if this process auto chains, let's find the name of the next process, too
-        val nextName =
-            ftProcess.gotoId?.let { fotoTimerSingleProcessViewModel.getNameOfNextProcess() }
-        ExistingProcessDetails(ftProcess, nextName)
-        // bottom - start button
-        Surface(modifier = Modifier.weight(0.25f)) {
-            Button(
-                onClick = {
-                    navigator.navigate(
-                        FotoTimerProcessLauncherDestination(
-                            processId = processId,
-                            nextState = FotoTimerCounterState.LEADIN,
-                            pause = 0 // not needed here, so set to zero
-                        )
-                    )
-                },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                enabled = true
-            ) {
-                ButtonText(text = "Start")
+        var nextName: String? = null
+        if (ftProcess !== null) {
+            if (ftProcess.gotoId !== null) {
+                processIdsAndNames.forEach { tupel ->
+                    if (tupel.uid == ftProcess.gotoId) {
+                        nextName = tupel.name
+                    }
+                }
             }
+            ExistingProcessDetails(ftProcess, nextName)
         }
     }
 }
@@ -190,8 +188,8 @@ fun ProcessAudioData(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProcessTimerData(
-    processTime: Long,
-    intervalTime: Long
+    processTime: Int,
+    intervalTime: Int
 ) {
     ListItem(
         headlineContent = { SmallBodyText(text = "Times") },
@@ -283,8 +281,8 @@ fun FTPPreview() {
         ExistingProcessDetails(
             process = FotoTimerSampleProcess.getFotoTimerSampleProcess(
                 name = "Sample Process",
-                processTime = 75L,
-                intervalTime = 25L,
+                processTime = 75,
+                intervalTime = 25,
                 hasSoundStart = true,
                 soundStartId = 1L,
                 hasSoundEnd = true,
