@@ -6,8 +6,8 @@ import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination
 @Composable
-fun RunProcess(
+fun ProcessRun(
     processId: Long
 ) {
-    Log.i("RunProcessScreen", "entering composable...")
+    Log.i("ProcessRunScreen", "entering composable...")
 }

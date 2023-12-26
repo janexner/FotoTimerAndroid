@@ -32,8 +32,9 @@ import com.exner.tools.fototimer.ui.BodyText
 import com.exner.tools.fototimer.ui.HeaderText
 import com.exner.tools.fototimer.ui.ProcessDetailsViewModel
 import com.exner.tools.fototimer.ui.SmallBodyText
+import com.exner.tools.fototimer.ui.destinations.destinations.ProcessDeleteDestination
 import com.exner.tools.fototimer.ui.destinations.destinations.ProcessEditDestination
-import com.exner.tools.fototimer.ui.destinations.destinations.RunProcessDestination
+import com.exner.tools.fototimer.ui.destinations.destinations.ProcessRunDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -133,7 +134,7 @@ fun FotoTimerDetailsBottomBar(
 
             IconButton(onClick = {
                 navigator.navigate(
-                    RunProcessDestination(processId = processId)
+                    ProcessRunDestination(processId = processId)
                 )
             }) {
                 Icon(
@@ -144,7 +145,7 @@ fun FotoTimerDetailsBottomBar(
 
             IconButton(onClick = {
                 navigator.navigate(
-                    ProcessEditDestination(processId)
+                    ProcessEditDestination(processId = processId)
                 )
             }) {
                 Icon(
@@ -153,7 +154,11 @@ fun FotoTimerDetailsBottomBar(
                 )
             }
 
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = {
+                navigator.navigate(
+                    ProcessDeleteDestination(processId = processId)
+                )
+            }) {
                 Icon(
                     imageVector = Icons.Filled.Delete,
                     contentDescription = "Delete"
