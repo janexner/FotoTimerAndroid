@@ -1,6 +1,5 @@
 package com.exner.tools.fototimer.ui.destinations
 
-import android.preference.PreferenceManager
 import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,6 +29,7 @@ import com.exner.tools.fototimer.R
 import com.exner.tools.fototimer.ui.BodyText
 import com.exner.tools.fototimer.ui.HeaderText
 import com.exner.tools.fototimer.ui.ProcessDetailsViewModel
+import com.exner.tools.fototimer.ui.SettingsViewModel
 import com.exner.tools.fototimer.ui.SmallBodyText
 import com.exner.tools.fototimer.ui.destinations.destinations.ProcessDeleteDestination
 import com.exner.tools.fototimer.ui.destinations.destinations.ProcessEditDestination
@@ -43,6 +42,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 fun ProcessDetails(
     processId: Long,
     processDetailsViewModel: ProcessDetailsViewModel = hiltViewModel(),
+    settingsViewModel: SettingsViewModel = hiltViewModel(),
     navigator: DestinationsNavigator
 ) {
     Log.i("ProcessDetailsScreen", "entering composable...")
@@ -67,9 +67,7 @@ fun ProcessDetails(
 
     processDetailsViewModel.getProcess(processId)
 
-    val context = LocalContext.current
-    val sharedSettings = PreferenceManager.getDefaultSharedPreferences(context)
-    val expertMode = sharedSettings.getBoolean("preference_expert_mode", false)
+    val expertMode by settingsViewModel.expertMode.observeAsState()
 
     Scaffold(
         content = { innerPadding ->
@@ -86,7 +84,7 @@ fun ProcessDetails(
                     processTime,
                     intervalTime,
                 )
-                if (keepsScreenOn == true && expertMode) {
+                if (keepsScreenOn == true && expertMode == true) {
                     ListItem(
                         headlineContent = { SmallBodyText(text = "UI") },
                         supportingContent = { BodyText(text = "Screen will stay on") },
@@ -103,7 +101,8 @@ fun ProcessDetails(
                     hasSoundEnd,
                     hasSoundInterval,
                     hasSoundMetronome,
-                    hasPreBeeps
+                    hasPreBeeps,
+                    expertMode
                 )
                 ProcessLeadInAndChainData(
                     hasLeadIn,
@@ -113,6 +112,7 @@ fun ProcessDetails(
                     pauseTime,
                     gotoId,
                     nextProcessesName,
+                    expertMode
                 )
                 // middle - spacer
                 Spacer(modifier = Modifier)
@@ -184,12 +184,10 @@ fun ProcessAudioData(
     hasSoundEnd: Boolean?,
     hasSoundInterval: Boolean?,
     hasSoundMetronome: Boolean?,
-    hasPreBeeps: Boolean?
+    hasPreBeeps: Boolean?,
+    expertMode: Boolean?
 ) {
-    val context = LocalContext.current
-    val sharedSettings = PreferenceManager.getDefaultSharedPreferences(context)
-    val expertMode = sharedSettings.getBoolean("preference_expert_mode", false)
-    if (expertMode) {
+    if (expertMode == true) {
         if (hasSoundStart == true || hasSoundEnd == true || hasPreBeeps == true || hasSoundInterval == true || hasSoundMetronome == true) {
             var soundStatement = "Sounds: "
             var space = ""
@@ -265,12 +263,10 @@ fun ProcessLeadInAndChainData(
     hasPauseBeforeChain: Boolean?,
     pauseTime: String?,
     gotoId: Long?,
-    nextName: String?
+    nextName: String?,
+    expertMode: Boolean?
 ) {
-    val context = LocalContext.current
-    val sharedSettings = PreferenceManager.getDefaultSharedPreferences(context)
-    val expertMode = sharedSettings.getBoolean("preference_expert_mode", false)
-    if (expertMode) {
+    if (expertMode == true) {
         if (hasLeadIn == true && (null != leadInSeconds)) {
             ListItem(
                 headlineContent = { SmallBodyText(text = "Before") },
