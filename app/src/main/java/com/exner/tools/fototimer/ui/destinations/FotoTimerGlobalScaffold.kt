@@ -40,11 +40,6 @@ fun FotoTimerGlobalScaffold() {
                 navGraph = NavGraphs.root,
                 modifier = Modifier.padding(innerPadding)
             ) {
-                composable(ProcessDetailsDestination) {
-                    ProcessDetails(
-                        processId = navArgs.processId,
-                    )
-                }
             }
         }
     )

@@ -1,5 +1,6 @@
 package com.exner.tools.fototimer.ui.destinations
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
@@ -21,7 +22,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.exner.tools.fototimer.ui.BodyText
 import com.exner.tools.fototimer.ui.HeaderText
 import com.exner.tools.fototimer.ui.ProcessListViewModel
@@ -30,8 +30,6 @@ import com.exner.tools.fototimer.ui.destinations.destinations.ProcessEditDestina
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.navigate
-import com.ramcosta.composedestinations.rememberNavHostEngine
 
 
 @RootNavGraph(start = true)
@@ -41,10 +39,9 @@ fun ProcessList(
     processListViewModel: ProcessListViewModel = hiltViewModel(),
     navigator: DestinationsNavigator
 ) {
-    val processes by processListViewModel.allProcesses.observeAsState()
+    Log.i("ProcessListScreen", "entering composable...")
 
-    val engine = rememberNavHostEngine()
-    val navController = engine.rememberNavController()
+    val processes by processListViewModel.allProcesses.observeAsState()
 
     Scaffold(
         content = { innerPadding ->
@@ -84,14 +81,14 @@ fun ProcessList(
             }
         },
         bottomBar = {
-            FotoTimerBottomBar(navController = navController)
+            FotoTimerListBottomBar(navigator)
         }
     )
 }
 
 @Composable
-private fun FotoTimerBottomBar(
-    navController: NavHostController
+private fun FotoTimerListBottomBar(
+    navigator: DestinationsNavigator
 ) {
     BottomAppBar(
         actions = {
@@ -99,7 +96,7 @@ private fun FotoTimerBottomBar(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate(
+                    navigator.navigate(
                         ProcessEditDestination(-1)
                     )
                 },
