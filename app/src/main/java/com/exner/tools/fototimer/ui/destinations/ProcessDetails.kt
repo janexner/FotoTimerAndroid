@@ -301,17 +301,30 @@ fun ProcessLeadInAndChainData(
             )
         }
     } else {
-        if (hasAutoChain == true && (null != gotoId) && (-1L < gotoId) && (null != nextName)) {
-            ListItem(
-                headlineContent = { SmallBodyText(text = "After") },
-                supportingContent = { BodyText(text = "'$nextName' will be started next") },
-                leadingContent = {
-                    Icon(
-                        painterResource(id = R.drawable.ic_baseline_navigate_next_24),
-                        contentDescription = "Process End",
-                    )
-                }
-            )
+        if (hasAutoChain == true && (null != gotoId) && (-1L < gotoId)) {
+            if (null != nextName) {
+                ListItem(
+                    headlineContent = { SmallBodyText(text = "After") },
+                    supportingContent = { BodyText(text = "'$nextName' will be started next") },
+                    leadingContent = {
+                        Icon(
+                            painterResource(id = R.drawable.ic_baseline_navigate_next_24),
+                            contentDescription = "Process End",
+                        )
+                    }
+                )
+            } else {
+                ListItem(
+                    headlineContent = { SmallBodyText(text = "After") },
+                    supportingContent = { BodyText(text = "This process chains into a process that does not exist!") },
+                    leadingContent = {
+                        Icon(
+                            painterResource(id = R.drawable.baseline_error_24),
+                            contentDescription = "Problem"
+                        )
+                    }
+                )
+            }
         }
     }
 }
