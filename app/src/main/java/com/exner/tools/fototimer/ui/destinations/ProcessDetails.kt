@@ -283,29 +283,16 @@ fun ProcessLeadInAndChainData(
                 }
             )
         }
-        if (hasAutoChain == true && (null != gotoId) && (-1L < gotoId) && (null != nextName)) {
-            var doneText =
-                "Afterwards, '$nextName' will be started."
-            if (true == hasPauseBeforeChain && (null != pauseTime) && ("0" != pauseTime)) {
-                doneText += " There will be a pause of $pauseTime seconds before that."
-            }
-            ListItem(
-                headlineContent = { SmallBodyText(text = "After") },
-                supportingContent = { BodyText(text = doneText) },
-                leadingContent = {
-                    Icon(
-                        painterResource(id = R.drawable.ic_baseline_navigate_next_24),
-                        contentDescription = "Process End",
-                    )
-                }
-            )
-        }
-    } else {
         if (hasAutoChain == true && (null != gotoId) && (-1L < gotoId)) {
             if (null != nextName) {
+                var doneText =
+                    "Afterwards, '$nextName' will be started."
+                if (true == hasPauseBeforeChain && (null != pauseTime) && ("0" != pauseTime)) {
+                    doneText += " There will be a pause of $pauseTime seconds before that."
+                }
                 ListItem(
                     headlineContent = { SmallBodyText(text = "After") },
-                    supportingContent = { BodyText(text = "'$nextName' will be started next") },
+                    supportingContent = { BodyText(text = doneText) },
                     leadingContent = {
                         Icon(
                             painterResource(id = R.drawable.ic_baseline_navigate_next_24),
