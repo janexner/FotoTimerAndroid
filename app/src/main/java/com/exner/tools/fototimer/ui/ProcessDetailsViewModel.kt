@@ -2,7 +2,6 @@ package com.exner.tools.fototimer.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcessRepository
@@ -12,7 +11,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProcessDetailsViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
     private val repository: FotoTimerProcessRepository
 ): ViewModel() {
 

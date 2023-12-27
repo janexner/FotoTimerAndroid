@@ -3,7 +3,6 @@ package com.exner.tools.fototimer.ui
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcessRepository
@@ -28,7 +27,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProcessRunViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
     private val repository: FotoTimerProcessRepository
 ) : ViewModel() {
 
@@ -136,7 +134,7 @@ class ProcessRunViewModel @Inject constructor(
                     } else {
                         val elapsed = System.currentTimeMillis() - startTime
                         Log.d("ProcessRunVM", "$elapsed: Now doing step $step of ${numberOfSteps.value}...")
-                        // update display action
+                        // update display action and do sounds
                         val actionsList = result[step]
                         actionsList.forEach { action ->
                             if (action is ProcessLeadInDisplayStepAction || action is ProcessDisplayStepAction || action is ProcessPauseDisplayStepAction) {
