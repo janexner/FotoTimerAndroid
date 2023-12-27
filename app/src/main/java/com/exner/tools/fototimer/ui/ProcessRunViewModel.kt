@@ -1,17 +1,28 @@
 package com.exner.tools.fototimer.ui
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcessRepository
+import com.exner.tools.fototimer.steps.ProcessDisplayStepAction
 import com.exner.tools.fototimer.steps.ProcessGotoAction
 import com.exner.tools.fototimer.steps.ProcessJumpbackAction
+import com.exner.tools.fototimer.steps.ProcessLeadInDisplayStepAction
+import com.exner.tools.fototimer.steps.ProcessPauseDisplayStepAction
 import com.exner.tools.fototimer.steps.ProcessStartAction
 import com.exner.tools.fototimer.steps.ProcessStepAction
+import com.exner.tools.fototimer.steps.STEP_LENGTH_IN_MILLISECONDS
 import com.exner.tools.fototimer.steps.getProcessStepListForOneProcess
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,9 +30,10 @@ import javax.inject.Inject
 class ProcessRunViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val repository: FotoTimerProcessRepository
-): ViewModel() {
+) : ViewModel() {
 
-    private val _actionsListList: MutableLiveData<MutableList<List<ProcessStepAction>>> = MutableLiveData(mutableListOf())
+    private val _actionsListList: MutableLiveData<MutableList<List<ProcessStepAction>>> =
+        MutableLiveData(mutableListOf())
     val actionsListList: LiveData<MutableList<List<ProcessStepAction>>> = _actionsListList
 
     private val _displayAction: MutableLiveData<ProcessStepAction> = MutableLiveData(null)
@@ -33,10 +45,14 @@ class ProcessRunViewModel @Inject constructor(
     private val _currentStepNumber: MutableLiveData<Int> = MutableLiveData(0)
     val currentStepNumber: LiveData<Int> = _currentStepNumber
 
+    private var job: Job? = null
+
+    @OptIn(DelicateCoroutinesApi::class)
     fun initialiseRun(processId: Long, numberOfPreBeeps: Int) {
         val result = mutableListOf<List<ProcessStepAction>>()
 
         viewModelScope.launch {
+            Log.d("ProcessRunVM", "Creating list in VM Scope...")
             // loop detection
             val processIdList = mutableListOf<Long>()
             var currentID = processId
@@ -44,6 +60,7 @@ class ProcessRunViewModel @Inject constructor(
             var firstRound = true
 
             while (currentID >= 0 && noLoopDetectedSoFar) {
+                Log.d("ProcessRunVM", "working on processID $currentID...")
                 processIdList.add(currentID)
                 val process = repository.loadProcessById(currentID)
                 if (process != null) {
@@ -93,15 +110,46 @@ class ProcessRunViewModel @Inject constructor(
                                 }
                             }
                         }
+                    } else {
+                        // that's it, no chain
+                        currentID = -1
                     }
                 }
             }
+            Log.d("ProcessVM", "list created, now running it...")
             // this is where the list is ready
             _actionsListList.value = result
+            _numberOfSteps.value = result.size
+
+            // go into a loop, but in a coroutine
+            job = GlobalScope.launch(Dispatchers.Main) {
+                Log.d("ProcessRunVM", "Entering into loop in Main Dispatcher...")
+                while (isActive) {
+                    val step: Int = currentStepNumber.value?.toInt() ?: 0
+                    if (step >= _actionsListList.value!!.size) {
+                        Log.d("ProcessRunVM", "Job done, cancelling...")
+                        job?.cancel()
+                    } else {
+                        Log.d("ProcessRunVM", "Now doing step $step of ${numberOfSteps.value}...")
+                        // update display action
+                        val actionsList = _actionsListList.value!!.get(step)
+                        actionsList.forEach { action ->
+                            if (action is ProcessLeadInDisplayStepAction || action is ProcessDisplayStepAction || action is ProcessPauseDisplayStepAction) {
+                                _displayAction.value = action
+                            }
+                        }
+                        // count up
+                        _currentStepNumber.value = step + 1
+                        // sleep till next step
+                        delay(STEP_LENGTH_IN_MILLISECONDS.toLong())
+                        // TODO align delay with full steps
+                    }
+                }
+            }
         }
     }
 
-    fun go() {
-
+    fun cancel() {
+        job?.cancel()
     }
 }

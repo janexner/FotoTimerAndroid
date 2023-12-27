@@ -13,6 +13,7 @@ import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -54,7 +55,8 @@ fun ProcessRun(
                     .fillMaxWidth()
             ) {
                 // first, a nice process indicator
-                val currentProgress = if (numberOfSteps != null) currentStepNumber!!.toFloat() / numberOfSteps!! else 0.0f
+                val currentProgress =
+                    if (numberOfSteps != null && numberOfSteps != 0) currentStepNumber!!.toFloat() / numberOfSteps!! else 0.0f
                 LinearProgressIndicator(
                     progress = currentProgress,
                     modifier = Modifier.fillMaxWidth(),
@@ -64,13 +66,19 @@ fun ProcessRun(
                 when (displayAction) {
                     is ProcessLeadInDisplayStepAction -> {
                         // TODO
+                        Text(text = "LeadIn")
                     }
+
                     is ProcessDisplayStepAction -> {
                         // TODO
+                        Text(text = "Display")
                     }
+
                     is ProcessPauseDisplayStepAction -> {
                         // TODO
+                        Text(text = "Pause")
                     }
+
                     else -> {
                         // TODO
                     }

@@ -2,6 +2,8 @@ package com.exner.tools.fototimer.steps
 
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcess
 
+const val STEP_LENGTH_IN_MILLISECONDS = 500
+
 fun getProcessStepListForOneProcess(
     process: FotoTimerProcess,
     considerLeadIn: Boolean = false,
@@ -10,7 +12,7 @@ fun getProcessStepListForOneProcess(
     val result = mutableListOf<List<ProcessStepAction>>()
 
     // step length - only there so we can tweak it, if necessary
-    val stepLengthInMilliseconds = 500
+    val stepLengthInMilliseconds = STEP_LENGTH_IN_MILLISECONDS
 
     // do we need steps for lead-in, and how many?
     if (considerLeadIn && process.hasLeadIn) {
