@@ -48,24 +48,24 @@ fun ProcessDelete(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
+                    .padding(8.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-                HeaderText(text = "Delete Process", modifier = Modifier.padding(8.dp))
+                HeaderText(text = "Delete Process")
                 Divider(modifier = Modifier.padding(8.dp))
                 Text(
-                    text = "You are about to delete processID $processId,",
-                    modifier = Modifier.padding(8.dp)
+                    text = "You are about to delete processID $processId,"
                 )
-                Text(text = "'$processName'.", modifier = Modifier.padding(8.dp))
+                Text(text = "'$processName'.")
                 // double-check in case there are chains that contain this
                 if (processIsTarget == true && dependantProcesses != null) {
-                    Text(text = "Other processes link to this one!", modifier = Modifier.padding(8.dp))
+                    Text(text = "Other processes link to this one!")
                     if (dependantProcesses!!.isNotEmpty()) {
                         dependantProcesses!!.forEach { 
-                            Text(text = "${it.uid}: ${it.name}", modifier = Modifier.padding(16.dp))
+                            Text(text = "${it.uid}: ${it.name}")
                         }
                     }
-                    Text(text = "If you delete this process, those others will no longer be able to link to it, meaning they will stop when they try to.", modifier = Modifier.padding(8.dp))
+                    Text(text = "If you delete this process, those others will no longer be able to link to it, meaning they will stop when they try to.")
                 }
             }
         },
