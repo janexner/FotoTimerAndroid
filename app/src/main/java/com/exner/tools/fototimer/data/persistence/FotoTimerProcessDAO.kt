@@ -14,6 +14,9 @@ interface FotoTimerProcessDAO {
     @Query("SELECT uid, name FROM fototimerprocess ORDER BY name ASC")
     suspend fun getIdsAndNamesOfAllProcesses(): List<FotoTimerProcessIdAndName>
 
+    @Query("SELECT uid, name FROM fototimerprocess WHERE goto_id=:id ORDER BY name ASC")
+    suspend fun getIdsAndNamesOfDependantProcesses(id: Long): List<FotoTimerProcessIdAndName>
+
     @Query("SELECT * FROM fototimerprocess WHERE uid=:id")
     suspend fun getFotoTimerProcess(id : Long): FotoTimerProcess?
 

@@ -26,10 +26,11 @@ class FotoTimerProcessRepository @Inject constructor(private val fotoTimerProces
     @WorkerThread
     suspend fun getNumberOfProcesses() = fotoTimerProcessDAO.getNumberOfProcesses()
 
-    // By default Room runs suspend queries off the main thread, therefore, we don't need to
-    // implement anything else to ensure we're not doing long running database work
-    // off the main thread.
-    @Suppress("RedundantSuppressModifier")
+    @WorkerThread
+    suspend fun getIdsAndNamesOfDependentProcesses(fotoTimerProcess: FotoTimerProcess): List<FotoTimerProcessIdAndName> {
+        return fotoTimerProcessDAO.getIdsAndNamesOfDependantProcesses(fotoTimerProcess.uid)
+    }
+
     @WorkerThread
     suspend fun insert(fotoTimerProcess: FotoTimerProcess) {
         fotoTimerProcessDAO.insert(fotoTimerProcess)

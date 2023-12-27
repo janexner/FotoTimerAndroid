@@ -37,6 +37,10 @@ fun ProcessDelete(
     Log.i("ProcessDeleteScreen", "entering composable...")
 
     val processName by processDeleteViewModel.processName.observeAsState()
+    val processIsTarget by processDeleteViewModel.processIsTarget.observeAsState()
+    val dependantProcesses by processDeleteViewModel.dependantProcesses.observeAsState()
+
+    processDeleteViewModel.checkProcess(processId)
 
     Scaffold(
         content = { innerPadding ->
@@ -52,7 +56,17 @@ fun ProcessDelete(
                     text = "You are about to delete processID $processId,",
                     modifier = Modifier.padding(8.dp)
                 )
-                Text(text = "'$processName'", modifier = Modifier.padding(8.dp))
+                Text(text = "'$processName'.", modifier = Modifier.padding(8.dp))
+                // double-check in case there are chains that contain this
+                if (processIsTarget == true && dependantProcesses != null) {
+                    Text(text = "Other processes link to this one!", modifier = Modifier.padding(8.dp))
+                    if (dependantProcesses!!.isNotEmpty()) {
+                        dependantProcesses!!.forEach { 
+                            Text(text = "${it.uid}: ${it.name}", modifier = Modifier.padding(16.dp))
+                        }
+                    }
+                    Text(text = "If you delete this process, those others will no longer be able to link to it, meaning they will stop when they try to.", modifier = Modifier.padding(8.dp))
+                }
             }
         },
         bottomBar = {
