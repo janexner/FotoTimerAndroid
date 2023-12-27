@@ -24,6 +24,7 @@ import com.exner.tools.fototimer.steps.ProcessDisplayStepAction
 import com.exner.tools.fototimer.steps.ProcessLeadInDisplayStepAction
 import com.exner.tools.fototimer.steps.ProcessPauseDisplayStepAction
 import com.exner.tools.fototimer.ui.BigTimerText
+import com.exner.tools.fototimer.ui.KeepScreenOn
 import com.exner.tools.fototimer.ui.MediumTimerAndIntervalText
 import com.exner.tools.fototimer.ui.ProcessRunViewModel
 import com.exner.tools.fototimer.ui.SettingsViewModel
@@ -44,10 +45,16 @@ fun ProcessRun(
     val displayAction by processRunViewModel.displayAction.observeAsState()
     val numberOfSteps by processRunViewModel.numberOfSteps.observeAsState()
     val currentStepNumber by processRunViewModel.currentStepNumber.observeAsState()
+    val keepScreenOn by processRunViewModel.keepScreenOn.observeAsState()
 
     val numberOfPreBeeps by settingsViewModel.numberOfPreBeeps.observeAsState()
 
     processRunViewModel.initialiseRun(processId, numberOfPreBeeps ?: 0)
+
+    if (keepScreenOn == true) {
+        Log.d("ProcessRunScreen", "Will keep screen on")
+        KeepScreenOn()
+    }
 
     Scaffold(
         content = { innerPadding ->
@@ -69,19 +76,24 @@ fun ProcessRun(
                 when (displayAction) {
                     is ProcessLeadInDisplayStepAction -> {
                         // TODO
-                        Text(text = "LeadIn")
+                        val plAction = (displayAction as ProcessLeadInDisplayStepAction)
+                        Text(text = plAction.processName + " - lead-in")
+                        BigTimerText(duration = plAction.currentLeadInTime.seconds)
                     }
 
                     is ProcessDisplayStepAction -> {
                         // TODO
-                        Text(text = (displayAction as ProcessDisplayStepAction).processName)
-                        BigTimerText(duration = (displayAction as ProcessDisplayStepAction).currentProcessTime.seconds)
-                        MediumTimerAndIntervalText(duration = (displayAction as ProcessDisplayStepAction).currentIntervalTime.seconds, intervalText = (displayAction as ProcessDisplayStepAction).currentRound.toString())
+                        val pdAction = (displayAction as ProcessDisplayStepAction)
+                        Text(text = pdAction.processName + " - running")
+                        BigTimerText(duration = pdAction.currentProcessTime.seconds)
+                        MediumTimerAndIntervalText(duration = pdAction.currentIntervalTime.seconds, intervalText = pdAction.currentRound.toString())
                     }
 
                     is ProcessPauseDisplayStepAction -> {
                         // TODO
-                        Text(text = "Pause")
+                        val ppAction = (displayAction as ProcessPauseDisplayStepAction)
+                        Text(text = ppAction.processName + " - pausing")
+                        BigTimerText(duration = ppAction.currentPauseTime.seconds)
                     }
 
                     else -> {

@@ -41,6 +41,9 @@ class ProcessRunViewModel @Inject constructor(
     private val _currentStepNumber: MutableLiveData<Int> = MutableLiveData(0)
     val currentStepNumber: LiveData<Int> = _currentStepNumber
 
+    private val _keepScreenOn: MutableLiveData<Boolean> = MutableLiveData(false)
+    val keepScreenOn: LiveData<Boolean> = _keepScreenOn
+
     private var job: Job? = null
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -54,6 +57,7 @@ class ProcessRunViewModel @Inject constructor(
             var currentID = processId
             var noLoopDetectedSoFar = true
             var firstRound = true
+            var keepScreenOnAcrossList = false
 
             while (currentID >= 0 && noLoopDetectedSoFar) {
                 Log.d("ProcessRunVM", "working on processID $currentID...")
@@ -65,6 +69,8 @@ class ProcessRunViewModel @Inject constructor(
                     partialResult.forEach { actionList ->
                         result.add(actionList)
                     }
+                    // screen on?
+                    keepScreenOnAcrossList = keepScreenOnAcrossList || process.keepsScreenOn
                     // prepare for the next iteration
                     firstRound = false
                     if (process.gotoId != null && process.gotoId != -1L) {
@@ -116,6 +122,8 @@ class ProcessRunViewModel @Inject constructor(
             // this is where the list is ready
             _numberOfSteps.value = result.size
 
+            _keepScreenOn.value = keepScreenOnAcrossList
+
             // go into a loop, but in a coroutine
             job = GlobalScope.launch(Dispatchers.Main) {
                 val startTime = System.currentTimeMillis()
@@ -123,8 +131,8 @@ class ProcessRunViewModel @Inject constructor(
                 while (isActive) {
                     val step: Int = currentStepNumber.value?.toInt() ?: 0
                     if (step >= result.size) {
-                        Log.d("ProcessRunVM", "Job done, cancelling...")
-                        job?.cancel()
+                        Log.d("ProcessRunVM", "Job done, quitting...")
+                        break
                     } else {
                         val elapsed = System.currentTimeMillis() - startTime
                         Log.d("ProcessRunVM", "$elapsed: Now doing step $step of ${numberOfSteps.value}...")

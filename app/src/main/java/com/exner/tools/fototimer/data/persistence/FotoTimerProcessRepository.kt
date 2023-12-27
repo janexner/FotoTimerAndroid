@@ -24,6 +24,11 @@ class FotoTimerProcessRepository @Inject constructor(private val fotoTimerProces
     }
 
     @WorkerThread
+    suspend fun getProcessNameById(id: Long): String {
+        return fotoTimerProcessDAO.getProcessNameById(id)
+    }
+
+    @WorkerThread
     suspend fun getNumberOfProcesses() = fotoTimerProcessDAO.getNumberOfProcesses()
 
     @WorkerThread
