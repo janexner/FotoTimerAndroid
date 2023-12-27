@@ -32,10 +32,6 @@ class ProcessRunViewModel @Inject constructor(
     private val repository: FotoTimerProcessRepository
 ) : ViewModel() {
 
-    private val _actionsListList: MutableLiveData<MutableList<List<ProcessStepAction>>> =
-        MutableLiveData(mutableListOf())
-    val actionsListList: LiveData<MutableList<List<ProcessStepAction>>> = _actionsListList
-
     private val _displayAction: MutableLiveData<ProcessStepAction> = MutableLiveData(null)
     val displayAction: LiveData<ProcessStepAction> = _displayAction
 
@@ -118,7 +114,6 @@ class ProcessRunViewModel @Inject constructor(
             }
             Log.d("ProcessVM", "list created, now running it...")
             // this is where the list is ready
-            _actionsListList.value = result
             _numberOfSteps.value = result.size
 
             // go into a loop, but in a coroutine
@@ -126,17 +121,19 @@ class ProcessRunViewModel @Inject constructor(
                 Log.d("ProcessRunVM", "Entering into loop in Main Dispatcher...")
                 while (isActive) {
                     val step: Int = currentStepNumber.value?.toInt() ?: 0
-                    if (step >= _actionsListList.value!!.size) {
+                    if (step >= result.size) {
                         Log.d("ProcessRunVM", "Job done, cancelling...")
                         job?.cancel()
                     } else {
                         Log.d("ProcessRunVM", "Now doing step $step of ${numberOfSteps.value}...")
                         // update display action
-                        val actionsList = _actionsListList.value!!.get(step)
+                        val actionsList = result[step]
                         actionsList.forEach { action ->
                             if (action is ProcessLeadInDisplayStepAction || action is ProcessDisplayStepAction || action is ProcessPauseDisplayStepAction) {
                                 _displayAction.value = action
+                                Log.d("ProcessRunVM", "${action.processName}: ${action.javaClass}")
                             }
+                            // TODO make noise
                         }
                         // count up
                         _currentStepNumber.value = step + 1

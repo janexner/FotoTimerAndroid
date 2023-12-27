@@ -106,6 +106,13 @@ class ProcessEditViewModel @Inject constructor(
         }
     }
 
+    fun getProcessIdsAndNames() {
+        viewModelScope.launch {
+            val temp = repository.loadIdsAndNamesForAllProcesses()
+            _processIdsAndNames.value = temp
+        }
+    }
+
     fun commitProcess() {
         if (_uid.value != null) {
             viewModelScope.launch {
@@ -131,7 +138,9 @@ class ProcessEditViewModel @Inject constructor(
                     soundIntervalId = 0L // TODO
                 )
                 if (_uid.value == -1L) {
-                    repository.insert(process)
+                    repository.insert(process.copy(
+                        uid = 0
+                    ))
                 } else {
                     repository.update(process)
                 }

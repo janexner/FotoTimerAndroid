@@ -73,6 +73,7 @@ fun ProcessEdit(
     val processIdsAndNames by processEditViewModel.processIdsAndNames.observeAsState()
 
     processEditViewModel.getProcess(processId)
+    processEditViewModel.getProcessIdsAndNames()
 
     var modified by remember { mutableStateOf(false) }
 

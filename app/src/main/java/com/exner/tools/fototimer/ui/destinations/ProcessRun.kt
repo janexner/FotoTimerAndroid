@@ -86,18 +86,19 @@ fun ProcessRun(
             }
         },
         bottomBar = {
-            FotoTimerRunBottomBar(navigator = navigator)
+            FotoTimerRunBottomBar(navigator = navigator) { processRunViewModel.cancel() }
         }
     )
 }
 
 @Composable
-fun FotoTimerRunBottomBar(navigator: DestinationsNavigator) {
+fun FotoTimerRunBottomBar(navigator: DestinationsNavigator, cancelAction: () -> Unit) {
     BottomAppBar(
         actions = {},
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
+                    cancelAction()
                     navigator.navigateUp()
                 },
                 containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
