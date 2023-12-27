@@ -44,7 +44,7 @@ sealed class SettingsTabs(val name: String) {
 fun Settings(
     settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
-    Log.i("SettingsScreen", "entering composable...")
+    Log.d("SettingsScreen", "entering composable...")
 
     val expertMode by settingsViewModel.expertMode.observeAsState()
     val useDynamicColour by settingsViewModel.useDynamicColour.observeAsState()

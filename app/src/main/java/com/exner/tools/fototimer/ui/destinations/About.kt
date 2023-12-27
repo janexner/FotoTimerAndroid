@@ -30,7 +30,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 @Destination
 @Composable
 fun About() {
-    Log.i("AboutScreen", "entering composable...")
+    Log.d("AboutScreen", "entering composable...")
 
     // what's the orientation, right now?
     val configuration = LocalConfiguration.current

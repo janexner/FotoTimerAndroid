@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.exner.tools.fototimer.ui.HeaderText
 import com.exner.tools.fototimer.ui.ProcessDeleteViewModel
+import com.exner.tools.fototimer.ui.destinations.destinations.ProcessListDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -34,7 +35,7 @@ fun ProcessDelete(
     processDeleteViewModel: ProcessDeleteViewModel = hiltViewModel(),
     navigator: DestinationsNavigator
 ) {
-    Log.i("ProcessDeleteScreen", "entering composable...")
+    Log.d("ProcessDeleteScreen", "entering composable...")
 
     val processName by processDeleteViewModel.processName.observeAsState()
     val processIsTarget by processDeleteViewModel.processIsTarget.observeAsState()
@@ -89,7 +90,7 @@ fun FotoTimerDeleteBottomBar(
             FloatingActionButton(
                 onClick = {
                     deleteAction()
-                    navigator.navigateUp()
+                    navigator.navigate(ProcessListDestination)
                 },
                 containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
                 elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()

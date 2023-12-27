@@ -48,7 +48,7 @@ fun ProcessDetails(
     settingsViewModel: SettingsViewModel = hiltViewModel(),
     navigator: DestinationsNavigator
 ) {
-    Log.i("ProcessDetailsScreen", "entering composable...")
+    Log.d("ProcessDetailsScreen", "entering composable...")
 
     val name by processDetailsViewModel.name.observeAsState()
     val processTime by processDetailsViewModel.processTime.observeAsState()

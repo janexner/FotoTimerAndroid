@@ -39,7 +39,7 @@ fun ProcessList(
     processListViewModel: ProcessListViewModel = hiltViewModel(),
     navigator: DestinationsNavigator
 ) {
-    Log.i("ProcessListScreen", "entering composable...")
+    Log.d("ProcessListScreen", "entering composable...")
 
     val processes by processListViewModel.allProcesses.observeAsState()
 
