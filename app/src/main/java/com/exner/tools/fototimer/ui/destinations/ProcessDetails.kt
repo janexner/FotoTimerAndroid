@@ -12,8 +12,11 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -134,17 +137,6 @@ fun FotoTimerDetailsBottomBar(
 
             IconButton(onClick = {
                 navigator.navigate(
-                    ProcessRunDestination(processId = processId)
-                )
-            }) {
-                Icon(
-                    imageVector = Icons.Filled.PlayArrow,
-                    contentDescription = "Start"
-                )
-            }
-
-            IconButton(onClick = {
-                navigator.navigate(
                     ProcessEditDestination(processId = processId)
                 )
             }) {
@@ -165,6 +157,22 @@ fun FotoTimerDetailsBottomBar(
                 )
             }
 
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    navigator.navigate(
+                        ProcessRunDestination(processId = processId)
+                    )
+                },
+                containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
+                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.PlayArrow,
+                    contentDescription = "Start"
+                )
+            }
         }
     )
 }
