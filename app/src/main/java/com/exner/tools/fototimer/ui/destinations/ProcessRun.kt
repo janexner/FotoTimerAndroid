@@ -46,6 +46,7 @@ fun ProcessRun(
     val numberOfSteps by processRunViewModel.numberOfSteps.observeAsState()
     val currentStepNumber by processRunViewModel.currentStepNumber.observeAsState()
     val keepScreenOn by processRunViewModel.keepScreenOn.observeAsState()
+    val hasLoop by processRunViewModel.hasLoop.observeAsState()
 
     val numberOfPreBeeps by settingsViewModel.numberOfPreBeeps.observeAsState()
 
@@ -64,13 +65,15 @@ fun ProcessRun(
                     .padding(8.dp)
                     .fillMaxWidth()
             ) {
-                // first, a nice process indicator
-                val currentProgress =
-                    if (numberOfSteps != null && numberOfSteps != 0) currentStepNumber!!.toFloat() / numberOfSteps!! else 0.0f
-                LinearProgressIndicator(
-                    progress = currentProgress,
-                    modifier = Modifier.fillMaxWidth(),
-                )
+                // first, a nice process indicator (if possible)
+                if (hasLoop != true) {
+                    val currentProgress =
+                        if (numberOfSteps != null && numberOfSteps != 0) currentStepNumber!!.toFloat() / numberOfSteps!! else 0.0f
+                    LinearProgressIndicator(
+                        progress = currentProgress,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
 
                 // show the display, depending on where we are right now
                 when (displayAction) {

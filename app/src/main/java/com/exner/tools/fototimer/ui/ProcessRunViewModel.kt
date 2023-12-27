@@ -42,112 +42,129 @@ class ProcessRunViewModel @Inject constructor(
     private val _keepScreenOn: MutableLiveData<Boolean> = MutableLiveData(false)
     val keepScreenOn: LiveData<Boolean> = _keepScreenOn
 
+    private val _hasLoop: MutableLiveData<Boolean> = MutableLiveData(false)
+    val hasLoop: LiveData<Boolean> = _hasLoop
+
     private var job: Job? = null
+
+    private var isRunning: Boolean = false
 
     @OptIn(DelicateCoroutinesApi::class)
     fun initialiseRun(processId: Long, numberOfPreBeeps: Int) {
         val result = mutableListOf<List<ProcessStepAction>>()
 
-        viewModelScope.launch {
-            Log.d("ProcessRunVM", "Creating list in VM Scope...")
-            // loop detection
-            val processIdList = mutableListOf<Long>()
-            var currentID = processId
-            var noLoopDetectedSoFar = true
-            var firstRound = true
-            var keepScreenOnAcrossList = false
+        Log.d("ProcessRunVM", "init...")
 
-            while (currentID >= 0 && noLoopDetectedSoFar) {
-                Log.d("ProcessRunVM", "working on processID $currentID...")
-                processIdList.add(currentID)
-                val process = repository.loadProcessById(currentID)
-                if (process != null) {
-                    val partialResult =
-                        getProcessStepListForOneProcess(process, firstRound, numberOfPreBeeps)
-                    partialResult.forEach { actionList ->
-                        result.add(actionList)
-                    }
-                    // screen on?
-                    keepScreenOnAcrossList = keepScreenOnAcrossList || process.keepsScreenOn
-                    // prepare for the next iteration
-                    firstRound = false
-                    if (process.gotoId != null && process.gotoId != -1L) {
-                        currentID = process.gotoId
-                        if (processIdList.contains(currentID)) {
-                            noLoopDetectedSoFar = false // LOOP!
-                            var earliestStepNumberForLoop = -1
-                            var i = 0
-                            while (i < result.size && earliestStepNumberForLoop < 0) {
-                                val checkPoint = result.get(i)
-                                checkPoint.forEach { action ->
-                                    if (action is ProcessStartAction) {
-                                        if (action.processID == currentID) {
-                                            earliestStepNumberForLoop = i
-                                        }
-                                    }
-                                }
-                                i++
-                            }
-                            if (earliestStepNumberForLoop >= 0) {
-                                // this has to replace the latest GotoAction
-                                val latestActionList = result[result.lastIndex]
-                                val lastAction = latestActionList[latestActionList.lastIndex]
-                                if (lastAction is ProcessGotoAction) { // it should be!
-                                    // remove the action list, it is not mutable
-                                    result.removeLast() // remove the action list, bcs we need a new one
-                                    val newActionsList = mutableListOf<ProcessStepAction>()
-                                    latestActionList.forEach { processStepAction ->
-                                        if (processStepAction !is ProcessGotoAction) {
-                                            newActionsList.add(processStepAction)
-                                        }
-                                    }
-                                    val ftpjumpAction = ProcessJumpbackAction(
-                                        process.name,
-                                        earliestStepNumberForLoop
-                                    )
-                                    newActionsList.add(ftpjumpAction)
-                                    result.add(newActionsList)
-                                }
-                            }
+        if (!isRunning) {
+            isRunning = true
+            viewModelScope.launch {
+                // loop detection
+                val processIdList = mutableListOf<Long>()
+                var currentID = processId
+                var noLoopDetectedSoFar = true
+                var firstRound = true
+                var keepScreenOnAcrossList = false
+
+                while (currentID >= 0 && noLoopDetectedSoFar) {
+                    processIdList.add(currentID)
+                    val process = repository.loadProcessById(currentID)
+                    if (process != null) {
+                        val partialResult =
+                            getProcessStepListForOneProcess(process, firstRound, numberOfPreBeeps)
+                        partialResult.forEach { actionList ->
+                            result.add(actionList)
                         }
-                    } else {
-                        // that's it, no chain
-                        currentID = -1
+                        // screen on?
+                        keepScreenOnAcrossList = keepScreenOnAcrossList || process.keepsScreenOn
+                        // prepare for the next iteration
+                        firstRound = false
+                        if (process.gotoId != null && process.gotoId != -1L) {
+                            currentID = process.gotoId
+                            if (processIdList.contains(currentID)) {
+                                noLoopDetectedSoFar = false // LOOP!
+                                _hasLoop.value = true
+                                var earliestStepNumberForLoop = -1
+                                var i = 0
+                                while (i < result.size && earliestStepNumberForLoop < 0) {
+                                    val checkPoint = result[i]
+                                    checkPoint.forEach { action ->
+                                        if (action is ProcessStartAction) {
+                                            if (action.processID == currentID) {
+                                                earliestStepNumberForLoop = i
+                                            }
+                                        }
+                                    }
+                                    i++
+                                }
+                                if (earliestStepNumberForLoop >= 0) {
+                                    // this has to replace the latest GotoAction
+                                    val latestActionList = result[result.lastIndex]
+                                    val lastAction = latestActionList[latestActionList.lastIndex]
+                                    if (lastAction is ProcessGotoAction) { // it should be!
+                                        // remove the action list, it is not mutable
+                                        result.removeLast() // remove the action list, bcs we need a new one
+                                        val newActionsList = mutableListOf<ProcessStepAction>()
+                                        latestActionList.forEach { processStepAction ->
+                                            if (processStepAction !is ProcessGotoAction) {
+                                                newActionsList.add(processStepAction)
+                                            }
+                                        }
+                                        val ftpJumpAction = ProcessJumpbackAction(
+                                            process.name,
+                                            earliestStepNumberForLoop
+                                        )
+                                        newActionsList.add(ftpJumpAction)
+                                        result.add(newActionsList)
+                                    }
+                                }
+                            }
+                        } else {
+                            // that's it, no chain
+                            currentID = -1
+                        }
                     }
                 }
-            }
-            Log.d("ProcessVM", "list created, now running it...")
-            // this is where the list is ready
-            _numberOfSteps.value = result.size
+                // this is where the list is ready
+                _numberOfSteps.value = result.size
 
-            _keepScreenOn.value = keepScreenOnAcrossList
+                _keepScreenOn.value = keepScreenOnAcrossList
 
-            // go into a loop, but in a coroutine
-            job = GlobalScope.launch(Dispatchers.Main) {
-                val startTime = System.currentTimeMillis()
-                Log.d("ProcessRunVM", "Entering into loop in Main Dispatcher...")
-                while (isActive) {
-                    val step: Int = currentStepNumber.value?.toInt() ?: 0
-                    if (step >= result.size) {
-                        Log.d("ProcessRunVM", "Job done, quitting...")
-                        break
-                    } else {
-                        val elapsed = System.currentTimeMillis() - startTime
-                        Log.d("ProcessRunVM", "$elapsed: Now doing step $step of ${numberOfSteps.value}...")
-                        // update display action and do sounds
-                        val actionsList = result[step]
-                        actionsList.forEach { action ->
-                            if (action is ProcessLeadInDisplayStepAction || action is ProcessDisplayStepAction || action is ProcessPauseDisplayStepAction) {
-                                _displayAction.value = action
+                // go into a loop, but in a coroutine
+                job = GlobalScope.launch(Dispatchers.Main) {
+                    val startTime = System.currentTimeMillis()
+                    var actualStep = 0
+                    while (isActive) {
+                        val step: Int = currentStepNumber.value?.toInt() ?: 0
+                        if (step >= result.size) {
+                            Log.d("ProcessRunVM", "Step $step, job done, quitting...")
+                            break
+                        } else {
+                            val elapsed = System.currentTimeMillis() - startTime
+                            Log.d(
+                                "ProcessRunVM",
+                                "$elapsed: Now doing step $step/$actualStep of ${numberOfSteps.value}..."
+                            )
+                            // update display action and do sounds
+                            val actionsList = result[step]
+                            actionsList.forEach { action ->
+                                if (action is ProcessLeadInDisplayStepAction || action is ProcessDisplayStepAction || action is ProcessPauseDisplayStepAction) {
+                                    _displayAction.value = action
+                                } else if (action is ProcessJumpbackAction) {
+                                    Log.d("ProcessRunVM", "Jump back to ${action.stepNumber}...")
+                                    _currentStepNumber.value = action.stepNumber - 1 // aim left
+                                    // bcs 4 lines down, we count up by one
+                                }
+                                // TODO make noise
                             }
-                            // TODO make noise
+                            // count up
+                            _currentStepNumber.value = currentStepNumber.value!! + 1
+                            // sleep till next step
+                            actualStep++
+                            val targetTimeForNextStep =
+                                startTime + (actualStep * STEP_LENGTH_IN_MILLISECONDS)
+                            val newDelay = targetTimeForNextStep - System.currentTimeMillis()
+                            delay(newDelay)
                         }
-                        // count up
-                        _currentStepNumber.value = step + 1
-                        // sleep till next step
-                        val targetTimeForNextStep = startTime + (step * STEP_LENGTH_IN_MILLISECONDS)
-                        val newDelay = targetTimeForNextStep - System.currentTimeMillis()
-                        delay(newDelay)
                     }
                 }
             }
@@ -155,7 +172,6 @@ class ProcessRunViewModel @Inject constructor(
     }
 
     fun cancel() {
-        Log.d("ProcessRunVM", "Cancelling job...")
         job?.cancel()
     }
 }
