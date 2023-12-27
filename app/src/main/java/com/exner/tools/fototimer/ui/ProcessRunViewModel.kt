@@ -118,6 +118,7 @@ class ProcessRunViewModel @Inject constructor(
 
             // go into a loop, but in a coroutine
             job = GlobalScope.launch(Dispatchers.Main) {
+                val startTime = System.currentTimeMillis()
                 Log.d("ProcessRunVM", "Entering into loop in Main Dispatcher...")
                 while (isActive) {
                     val step: Int = currentStepNumber.value?.toInt() ?: 0
@@ -125,21 +126,22 @@ class ProcessRunViewModel @Inject constructor(
                         Log.d("ProcessRunVM", "Job done, cancelling...")
                         job?.cancel()
                     } else {
-                        Log.d("ProcessRunVM", "Now doing step $step of ${numberOfSteps.value}...")
+                        val elapsed = System.currentTimeMillis() - startTime
+                        Log.d("ProcessRunVM", "$elapsed: Now doing step $step of ${numberOfSteps.value}...")
                         // update display action
                         val actionsList = result[step]
                         actionsList.forEach { action ->
                             if (action is ProcessLeadInDisplayStepAction || action is ProcessDisplayStepAction || action is ProcessPauseDisplayStepAction) {
                                 _displayAction.value = action
-                                Log.d("ProcessRunVM", "${action.processName}: ${action.javaClass}")
                             }
                             // TODO make noise
                         }
                         // count up
                         _currentStepNumber.value = step + 1
                         // sleep till next step
-                        delay(STEP_LENGTH_IN_MILLISECONDS.toLong())
-                        // TODO align delay with full steps
+                        val targetTimeForNextStep = startTime + (step * STEP_LENGTH_IN_MILLISECONDS)
+                        val newDelay = targetTimeForNextStep - System.currentTimeMillis()
+                        delay(newDelay)
                     }
                 }
             }
@@ -147,6 +149,7 @@ class ProcessRunViewModel @Inject constructor(
     }
 
     fun cancel() {
+        Log.d("ProcessRunVM", "Cancelling job...")
         job?.cancel()
     }
 }

@@ -112,7 +112,6 @@ fun TextAndSwitch(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TextFieldForTimes(
     value: String,

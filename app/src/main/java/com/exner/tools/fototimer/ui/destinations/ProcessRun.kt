@@ -23,10 +23,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.exner.tools.fototimer.steps.ProcessDisplayStepAction
 import com.exner.tools.fototimer.steps.ProcessLeadInDisplayStepAction
 import com.exner.tools.fototimer.steps.ProcessPauseDisplayStepAction
+import com.exner.tools.fototimer.ui.BigTimerText
+import com.exner.tools.fototimer.ui.MediumTimerAndIntervalText
 import com.exner.tools.fototimer.ui.ProcessRunViewModel
 import com.exner.tools.fototimer.ui.SettingsViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlin.time.Duration.Companion.seconds
 
 @Destination
 @Composable
@@ -71,7 +74,9 @@ fun ProcessRun(
 
                     is ProcessDisplayStepAction -> {
                         // TODO
-                        Text(text = "Display")
+                        Text(text = (displayAction as ProcessDisplayStepAction).processName)
+                        BigTimerText(duration = (displayAction as ProcessDisplayStepAction).currentProcessTime.seconds)
+                        MediumTimerAndIntervalText(duration = (displayAction as ProcessDisplayStepAction).currentIntervalTime.seconds, intervalText = (displayAction as ProcessDisplayStepAction).currentRound.toString())
                     }
 
                     is ProcessPauseDisplayStepAction -> {
@@ -80,7 +85,7 @@ fun ProcessRun(
                     }
 
                     else -> {
-                        // TODO
+                        // nothing to do for us
                     }
                 }
             }
