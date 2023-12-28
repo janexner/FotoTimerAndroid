@@ -5,12 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.exner.tools.fototimer.audio.SoundPoolHolder
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcessRepository
 import com.exner.tools.fototimer.steps.ProcessDisplayStepAction
 import com.exner.tools.fototimer.steps.ProcessGotoAction
 import com.exner.tools.fototimer.steps.ProcessJumpbackAction
 import com.exner.tools.fototimer.steps.ProcessLeadInDisplayStepAction
 import com.exner.tools.fototimer.steps.ProcessPauseDisplayStepAction
+import com.exner.tools.fototimer.steps.ProcessSoundAction
 import com.exner.tools.fototimer.steps.ProcessStartAction
 import com.exner.tools.fototimer.steps.ProcessStepAction
 import com.exner.tools.fototimer.steps.STEP_LENGTH_IN_MILLISECONDS
@@ -57,6 +59,8 @@ class ProcessRunViewModel @Inject constructor(
 
         if (!isRunning) {
             isRunning = true
+
+            // create list of list of actions and run it
             viewModelScope.launch {
                 // loop detection
                 val processIdList = mutableListOf<Long>()
@@ -147,14 +151,22 @@ class ProcessRunViewModel @Inject constructor(
                             // update display action and do sounds
                             val actionsList = result[step]
                             actionsList.forEach { action ->
-                                if (action is ProcessLeadInDisplayStepAction || action is ProcessDisplayStepAction || action is ProcessPauseDisplayStepAction) {
-                                    _displayAction.value = action
-                                } else if (action is ProcessJumpbackAction) {
-                                    Log.d("ProcessRunVM", "Jump back to ${action.stepNumber}...")
-                                    _currentStepNumber.value = action.stepNumber - 1 // aim left
-                                    // bcs 4 lines down, we count up by one
+                                when (action) {
+                                    is ProcessLeadInDisplayStepAction, is ProcessDisplayStepAction, is ProcessPauseDisplayStepAction -> {
+                                        _displayAction.value = action
+                                    }
+
+                                    is ProcessJumpbackAction -> {
+                                        Log.d("ProcessRunVM", "Jump back to ${action.stepNumber}...")
+                                        _currentStepNumber.value = action.stepNumber - 1 // aim left
+                                        // bcs 4 lines down, we count up by one
+                                    }
+
+                                    is ProcessSoundAction -> {
+                                        SoundPoolHolder.playSound(action.soundId)
+                                        // TODO debug this
+                                    }
                                 }
-                                // TODO make noise
                             }
                             // count up
                             _currentStepNumber.value = currentStepNumber.value!! + 1

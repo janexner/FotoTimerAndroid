@@ -61,6 +61,7 @@ fun ProcessDetails(
     val hasPreBeeps by processDetailsViewModel.hasPreBeeps.observeAsState()
     val hasLeadIn by processDetailsViewModel.hasLeadIn.observeAsState()
     val leadInSeconds by processDetailsViewModel.leadInSeconds.observeAsState()
+    val hasLeadInSound by processDetailsViewModel.hasLeadInSound.observeAsState()
     val hasAutoChain by processDetailsViewModel.hasAutoChain.observeAsState()
     val hasPauseBeforeChain by processDetailsViewModel.hasPauseBeforeChain.observeAsState()
     val pauseTime by processDetailsViewModel.pauseTime.observeAsState()
@@ -105,6 +106,7 @@ fun ProcessDetails(
                     hasSoundInterval,
                     hasSoundMetronome,
                     hasPreBeeps,
+                    hasLeadInSound,
                     expertMode
                 )
                 ProcessLeadInAndChainData(
@@ -193,14 +195,19 @@ fun ProcessAudioData(
     hasSoundInterval: Boolean?,
     hasSoundMetronome: Boolean?,
     hasPreBeeps: Boolean?,
+    hasLeadInSound: Boolean?,
     expertMode: Boolean?
 ) {
     if (expertMode == true) {
-        if (hasSoundStart == true || hasSoundEnd == true || hasPreBeeps == true || hasSoundInterval == true || hasSoundMetronome == true) {
+        if (hasSoundStart == true || hasSoundEnd == true || hasPreBeeps == true || hasSoundInterval == true || hasSoundMetronome == true || hasLeadInSound == true) {
             var soundStatement = "Sounds: "
             var space = ""
+            if (hasLeadInSound == true) {
+                soundStatement += space + "lead-in"
+                space = ", "
+            }
             if (hasSoundStart == true) {
-                soundStatement += "start"
+                soundStatement += space + "start"
                 space = ", "
             }
             if (hasSoundInterval == true) {
@@ -229,7 +236,7 @@ fun ProcessAudioData(
             )
         }
     } else { // not expert mode
-        if (hasSoundStart == true || hasSoundEnd == true || hasPreBeeps == true || hasSoundInterval == true || hasSoundMetronome == true) {
+        if (hasSoundStart == true || hasSoundEnd == true || hasPreBeeps == true || hasSoundInterval == true || hasSoundMetronome == true || hasLeadInSound == true) {
             ListItem(
                 headlineContent = { SmallBodyText(text = "Sounds") },
                 supportingContent = { BodyText(text = "Sound is on") },

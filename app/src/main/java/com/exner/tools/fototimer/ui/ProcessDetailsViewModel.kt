@@ -50,6 +50,9 @@ class ProcessDetailsViewModel @Inject constructor(
     private val _leadInSeconds: MutableLiveData<String> = MutableLiveData("5")
     val leadInSeconds: LiveData<String> = _leadInSeconds
 
+    private val _hasLeadInSound: MutableLiveData<Boolean> = MutableLiveData(false)
+    val hasLeadInSound: LiveData<Boolean> = _hasLeadInSound
+
     private val _hasAutoChain: MutableLiveData<Boolean> = MutableLiveData(false)
     val hasAutoChain: LiveData<Boolean> = _hasAutoChain
 
@@ -86,6 +89,7 @@ class ProcessDetailsViewModel @Inject constructor(
                     _hasSoundEnd.value = process.hasSoundEnd
                     _hasSoundInterval.value = process.hasSoundInterval
                     _hasSoundMetronome.value = process.hasSoundMetronome
+                    _hasLeadInSound.value = process.hasLeadInSound
                     if (process.gotoId != null && process.gotoId != -1L) {
                         val nextProcess = repository.loadProcessById(process.gotoId)
                         if (nextProcess != null) {

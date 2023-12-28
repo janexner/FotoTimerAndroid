@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 @Database(
     entities = [FotoTimerProcess::class],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
@@ -34,6 +34,12 @@ abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE FotoTimerProcess ADD COLUMN has_lead_in_sound INTEGER NOT NULL DEFAULT FALSE;")
+            }
+        }
+
         fun getDatabase(context: Context, scope: CoroutineScope): FotoTimerProcessRoomDatabase {
             // check that INSTANCE is not null, then return it.
             // Otherwise, create it first
@@ -43,7 +49,7 @@ abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
                     FotoTimerProcessRoomDatabase::class.java,
                     "foto_timer_process_database"
                 ).addCallback(ProcessDatabaseCallback(scope))
-                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4).build()
+                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5).build()
                 INSTANCE = instance
                 // return instance
                 instance
@@ -86,6 +92,7 @@ abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
                     -1L,
                     keepsScreenOn = false,
                     hasPreBeeps = false,
+                    hasLeadInSound = false
                 )
             fotoTimerProcessDao.insert(fotoTimerProcess)
             fotoTimerProcess =
@@ -108,6 +115,7 @@ abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
                     -1L,
                     keepsScreenOn = true,
                     hasPreBeeps = false,
+                    hasLeadInSound = false
                 )
             fotoTimerProcessDao.insert(fotoTimerProcess)
         }

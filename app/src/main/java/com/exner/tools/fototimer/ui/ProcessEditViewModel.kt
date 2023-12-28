@@ -52,6 +52,9 @@ class ProcessEditViewModel @Inject constructor(
     private val _leadInSeconds: MutableLiveData<String?> = MutableLiveData("5")
     val leadInSeconds: LiveData<String?> = _leadInSeconds
 
+    private val _hasLeadInSound: MutableLiveData<Boolean> = MutableLiveData(false)
+    val hasLeadInSound: LiveData<Boolean> = _hasLeadInSound
+
     private val _hasAutoChain: MutableLiveData<Boolean> = MutableLiveData(false)
     val hasAutoChain: LiveData<Boolean> = _hasAutoChain
 
@@ -93,6 +96,7 @@ class ProcessEditViewModel @Inject constructor(
                     _hasSoundEnd.value = process.hasSoundEnd
                     _hasSoundInterval.value = process.hasSoundInterval
                     _hasSoundMetronome.value = process.hasSoundMetronome
+                    _hasLeadInSound.value = process.hasLeadInSound
                     if (process.gotoId != null && process.gotoId != -1L) {
                         val nextProcess = repository.loadProcessById(process.gotoId)
                         if (nextProcess != null) {
@@ -131,6 +135,7 @@ class ProcessEditViewModel @Inject constructor(
                     hasSoundEnd = _hasSoundEnd.value == true,
                     hasSoundInterval = _hasSoundInterval.value == true,
                     hasSoundMetronome = _hasSoundMetronome.value == true,
+                    hasLeadInSound = _hasLeadInSound.value == true,
                     soundStartId = 0L, // TODO
                     soundEndId = 0L, // TODO
                     soundIntervalId = 0L // TODO
@@ -204,6 +209,10 @@ class ProcessEditViewModel @Inject constructor(
 
     fun updateHasSoundMetronome(hasSoundMetronome: Boolean) {
         _hasSoundMetronome.value = hasSoundMetronome
+    }
+
+    fun updateHasLeadInSound(hasLeadInSound: Boolean) {
+        _hasLeadInSound.value = hasLeadInSound
     }
 
     fun updateNextProcessesName(nextProcessesName: String?) {

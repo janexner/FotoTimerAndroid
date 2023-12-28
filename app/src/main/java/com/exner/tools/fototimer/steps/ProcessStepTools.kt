@@ -1,5 +1,6 @@
 package com.exner.tools.fototimer.steps
 
+import com.exner.tools.fototimer.audio.SoundIDs
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcess
 
 const val STEP_LENGTH_IN_MILLISECONDS = 500
@@ -26,6 +27,13 @@ fun getProcessStepListForOneProcess(
                     i * stepLengthInMilliseconds / 1000
                 )
                 actionsList.add(ftpliAction)
+                if (isFullSecond(i, stepLengthInMilliseconds) && process.hasLeadInSound) {
+                    val ftplisAction = ProcessSoundAction(
+                        process.name,
+                        SoundIDs.SOUND_ID_LEAD_IN
+                    )
+                    actionsList.add(ftplisAction)
+                }
                 // add the chain of actions to the overall list
                 result.add(actionsList)
             }
@@ -59,37 +67,38 @@ fun getProcessStepListForOneProcess(
         if (i == 1 && process.hasSoundStart) {
             val ftpssAction = ProcessSoundAction(
                 process.name,
-                process.soundStartId ?: 0L
+                SoundIDs.SOUND_ID_PROCESS_START
             )
             actionsList.add(ftpssAction)
         } else if (i == howManySteps && process.hasSoundEnd) {
             val ftpseAction = ProcessSoundAction(
                 process.name,
-                process.soundEndId ?: 0L
+                SoundIDs.SOUND_ID_PROCESS_END
             )
             actionsList.add(ftpseAction)
         } else if (isFullSecond(i, stepLengthInMilliseconds)) {
             if ((i * stepLengthInMilliseconds / 1000.0 % process.intervalTime == 0.0) && process.hasSoundInterval) {
                 val ftpsiAction = ProcessSoundAction(
                     process.name,
-                    process.soundIntervalId ?: 0L
+                    SoundIDs.SOUND_ID_INTERVAL
                 )
                 actionsList.add(ftpsiAction)
-            } else if (process.hasPreBeeps) {
-                val relativePosition = (i * stepLengthInMilliseconds / 1000) % process.intervalTime
-                if (relativePosition >= (process.intervalTime - numberOfPreBeeps)) {
-                    val ftpspbAction = ProcessSoundAction(
+            } else {
+                val relativePosition =
+                    (i * stepLengthInMilliseconds / 1000) % process.intervalTime
+                if (process.hasPreBeeps && relativePosition >= (process.intervalTime - numberOfPreBeeps)) {
+                        val ftpspbAction = ProcessSoundAction(
+                            process.name,
+                            SoundIDs.SOUND_ID_PRE_BEEPS
+                        )
+                        actionsList.add(ftpspbAction)
+                } else if (process.hasSoundMetronome) {
+                    val ftpsmAction = ProcessSoundAction(
                         process.name,
-                        6L
+                        SoundIDs.SOUND_ID_METRONOME
                     )
-                    actionsList.add(ftpspbAction)
+                    actionsList.add(ftpsmAction)
                 }
-            } else if (process.hasSoundMetronome) {
-                val ftpsmAction = ProcessSoundAction(
-                    process.name,
-                    5L // TODO add proper sound ID - metronome
-                )
-                actionsList.add(ftpsmAction)
             }
         }
         // add the chain of actions to the overall list

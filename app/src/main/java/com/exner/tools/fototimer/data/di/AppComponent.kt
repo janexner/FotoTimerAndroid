@@ -31,7 +31,7 @@ object AppComponent {
 
     @Singleton
     @Provides
-    fun providesAppDatabase(
+    fun provideAppDatabase(
         @ApplicationContext context: Context,
         provider: Provider<FotoTimerProcessDAO>
     ): FotoTimerProcessRoomDatabase =
@@ -40,7 +40,7 @@ object AppComponent {
             FotoTimerProcessRoomDatabase::class.java,
             "foto_timer_process_database"
         ).addCallback(ProcessDatabaseCallback(provider))
-            .addMigrations(MIGRATION_2_3, MIGRATION_3_4).build()
+            .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5).build()
 
     private val MIGRATION_2_3 = object : Migration(2, 3) {
         override fun migrate(db: SupportSQLiteDatabase) {
@@ -53,66 +53,72 @@ object AppComponent {
             db.execSQL("ALTER TABLE FotoTimerProcess ADD COLUMN has_pre_beeps INTEGER NOT NULL DEFAULT FALSE;")
         }
     }
-}
 
-class ProcessDatabaseCallback(
-    private val provider: Provider<FotoTimerProcessDAO>
-) : RoomDatabase.Callback() {
-
-    private val applicationScope = CoroutineScope(SupervisorJob())
-
-    override fun onCreate(db: SupportSQLiteDatabase) {
-        super.onCreate(db)
-        applicationScope.launch(Dispatchers.IO) {
-            populateDatabaseWithSampleProcesses()
+    private val MIGRATION_4_5 = object : Migration(4, 5) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE FotoTimerProcess ADD COLUMN has_lead_in_sound INTEGER NOT NULL DEFAULT FALSE;")
         }
     }
 
-    private suspend fun populateDatabaseWithSampleProcesses() {
-        // Add sample words.
-        var fotoTimerProcess =
-            FotoTimerProcess(
-                "Test Process 1",
-                30,
-                10,
-                true,
-                0,
-                hasSoundEnd = true,
-                0,
-                hasSoundInterval = true,
-                0,
-                hasSoundMetronome = false,
-                hasLeadIn = false,
-                0,
-                hasAutoChain = false,
-                hasPauseBeforeChain = false,
-                0,
-                -1L,
-                keepsScreenOn = false,
-                hasPreBeeps = false,
-            )
-        provider.get().insert(fotoTimerProcess)
-        fotoTimerProcess =
-            FotoTimerProcess(
-                "Test Process 2",
-                15,
-                5,
-                false,
-                0,
-                hasSoundEnd = false,
-                0,
-                hasSoundInterval = false,
-                0,
-                hasSoundMetronome = true,
-                hasLeadIn = false,
-                0,
-                hasAutoChain = false,
-                hasPauseBeforeChain = false,
-                0,
-                -1L,
-                keepsScreenOn = true,
-                hasPreBeeps = false,
-            )
-        provider.get().insert(fotoTimerProcess)
+    class ProcessDatabaseCallback(
+        private val provider: Provider<FotoTimerProcessDAO>
+    ) : RoomDatabase.Callback() {
+
+        private val applicationScope = CoroutineScope(SupervisorJob())
+
+        override fun onCreate(db: SupportSQLiteDatabase) {
+            super.onCreate(db)
+            applicationScope.launch(Dispatchers.IO) {
+                populateDatabaseWithSampleProcesses()
+            }
+        }
+
+        private suspend fun populateDatabaseWithSampleProcesses() {
+            // Add sample words.
+            var fotoTimerProcess =
+                FotoTimerProcess(
+                    "Test Process 1",
+                    30,
+                    10,
+                    true,
+                    0,
+                    hasSoundEnd = true,
+                    0,
+                    hasSoundInterval = true,
+                    0,
+                    hasSoundMetronome = false,
+                    hasLeadIn = false,
+                    0,
+                    hasAutoChain = false,
+                    hasPauseBeforeChain = false,
+                    0,
+                    -1L,
+                    keepsScreenOn = false,
+                    hasPreBeeps = false,
+                )
+            provider.get().insert(fotoTimerProcess)
+            fotoTimerProcess =
+                FotoTimerProcess(
+                    "Test Process 2",
+                    15,
+                    5,
+                    false,
+                    0,
+                    hasSoundEnd = false,
+                    0,
+                    hasSoundInterval = false,
+                    0,
+                    hasSoundMetronome = true,
+                    hasLeadIn = false,
+                    0,
+                    hasAutoChain = false,
+                    hasPauseBeforeChain = false,
+                    0,
+                    -1L,
+                    keepsScreenOn = true,
+                    hasPreBeeps = false,
+                )
+            provider.get().insert(fotoTimerProcess)
+        }
     }
 }

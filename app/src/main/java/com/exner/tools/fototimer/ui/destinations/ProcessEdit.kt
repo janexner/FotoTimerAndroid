@@ -64,6 +64,7 @@ fun ProcessEdit(
     val hasPreBeeps by processEditViewModel.hasPreBeeps.observeAsState()
     val hasLeadIn by processEditViewModel.hasLeadIn.observeAsState()
     val leadInSeconds by processEditViewModel.leadInSeconds.observeAsState()
+    val hasLeadInSound by processEditViewModel.hasLeadInSound.observeAsState()
     val hasAutoChain by processEditViewModel.hasAutoChain.observeAsState()
     val hasPauseBeforeChain by processEditViewModel.hasPauseBeforeChain.observeAsState()
     val pauseTime by processEditViewModel.pauseTime.observeAsState()
@@ -156,6 +157,13 @@ fun ProcessEdit(
                         modified = true
                     }
                     TextAndSwitch(
+                        text = "Every second ('metronome')",
+                        checked = hasSoundMetronome == true,
+                    ) {
+                        processEditViewModel.updateHasSoundMetronome(it)
+                        modified = true
+                    }
+                    TextAndSwitch(
                         text = "At the end",
                         checked = hasSoundEnd == true,
                     ) {
@@ -177,13 +185,6 @@ fun ProcessEdit(
                     Column(
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        TextAndSwitch(
-                            text = "Play a sound every second ('metronome')",
-                            checked = hasSoundMetronome == true,
-                        ) {
-                            processEditViewModel.updateHasSoundMetronome(it)
-                            modified = true
-                        }
                         HeaderText(text = "Before the process")
                         TextAndSwitch(
                             text = "Lead-in before process",
@@ -203,6 +204,13 @@ fun ProcessEdit(
                                 modifier = Modifier.fillMaxWidth(),
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                             )
+                            TextAndSwitch(
+                                text = "Play a sound during lead-in",
+                                checked = hasLeadInSound == true
+                            ) {
+                                processEditViewModel.updateHasLeadInSound(it)
+                                modified = true
+                            }
                         }
                     }
                 }
