@@ -148,8 +148,6 @@ fun Settings(
         }
     }
 // invisible preferences TODO
-// metronome sound
-// lead-in sound
 // default sounds
 // - process start
 // - process end
@@ -207,35 +205,31 @@ private fun ExpertSettingsDefaultTimes(
         modifier = Modifier.fillMaxWidth()
     ) {
         TextFieldForTimes(
-            value = processTime.toString(),
+            value = processTime ?: 30,
             label = { Text(text = "Default Process time") },
             onValueChange = {
-                val newProcessTime = it.toIntOrNull() ?: 0
-                setProcessTime(newProcessTime)
+                setProcessTime(it)
             }
         ) { Text(text = "30") }
         TextFieldForTimes(
-            value = intervalTime.toString(),
+            value = intervalTime?: 10,
             label = { Text(text = "Default Interval time") },
             onValueChange = {
-                val newIntervalTime = it.toIntOrNull() ?: 0
-                setIntervalTime(newIntervalTime)
+                setIntervalTime(it)
             },
         ) { Text(text = "10") }
         TextFieldForTimes(
-            value = leadInTime.toString(),
+            value = leadInTime ?: 5,
             label = { Text(text = "Default Lead-in time") },
             onValueChange = {
-                val newLeadInTime = it.toIntOrNull() ?: 0
-                setLeadInTime(newLeadInTime)
+                setLeadInTime(it)
             },
         ) { Text(text = "0") }
         TextFieldForTimes(
-            value = pauseTime.toString(),
+            value = pauseTime ?: 5,
             label = { Text(text = "Default Pause time") },
             onValueChange = {
-                val newPauseTime = it.toIntOrNull() ?: 0
-                setPauseTime(newPauseTime)
+                setPauseTime(it)
             },
         ) { Text(text = "4") }
         TextAndSwitch(

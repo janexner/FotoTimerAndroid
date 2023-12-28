@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.exner.tools.fototimer.ui.HeaderText
 import com.exner.tools.fototimer.ui.ProcessEditViewModel
@@ -105,7 +106,7 @@ fun ProcessEdit(
                 }
                 HeaderText(text = "Times")
                 TextFieldForTimes(
-                    value = processTime ?: "30",
+                    value = processTime ?: 30,
                     label = { Text(text = "Process time (total)") },
                     onValueChange = {
                         processEditViewModel.updateProcessTime(it)
@@ -113,7 +114,7 @@ fun ProcessEdit(
                     },
                 )
                 TextFieldForTimes(
-                    value = intervalTime ?: "10",
+                    value = intervalTime ?: 10,
                     label = { Text(text = "Interval time") },
                     onValueChange = {
                         processEditViewModel.updateIntervalTime(it)
@@ -194,15 +195,13 @@ fun ProcessEdit(
                             modified = true
                         }
                         AnimatedVisibility(visible = hasLeadIn == true) {
-                            OutlinedTextField(
-                                value = leadInSeconds ?: "5",
+                            TextFieldForTimes(
+                                value = leadInSeconds ?: 5,
                                 label = { Text(text = "Lead-in (seconds)") },
                                 onValueChange = {
                                     processEditViewModel.updateLeadInSeconds(it)
                                     modified = true
-                                },
-                                modifier = Modifier.fillMaxWidth(),
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                                }
                             )
                             TextAndSwitch(
                                 text = "Play a sound during lead-in",
@@ -268,7 +267,7 @@ fun ProcessEdit(
                         }
                         AnimatedVisibility(visible = true == hasPauseBeforeChain) {
                             TextFieldForTimes(
-                                value = pauseTime ?: "5",
+                                value = pauseTime ?: 5,
                                 label = { Text(text = "Pause (seconds)") },
                                 onValueChange = {
                                     processEditViewModel.updatePauseTime(it)

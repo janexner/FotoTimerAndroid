@@ -18,6 +18,10 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -114,18 +118,23 @@ fun TextAndSwitch(
 
 @Composable
 fun TextFieldForTimes(
-    value: String,
+    value: Int,
     label: @Composable (() -> Unit)?,
-    onValueChange: (String) -> Unit,
+    onValueChange: (Int) -> Unit,
     placeholder: @Composable (() -> Unit)? = null,
 ) {
+    var text by remember(value) { mutableStateOf(value.toString()) }
     OutlinedTextField(
-        value = value,
+        value = text,
         label = label,
         modifier = Modifier.fillMaxWidth(),
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        onValueChange = onValueChange,
+        onValueChange = { raw ->
+            text = raw
+            val parsed = text.toIntOrNull() ?: 0
+            onValueChange(parsed)
+        },
         placeholder = placeholder,
         textStyle = MaterialTheme.typography.bodyLarge
     )
@@ -299,7 +308,7 @@ fun Context.findActivity(): Activity? = when (this) {
 }
 
 // from https://stackoverflow.com/questions/67768746/chaining-modifier-based-on-certain-conditions-in-android-compose
-fun Modifier.conditional(condition : Boolean, modifier : Modifier.() -> Modifier) : Modifier {
+fun Modifier.conditional(condition: Boolean, modifier: Modifier.() -> Modifier): Modifier {
     return if (condition) {
         then(modifier(Modifier))
     } else {

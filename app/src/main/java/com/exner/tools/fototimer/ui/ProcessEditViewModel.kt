@@ -22,11 +22,11 @@ class ProcessEditViewModel @Inject constructor(
     private val _name: MutableLiveData<String> = MutableLiveData("Name")
     val name: LiveData<String> = _name
 
-    private val _processTime: MutableLiveData<String> = MutableLiveData("30")
-    val processTime: LiveData<String> = _processTime
+    private val _processTime: MutableLiveData<Int> = MutableLiveData(30)
+    val processTime: LiveData<Int> = _processTime
 
-    private val _intervalTime: MutableLiveData<String> = MutableLiveData("10")
-    val intervalTime: LiveData<String> = _intervalTime
+    private val _intervalTime: MutableLiveData<Int> = MutableLiveData(10)
+    val intervalTime: LiveData<Int> = _intervalTime
 
     private val _keepsScreenOn: MutableLiveData<Boolean> = MutableLiveData(false)
     val keepsScreenOn: LiveData<Boolean> = _keepsScreenOn
@@ -49,8 +49,8 @@ class ProcessEditViewModel @Inject constructor(
     private val _hasLeadIn: MutableLiveData<Boolean> = MutableLiveData(false)
     val hasLeadIn: LiveData<Boolean> = _hasLeadIn
 
-    private val _leadInSeconds: MutableLiveData<String?> = MutableLiveData("5")
-    val leadInSeconds: LiveData<String?> = _leadInSeconds
+    private val _leadInSeconds: MutableLiveData<Int?> = MutableLiveData(5)
+    val leadInSeconds: LiveData<Int?> = _leadInSeconds
 
     private val _hasLeadInSound: MutableLiveData<Boolean> = MutableLiveData(false)
     val hasLeadInSound: LiveData<Boolean> = _hasLeadInSound
@@ -61,8 +61,8 @@ class ProcessEditViewModel @Inject constructor(
     private val _hasPauseBeforeChain: MutableLiveData<Boolean?> = MutableLiveData(false)
     val hasPauseBeforeChain: LiveData<Boolean?> = _hasPauseBeforeChain
 
-    private val _pauseTime: MutableLiveData<String?> = MutableLiveData("5")
-    val pauseTime: LiveData<String?> = _pauseTime
+    private val _pauseTime: MutableLiveData<Int?> = MutableLiveData(5)
+    val pauseTime: LiveData<Int?> = _pauseTime
 
     private val _gotoId: MutableLiveData<Long?> = MutableLiveData(-1L)
     val gotoId: LiveData<Long?> = _gotoId
@@ -82,15 +82,15 @@ class ProcessEditViewModel @Inject constructor(
                 val process = repository.loadProcessById(processId)
                 if (process != null) {
                     _name.value = process.name
-                    _processTime.value = process.processTime.toString()
-                    _intervalTime.value = process.intervalTime.toString()
+                    _processTime.value = process.processTime
+                    _intervalTime.value = process.intervalTime
                     _keepsScreenOn.value = process.keepsScreenOn
                     _hasLeadIn.value = process.hasLeadIn
-                    _leadInSeconds.value = process.leadInSeconds.toString()
+                    _leadInSeconds.value = process.leadInSeconds
                     _hasPreBeeps.value = process.hasPreBeeps
                     _hasAutoChain.value = process.hasAutoChain
                     _hasPauseBeforeChain.value = process.hasPauseBeforeChain ?: false
-                    _pauseTime.value = process.pauseTime.toString()
+                    _pauseTime.value = process.pauseTime
                     _gotoId.value = process.gotoId ?: -1L
                     _hasSoundStart.value = process.hasSoundStart
                     _hasSoundEnd.value = process.hasSoundEnd
@@ -155,11 +155,11 @@ class ProcessEditViewModel @Inject constructor(
         _name.value = name
     }
 
-    fun updateProcessTime(processTime: String) {
+    fun updateProcessTime(processTime: Int) {
         _processTime.value = processTime
     }
 
-    fun updateIntervalTime(intervalTime: String) {
+    fun updateIntervalTime(intervalTime: Int) {
         _intervalTime.value = intervalTime
     }
 
@@ -171,7 +171,7 @@ class ProcessEditViewModel @Inject constructor(
         _hasLeadIn.value = hasLeadIn
     }
 
-    fun updateLeadInSeconds(leadInSeconds: String?) {
+    fun updateLeadInSeconds(leadInSeconds: Int?) {
         _leadInSeconds.value = leadInSeconds
     }
 
@@ -187,7 +187,7 @@ class ProcessEditViewModel @Inject constructor(
         _hasPauseBeforeChain.value = hasPauseBeforeChain
     }
 
-    fun updatePauseTime(pauseTime: String?) {
+    fun updatePauseTime(pauseTime: Int?) {
         _pauseTime.value = pauseTime
     }
 
