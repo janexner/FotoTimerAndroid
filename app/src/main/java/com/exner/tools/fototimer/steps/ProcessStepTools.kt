@@ -2,6 +2,7 @@ package com.exner.tools.fototimer.steps
 
 import com.exner.tools.fototimer.audio.SoundIDs
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcess
+import kotlin.math.ceil
 
 const val STEP_LENGTH_IN_MILLISECONDS = 500
 
@@ -64,12 +65,13 @@ fun getProcessStepListForOneProcess(
             actionsList.add(ftpstartAction)
         }
         // calculate round and times and create the display action
-        val currentProcessTime = i * stepLengthInMilliseconds / 1000L
+        val currentProcessTime = i * stepLengthInMilliseconds / 1000
         val currentIntervalTime = currentProcessTime % process.intervalTime
         val ftpdAction = ProcessDisplayStepAction(
             process.name,
             processParameters,
-            1L + currentProcessTime / process.intervalTime,
+            1 + currentProcessTime / process.intervalTime,
+            ceil(process.processTime.toDouble() / process.intervalTime).toInt(),
             currentProcessTime,
             currentIntervalTime
         )

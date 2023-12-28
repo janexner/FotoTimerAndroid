@@ -12,9 +12,10 @@ class ProcessStartAction(
 class ProcessDisplayStepAction(
     processName: String,
     val processParameters: String,
-    val currentRound: Long,
-    val currentProcessTime: Long,
-    val currentIntervalTime: Long
+    val currentRound: Int,
+    val totalRounds: Int,
+    val currentProcessTime: Int,
+    val currentIntervalTime: Int
 ) : ProcessStepAction(processName)
 
 class ProcessLeadInDisplayStepAction(

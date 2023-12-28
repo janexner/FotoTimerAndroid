@@ -47,6 +47,9 @@ class ProcessRunViewModel @Inject constructor(
     private val _hasLoop: MutableLiveData<Boolean> = MutableLiveData(false)
     val hasLoop: LiveData<Boolean> = _hasLoop
 
+    private val _hasHours: MutableLiveData<Boolean> = MutableLiveData(false)
+    val hasHours: LiveData<Boolean> = _hasHours
+
     private var job: Job? = null
 
     private var isRunning: Boolean = false
@@ -80,6 +83,8 @@ class ProcessRunViewModel @Inject constructor(
                         }
                         // screen on?
                         keepScreenOnAcrossList = keepScreenOnAcrossList || process.keepsScreenOn
+                        // do we need hours in the display?
+                        _hasHours.value = hasHours.value == true || process.processTime > 3600
                         // prepare for the next iteration
                         firstRound = false
                         if (process.gotoId != null && process.gotoId != -1L) {

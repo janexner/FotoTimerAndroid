@@ -47,13 +47,13 @@ fun ProcessRun(
     val currentStepNumber by processRunViewModel.currentStepNumber.observeAsState()
     val keepScreenOn by processRunViewModel.keepScreenOn.observeAsState()
     val hasLoop by processRunViewModel.hasLoop.observeAsState()
+    val hasHours by processRunViewModel.hasHours.observeAsState()
 
     val numberOfPreBeeps by settingsViewModel.numberOfPreBeeps.observeAsState()
 
     processRunViewModel.initialiseRun(processId, numberOfPreBeeps ?: 0)
 
     if (keepScreenOn == true) {
-        Log.d("ProcessRunScreen", "Will keep screen on")
         KeepScreenOn()
     }
 
@@ -80,23 +80,27 @@ fun ProcessRun(
                     is ProcessLeadInDisplayStepAction -> {
                         // TODO
                         val plAction = (displayAction as ProcessLeadInDisplayStepAction)
-                        Text(text = plAction.processName + " - " + plAction.processParameters + " - lead-in")
-                        BigTimerText(duration = plAction.currentLeadInTime.seconds)
+                        Text(text = plAction.processName + " | " + plAction.processParameters + " | lead-in")
+                        BigTimerText(duration = plAction.currentLeadInTime.seconds, hasHours == true)
                     }
 
                     is ProcessDisplayStepAction -> {
                         // TODO
                         val pdAction = (displayAction as ProcessDisplayStepAction)
                         Text(text = pdAction.processName + " - " + pdAction.processParameters + " - running")
-                        BigTimerText(duration = pdAction.currentProcessTime.seconds)
-                        MediumTimerAndIntervalText(duration = pdAction.currentIntervalTime.seconds, intervalText = pdAction.currentRound.toString())
+                        BigTimerText(duration = pdAction.currentProcessTime.seconds, withHours = hasHours == true)
+                        MediumTimerAndIntervalText(
+                            duration = pdAction.currentIntervalTime.seconds,
+                            withHours = hasHours == true,
+                            intervalText = "${pdAction.currentRound} of ${pdAction.totalRounds}"
+                        )
                     }
 
                     is ProcessPauseDisplayStepAction -> {
                         // TODO
                         val ppAction = (displayAction as ProcessPauseDisplayStepAction)
                         Text(text = ppAction.processName + " - " + ppAction.processParameters + " - pausing")
-                        BigTimerText(duration = ppAction.currentPauseTime.seconds)
+                        BigTimerText(duration = ppAction.currentPauseTime.seconds, withHours = hasHours == true)
                     }
 
                     else -> {

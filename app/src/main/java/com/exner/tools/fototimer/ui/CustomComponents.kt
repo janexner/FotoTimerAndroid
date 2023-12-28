@@ -141,7 +141,7 @@ fun TextFieldForTimes(
 }
 
 @Composable
-fun durationToAnnotatedString(duration: Duration): AnnotatedString {
+fun durationToAnnotatedString(duration: Duration, withHours: Boolean): AnnotatedString {
     // convert seconds to "00:00" style string
     val output = duration.toComponents { hours, minutes, seconds, _ ->
         String.format("%02d:%02d:%02d", hours, minutes, seconds)
@@ -149,13 +149,15 @@ fun durationToAnnotatedString(duration: Duration): AnnotatedString {
     val tmp = output.split(":")
     val styledOutput = buildAnnotatedString {
         var myStyle = SpanStyle()
-        if ("00" == tmp[0]) {
-            myStyle = SpanStyle(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f))
+        if (withHours) {
+            if ("00" == tmp[0]) {
+                myStyle = SpanStyle(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f))
+            }
+            withStyle(style = myStyle) {
+                append(tmp[0])
+            }
+            append(":")
         }
-        withStyle(style = myStyle) {
-            append(tmp[0])
-        }
-        append(":")
         myStyle = if ("00" == tmp[1]) {
             SpanStyle(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f))
         } else {
@@ -172,10 +174,10 @@ fun durationToAnnotatedString(duration: Duration): AnnotatedString {
 }
 
 @Composable
-fun BigTimerText(duration: Duration, modifier: Modifier = Modifier) {
+fun BigTimerText(duration: Duration, withHours: Boolean, modifier: Modifier = Modifier) {
     BoxWithConstraints(modifier = modifier) {
         AutoSizeText(
-            text = durationToAnnotatedString(duration),
+            text = durationToAnnotatedString(duration, withHours),
             style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center,
             fontSize = 294.dp.toTextDp(),
@@ -187,21 +189,22 @@ fun BigTimerText(duration: Duration, modifier: Modifier = Modifier) {
 @Composable
 fun MediumTimerAndIntervalText(
     duration: Duration,
+    withHours: Boolean,
     intervalText: String
 ) {
     Row(modifier = Modifier) {
         Text(
-            text = durationToAnnotatedString(duration),
+            text = durationToAnnotatedString(duration, withHours),
             style = MaterialTheme.typography.headlineLarge,
-            fontSize = 48.dp.toTextDp(),
+            fontSize = 44.dp.toTextDp(),
             textAlign = TextAlign.Center,
             modifier = Modifier.alignByBaseline()
         )
         Spacer(modifier = Modifier.weight(0.05f))
         Text(
-            text = intervalText,
+            text = "Round $intervalText",
             style = MaterialTheme.typography.headlineLarge,
-            fontSize = 48.dp.toTextDp(),
+            fontSize = 44.dp.toTextDp(),
             textAlign = TextAlign.Center,
             modifier = Modifier.alignByBaseline()
         )
@@ -321,8 +324,8 @@ fun Modifier.conditional(condition: Boolean, modifier: Modifier.() -> Modifier):
 fun BTTTest() {
     FotoTimerTheme {
         Column {
-            BigTimerText(duration = 10.seconds)
-            MediumTimerAndIntervalText(duration = 75.seconds, intervalText = "1 of 3")
+            BigTimerText(duration = 10.seconds, false)
+            MediumTimerAndIntervalText(duration = 75.seconds, withHours = false, intervalText = "1 of 3")
         }
     }
 }
@@ -332,8 +335,8 @@ fun BTTTest() {
 fun BTTNormalTest() {
     FotoTimerTheme {
         Column {
-            BigTimerText(duration = 10.seconds)
-            MediumTimerAndIntervalText(duration = 75.seconds, intervalText = "1 of 3")
+            BigTimerText(duration = 10.seconds, false)
+            MediumTimerAndIntervalText(duration = 75.seconds, withHours = false, intervalText = "1 of 3")
         }
     }
 }
