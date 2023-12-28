@@ -11,6 +11,7 @@ class ProcessStartAction(
 
 class ProcessDisplayStepAction(
     processName: String,
+    val processParameters: String,
     val currentRound: Long,
     val currentProcessTime: Long,
     val currentIntervalTime: Long
@@ -18,6 +19,7 @@ class ProcessDisplayStepAction(
 
 class ProcessLeadInDisplayStepAction(
     processName: String,
+    val processParameters: String,
     val currentLeadInTime: Int
 ) : ProcessStepAction(processName)
 
@@ -28,6 +30,7 @@ class ProcessSoundAction(
 
 class ProcessPauseDisplayStepAction(
     processName: String,
+    val processParameters: String,
     val currentPauseTime: Int
 ) : ProcessStepAction(processName)
 

@@ -80,14 +80,14 @@ fun ProcessRun(
                     is ProcessLeadInDisplayStepAction -> {
                         // TODO
                         val plAction = (displayAction as ProcessLeadInDisplayStepAction)
-                        Text(text = plAction.processName + " - lead-in")
+                        Text(text = plAction.processName + " - " + plAction.processParameters + " - lead-in")
                         BigTimerText(duration = plAction.currentLeadInTime.seconds)
                     }
 
                     is ProcessDisplayStepAction -> {
                         // TODO
                         val pdAction = (displayAction as ProcessDisplayStepAction)
-                        Text(text = pdAction.processName + " - running")
+                        Text(text = pdAction.processName + " - " + pdAction.processParameters + " - running")
                         BigTimerText(duration = pdAction.currentProcessTime.seconds)
                         MediumTimerAndIntervalText(duration = pdAction.currentIntervalTime.seconds, intervalText = pdAction.currentRound.toString())
                     }
@@ -95,7 +95,7 @@ fun ProcessRun(
                     is ProcessPauseDisplayStepAction -> {
                         // TODO
                         val ppAction = (displayAction as ProcessPauseDisplayStepAction)
-                        Text(text = ppAction.processName + " - pausing")
+                        Text(text = ppAction.processName + " - " + ppAction.processParameters + " - pausing")
                         BigTimerText(duration = ppAction.currentPauseTime.seconds)
                     }
 

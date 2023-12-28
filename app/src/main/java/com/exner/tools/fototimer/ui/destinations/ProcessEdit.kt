@@ -122,7 +122,7 @@ fun ProcessEdit(
                     },
                 )
                 HeaderText(text = "During the process")
-                if ((expertMode == true) || keepsScreenOn != true) {
+                if (expertMode == true) {
                     TextAndSwitch(
                         text = "Keep the screen on",
                         checked = keepsScreenOn == true,
@@ -130,8 +130,6 @@ fun ProcessEdit(
                         processEditViewModel.updateKeepsScreenOn(it)
                         modified = true
                     }
-                }
-                if (expertMode == true) {
                     Text(
                         text = "Play sounds:",
                         modifier = Modifier.fillMaxWidth()

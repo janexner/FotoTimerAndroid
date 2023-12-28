@@ -15,6 +15,15 @@ fun getProcessStepListForOneProcess(
     // step length - only there so we can tweak it, if necessary
     val stepLengthInMilliseconds = STEP_LENGTH_IN_MILLISECONDS
 
+    var processParameters: String = ""
+    if (considerLeadIn && process.hasLeadIn && process.leadInSeconds != null && process.leadInSeconds > 0) {
+        processParameters += "${process.leadInSeconds} > "
+    }
+    processParameters += "${process.processTime} / ${process.intervalTime}"
+    if (process.hasAutoChain && process.gotoId != null && process.gotoId >= 0 && process.hasPauseBeforeChain == true && process.pauseTime != null && process.pauseTime > 0) {
+        processParameters += " > ${process.pauseTime}"
+    }
+
     // do we need steps for lead-in, and how many?
     if (considerLeadIn && process.hasLeadIn) {
         if (process.leadInSeconds != null && process.leadInSeconds > 0) {
@@ -24,6 +33,7 @@ fun getProcessStepListForOneProcess(
                 // add actions as needed
                 val ftpliAction = ProcessLeadInDisplayStepAction(
                     process.name,
+                    processParameters,
                     i * stepLengthInMilliseconds / 1000
                 )
                 actionsList.add(ftpliAction)
@@ -58,6 +68,7 @@ fun getProcessStepListForOneProcess(
         val currentIntervalTime = currentProcessTime % process.intervalTime
         val ftpdAction = ProcessDisplayStepAction(
             process.name,
+            processParameters,
             1L + currentProcessTime / process.intervalTime,
             currentProcessTime,
             currentIntervalTime
@@ -113,7 +124,11 @@ fun getProcessStepListForOneProcess(
             for (i in 1..howManyPauseSteps) {
                 val actionsList = mutableListOf<ProcessStepAction>()
                 val ftppdAction =
-                    ProcessPauseDisplayStepAction(process.name, i * stepLengthInMilliseconds / 1000)
+                    ProcessPauseDisplayStepAction(
+                        process.name,
+                        processParameters,
+                        i * stepLengthInMilliseconds / 1000
+                    )
                 actionsList.add(ftppdAction)
                 if (i == howManyPauseSteps) {
                     val ftpchainAction = ProcessGotoAction(
