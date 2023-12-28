@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.google.services) apply false
 
     // before updating this, check compatibilities on https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility
     // and https://developer.android.com/jetpack/androidx/releases/compose-kotlin

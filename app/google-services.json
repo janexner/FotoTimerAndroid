@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "914040686041",
+    "project_id": "foto-timer-for-android",
+    "storage_bucket": "foto-timer-for-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:914040686041:android:e976fd6f75a679845685c8",
+        "android_client_info": {
+          "package_name": "com.exner.tools.fototimer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBU3NkdRIOtmVhYW7mJ__4tlD8DDrSjJAU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
