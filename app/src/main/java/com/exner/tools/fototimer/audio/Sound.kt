@@ -24,12 +24,12 @@ object SoundPoolHolder {
     fun loadSounds(context: Context) {
         soundPool = SoundPool.Builder().build()
         // load all default sounds
-        soundMap[SoundIDs.SOUND_ID_PROCESS_START] = soundPool.load(context, R.raw.start_13691, 1)
-        soundMap[SoundIDs.SOUND_ID_PROCESS_END] = soundPool.load(context, R.raw.stop_13692, 1)
-        soundMap[SoundIDs.SOUND_ID_INTERVAL] = 0
+        soundMap[SoundIDs.SOUND_ID_PROCESS_START] = soundPool.load(context, R.raw.start, 1)
+        soundMap[SoundIDs.SOUND_ID_PROCESS_END] = soundPool.load(context, R.raw.stop, 1)
+        soundMap[SoundIDs.SOUND_ID_INTERVAL] = soundPool.load(context, R.raw.ping, 1)
         soundMap[SoundIDs.SOUND_ID_METRONOME] = soundPool.load(context, R.raw.sound_250552_metronome, 1)
         soundMap[SoundIDs.SOUND_ID_LEAD_IN] = soundPool.load(context, R.raw.finger_snap_179180, 1)
-        soundMap[SoundIDs.SOUND_ID_PRE_BEEPS] = 0
+        soundMap[SoundIDs.SOUND_ID_PRE_BEEPS] = soundPool.load(context, R.raw.mouth_bass_102317, 1)
         soundMap[SoundIDs.SOUND_ID_TICK_WHILE_CHAINING] = 0
         // sounds are loaded, so we are ready to play!
         isReady = true
