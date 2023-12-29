@@ -70,6 +70,12 @@ fun ProcessEdit(
     val processIdsAndNames by processEditViewModel.processIdsAndNames.observeAsState()
 
     processEditViewModel.getProcess(processId)
+    // if this is a new process, the keepScreenOn property has to be set
+    // this is necessary because there is a setting for that
+    if (processId == -1L) {
+        val defaultKeepsScreenOn by settingsViewModel.defaultKeepScreenOn.observeAsState()
+        processEditViewModel.updateKeepsScreenOn(defaultKeepsScreenOn == true)
+    }
     processEditViewModel.getProcessIdsAndNames()
 
     var modified by remember { mutableStateOf(false) }

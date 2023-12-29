@@ -1,5 +1,6 @@
 package com.exner.tools.fototimer.ui
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProcessEditViewModel @Inject constructor(
-    private val repository: FotoTimerProcessRepository
+    private val repository: FotoTimerProcessRepository,
 ): ViewModel() {
 
     private val _uid: MutableLiveData<Long> = MutableLiveData(-1L)
@@ -28,7 +29,8 @@ class ProcessEditViewModel @Inject constructor(
     private val _intervalTime: MutableLiveData<Int> = MutableLiveData(10)
     val intervalTime: LiveData<Int> = _intervalTime
 
-    private val _keepsScreenOn: MutableLiveData<Boolean> = MutableLiveData(false)
+    // TODO this one should not have a static default. There is a preference!
+    private val _keepsScreenOn: MutableLiveData<Boolean> = MutableLiveData(true)
     val keepsScreenOn: LiveData<Boolean> = _keepsScreenOn
 
     private val _hasSoundStart: MutableLiveData<Boolean> = MutableLiveData(true)
