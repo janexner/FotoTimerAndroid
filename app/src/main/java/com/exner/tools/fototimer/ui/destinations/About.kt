@@ -83,7 +83,7 @@ fun AboutScreenElements() {
                     request: WebResourceRequest?
                 ): Boolean {
                     if (request != null) {
-                        return if (request.url.toString() == url || request.url.toString() == url2) { // load this, and only this, URL in webview
+                        return if (request.url.toString() == url || request.url.toString() == url2) { // load this, and only this, URL in webView
                             false
                         } else { // load anything else in the Android default browser
                             uriHandler.openUri(request.url.toString())

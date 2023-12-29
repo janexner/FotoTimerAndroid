@@ -146,7 +146,6 @@ class ProcessRunViewModel @Inject constructor(
                         if (step >= result.size) {
                             break
                         } else {
-                            val elapsed = System.currentTimeMillis() - startTime
                             // update display action and do sounds
                             val actionsList = result[step]
                             actionsList.forEach { action ->

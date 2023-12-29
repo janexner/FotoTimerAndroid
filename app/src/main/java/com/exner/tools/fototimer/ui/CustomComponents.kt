@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -29,7 +28,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFontFamilyResolver
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextMeasurer
@@ -81,17 +79,6 @@ fun SmallBodyText(text: String, modifier: Modifier = Modifier) {
     )
 }
 
-@Composable
-fun ButtonText(text: String, modifier: Modifier = Modifier) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.headlineLarge,
-        textAlign = TextAlign.Center,
-        modifier = modifier,
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TextAndSwitch(
     text: String,
@@ -229,7 +216,6 @@ fun KeepScreenOn() {
     }
 }
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
 private fun AutoSizeText(
     text: AnnotatedString,
@@ -308,15 +294,6 @@ fun Context.findActivity(): Activity? = when (this) {
     is Activity -> this
     is ContextWrapper -> baseContext.findActivity()
     else -> null
-}
-
-// from https://stackoverflow.com/questions/67768746/chaining-modifier-based-on-certain-conditions-in-android-compose
-fun Modifier.conditional(condition: Boolean, modifier: Modifier.() -> Modifier): Modifier {
-    return if (condition) {
-        then(modifier(Modifier))
-    } else {
-        this
-    }
 }
 
 @Preview(fontScale = 1.5f)

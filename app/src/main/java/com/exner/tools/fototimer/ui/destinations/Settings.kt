@@ -33,9 +33,9 @@ import com.exner.tools.fototimer.ui.theme.FotoTimerTheme
 import com.ramcosta.composedestinations.annotation.Destination
 
 sealed class SettingsTabs(val name: String) {
-    object UiTab : SettingsTabs("UI")
-    object TimersTab : SettingsTabs("Times")
-    object SoundsTab : SettingsTabs("Sounds")
+    data object UiTab : SettingsTabs("UI")
+    data object TimersTab : SettingsTabs("Times")
+    data object SoundsTab : SettingsTabs("Sounds")
 }
 
 @Destination

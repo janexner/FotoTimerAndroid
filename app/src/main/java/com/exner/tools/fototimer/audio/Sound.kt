@@ -6,7 +6,6 @@ import android.util.Log
 import com.exner.tools.fototimer.R
 
 object SoundIDs {
-    const val SOUND_ID_NO_SOUND: Long = 0
     const val SOUND_ID_PROCESS_START: Long = 1
     const val SOUND_ID_PROCESS_END: Long = 2
     const val SOUND_ID_INTERVAL: Long = 3

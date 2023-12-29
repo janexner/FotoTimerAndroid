@@ -13,10 +13,7 @@ fun getProcessStepListForOneProcess(
 ): MutableList<List<ProcessStepAction>> {
     val result = mutableListOf<List<ProcessStepAction>>()
 
-    // step length - only there so we can tweak it, if necessary
-    val stepLengthInMilliseconds = STEP_LENGTH_IN_MILLISECONDS
-
-    var processParameters: String = ""
+    var processParameters = ""
     if (considerLeadIn && process.hasLeadIn && process.leadInSeconds != null && process.leadInSeconds > 0) {
         processParameters += "${process.leadInSeconds} > "
     }
@@ -28,17 +25,17 @@ fun getProcessStepListForOneProcess(
     // do we need steps for lead-in, and how many?
     if (considerLeadIn && process.hasLeadIn) {
         if (process.leadInSeconds != null && process.leadInSeconds > 0) {
-            val howManySteps = process.leadInSeconds * 1000 / stepLengthInMilliseconds
+            val howManySteps = process.leadInSeconds * 1000 / STEP_LENGTH_IN_MILLISECONDS
             for (i in 1..howManySteps) {
                 val actionsList = mutableListOf<ProcessStepAction>()
                 // add actions as needed
                 val ftpliAction = ProcessLeadInDisplayStepAction(
                     process.name,
                     processParameters,
-                    i * stepLengthInMilliseconds / 1000
+                    i * STEP_LENGTH_IN_MILLISECONDS / 1000
                 )
                 actionsList.add(ftpliAction)
-                if (isFullSecond(i, stepLengthInMilliseconds) && process.hasLeadInSound) {
+                if (isFullSecond(i) && process.hasLeadInSound) {
                     val ftplisAction = ProcessSoundAction(
                         process.name,
                         SoundIDs.SOUND_ID_LEAD_IN
@@ -52,7 +49,7 @@ fun getProcessStepListForOneProcess(
     }
 
     // how many steps do we need for the regular interval?
-    val howManySteps = process.processTime * 1000 / stepLengthInMilliseconds
+    val howManySteps = process.processTime * 1000 / STEP_LENGTH_IN_MILLISECONDS
     for (i in 1..howManySteps) {
         val actionsList = mutableListOf<ProcessStepAction>()
         // add actions as needed
@@ -65,7 +62,7 @@ fun getProcessStepListForOneProcess(
             actionsList.add(ftpstartAction)
         }
         // calculate round and times and create the display action
-        val currentProcessTime = i * stepLengthInMilliseconds / 1000
+        val currentProcessTime = i * STEP_LENGTH_IN_MILLISECONDS / 1000
         val currentIntervalTime = currentProcessTime % process.intervalTime
         val ftpdAction = ProcessDisplayStepAction(
             process.name,
@@ -89,8 +86,8 @@ fun getProcessStepListForOneProcess(
                 SoundIDs.SOUND_ID_PROCESS_END
             )
             actionsList.add(ftpseAction)
-        } else if (isFullSecond(i, stepLengthInMilliseconds)) {
-            if ((i * stepLengthInMilliseconds / 1000.0 % process.intervalTime == 0.0) && process.hasSoundInterval) {
+        } else if (isFullSecond(i)) {
+            if ((i * STEP_LENGTH_IN_MILLISECONDS / 1000.0 % process.intervalTime == 0.0) && process.hasSoundInterval) {
                 val ftpsiAction = ProcessSoundAction(
                     process.name,
                     SoundIDs.SOUND_ID_INTERVAL
@@ -98,7 +95,7 @@ fun getProcessStepListForOneProcess(
                 actionsList.add(ftpsiAction)
             } else {
                 val relativePosition =
-                    (i * stepLengthInMilliseconds / 1000) % process.intervalTime
+                    (i * STEP_LENGTH_IN_MILLISECONDS / 1000) % process.intervalTime
                 if (process.hasPreBeeps && relativePosition >= (process.intervalTime - numberOfPreBeeps)) {
                         val ftpspbAction = ProcessSoundAction(
                             process.name,
@@ -122,14 +119,14 @@ fun getProcessStepListForOneProcess(
     if (process.hasAutoChain && process.gotoId != null && process.gotoId >= 0) {
         if (process.hasPauseBeforeChain == true && process.pauseTime != null && process.pauseTime > 0) {
             // TODO not treating the pauseTime == 0 case
-            val howManyPauseSteps = process.pauseTime * 1000 / stepLengthInMilliseconds
+            val howManyPauseSteps = process.pauseTime * 1000 / STEP_LENGTH_IN_MILLISECONDS
             for (i in 1..howManyPauseSteps) {
                 val actionsList = mutableListOf<ProcessStepAction>()
                 val ftppdAction =
                     ProcessPauseDisplayStepAction(
                         process.name,
                         processParameters,
-                        i * stepLengthInMilliseconds / 1000
+                        i * STEP_LENGTH_IN_MILLISECONDS / 1000
                     )
                 actionsList.add(ftppdAction)
                 if (i == howManyPauseSteps) {
@@ -155,6 +152,6 @@ fun getProcessStepListForOneProcess(
     return result
 }
 
-private fun isFullSecond(stepIndex: Int, stepLengthInMilliseconds: Int): Boolean {
-    return (stepIndex * stepLengthInMilliseconds) % 1000.0 == 0.0
+private fun isFullSecond(stepIndex: Int): Boolean {
+    return (stepIndex * STEP_LENGTH_IN_MILLISECONDS) % 1000.0 == 0.0
 }

@@ -13,7 +13,6 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -188,7 +187,6 @@ fun ProcessName(name: String?, modifier: Modifier) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProcessAudioData(
     hasSoundStart: Boolean?,
@@ -252,7 +250,6 @@ fun ProcessAudioData(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProcessTimerData(
     processTime: String?,
@@ -270,7 +267,6 @@ fun ProcessTimerData(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProcessLeadInAndChainData(
     hasLeadIn: Boolean?,

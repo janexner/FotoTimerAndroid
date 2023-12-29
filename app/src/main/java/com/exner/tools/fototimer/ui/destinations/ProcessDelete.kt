@@ -69,7 +69,7 @@ fun ProcessDelete(
             }
         },
         bottomBar = {
-            FotoTimerDeleteBottomBar(processId = processId, navigator = navigator) {
+            FotoTimerDeleteBottomBar(navigator = navigator) {
                 processDeleteViewModel.deleteProcess(processId)
             }
         }
@@ -78,7 +78,6 @@ fun ProcessDelete(
 
 @Composable
 fun FotoTimerDeleteBottomBar(
-    processId: Long,
     navigator: DestinationsNavigator,
     deleteAction: () -> Unit,
 ) {

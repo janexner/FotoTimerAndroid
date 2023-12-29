@@ -64,7 +64,6 @@ fun ProcessEdit(
     val hasAutoChain by processEditViewModel.hasAutoChain.observeAsState()
     val hasPauseBeforeChain by processEditViewModel.hasPauseBeforeChain.observeAsState()
     val pauseTime by processEditViewModel.pauseTime.observeAsState()
-    val gotoId by processEditViewModel.gotoId.observeAsState()
     // some odd ones out
     val nextProcessesName by processEditViewModel.nextProcessesName.observeAsState()
     val processIdsAndNames by processEditViewModel.processIdsAndNames.observeAsState()

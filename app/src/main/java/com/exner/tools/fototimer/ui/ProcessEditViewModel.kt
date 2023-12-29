@@ -1,6 +1,5 @@
 package com.exner.tools.fototimer.ui
 
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -67,7 +66,6 @@ class ProcessEditViewModel @Inject constructor(
     val pauseTime: LiveData<Int?> = _pauseTime
 
     private val _gotoId: MutableLiveData<Long?> = MutableLiveData(-1L)
-    val gotoId: LiveData<Long?> = _gotoId
 
     private val _nextProcessesName: MutableLiveData<String?> = MutableLiveData("")
     val nextProcessesName: LiveData<String?> = _nextProcessesName
