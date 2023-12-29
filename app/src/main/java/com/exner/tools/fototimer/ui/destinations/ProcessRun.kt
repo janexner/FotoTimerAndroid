@@ -8,7 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -53,6 +53,10 @@ fun ProcessRun(
 
     processRunViewModel.initialiseRun(processId, numberOfPreBeeps ?: 0)
 
+    processRunViewModel.setDoneEventHandler {
+        navigator.navigateUp()
+    }
+
     if (keepScreenOn == true) {
         KeepScreenOn()
     }
@@ -81,14 +85,20 @@ fun ProcessRun(
                         // TODO
                         val plAction = (displayAction as ProcessLeadInDisplayStepAction)
                         Text(text = plAction.processName + " | " + plAction.processParameters + " | lead-in")
-                        BigTimerText(duration = plAction.currentLeadInTime.seconds, hasHours == true)
+                        BigTimerText(
+                            duration = plAction.currentLeadInTime.seconds,
+                            hasHours == true
+                        )
                     }
 
                     is ProcessDisplayStepAction -> {
                         // TODO
                         val pdAction = (displayAction as ProcessDisplayStepAction)
                         Text(text = pdAction.processName + " - " + pdAction.processParameters + " - running")
-                        BigTimerText(duration = pdAction.currentProcessTime.seconds, withHours = hasHours == true)
+                        BigTimerText(
+                            duration = pdAction.currentProcessTime.seconds,
+                            withHours = hasHours == true
+                        )
                         MediumTimerAndIntervalText(
                             duration = pdAction.currentIntervalTime.seconds,
                             withHours = hasHours == true,
@@ -100,7 +110,10 @@ fun ProcessRun(
                         // TODO
                         val ppAction = (displayAction as ProcessPauseDisplayStepAction)
                         Text(text = ppAction.processName + " - " + ppAction.processParameters + " - pausing")
-                        BigTimerText(duration = ppAction.currentPauseTime.seconds, withHours = hasHours == true)
+                        BigTimerText(
+                            duration = ppAction.currentPauseTime.seconds,
+                            withHours = hasHours == true
+                        )
                     }
 
                     else -> {
@@ -120,19 +133,21 @@ fun FotoTimerRunBottomBar(navigator: DestinationsNavigator, cancelAction: () -> 
     BottomAppBar(
         actions = {},
         floatingActionButton = {
-            FloatingActionButton(
+            ExtendedFloatingActionButton(
+                text = { Text(text = "Stop") },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "Stop"
+                    )
+                },
                 onClick = {
                     cancelAction()
                     navigator.navigateUp()
                 },
                 containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
-                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "Stop"
-                )
-            }
+                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
+            )
         }
     )
 }

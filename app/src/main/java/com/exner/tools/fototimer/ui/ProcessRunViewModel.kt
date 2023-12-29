@@ -54,6 +54,8 @@ class ProcessRunViewModel @Inject constructor(
 
     private var isRunning: Boolean = false
 
+    private var doneEventHandler: () -> Unit = {}
+
     @OptIn(DelicateCoroutinesApi::class)
     fun initialiseRun(processId: Long, numberOfPreBeeps: Int) {
         val result = mutableListOf<List<ProcessStepAction>>()
@@ -183,9 +185,15 @@ class ProcessRunViewModel @Inject constructor(
                             delay(newDelay)
                         }
                     }
+                    // done
+                    doneEventHandler()
                 }
             }
         }
+    }
+
+    fun setDoneEventHandler(handler: () -> Unit) {
+        doneEventHandler = handler
     }
 
     fun cancel() {

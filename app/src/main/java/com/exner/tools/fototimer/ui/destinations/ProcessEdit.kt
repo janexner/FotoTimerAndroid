@@ -18,6 +18,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -290,16 +291,18 @@ fun FotoTimerEditBottomBar(navigator: DestinationsNavigator, commitProcess: () -
     BottomAppBar(
         actions = {},
         floatingActionButton = {
-            FloatingActionButton(
+            ExtendedFloatingActionButton(
+                text = { Text(text = "Save") },
+                icon = {
+                    Icon(imageVector = Icons.Filled.Done, contentDescription = "Save the process")
+                },
                 onClick = {
                     commitProcess()
                     navigator.navigateUp()
                 },
                 containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
                 elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
-            ) {
-                Icon(imageVector = Icons.Filled.Done, contentDescription = "Save the process")
-            }
+            )
         }
     )
 }

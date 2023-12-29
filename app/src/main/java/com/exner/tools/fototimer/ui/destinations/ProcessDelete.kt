@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -87,16 +88,18 @@ fun FotoTimerDeleteBottomBar(
     BottomAppBar(
         actions = {},
         floatingActionButton = {
-            FloatingActionButton(
+            ExtendedFloatingActionButton(
+                text = { Text(text = "Delete") },
+                icon = {
+                    Icon(imageVector = Icons.Filled.Delete, contentDescription = "Delete the process")
+                },
                 onClick = {
                     deleteAction()
                     navigator.navigate(ProcessListDestination)
                 },
                 containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
                 elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
-            ) {
-                Icon(imageVector = Icons.Filled.Delete, contentDescription = "Delete the process")
-            }
+            )
         }
     )
 }
