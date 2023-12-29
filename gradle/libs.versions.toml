@@ -19,7 +19,7 @@ material = "1.11.0"
 room = "2.6.1"
 webkit = "1.9.0"
 composeDestinations = "1.9.56"
-preference = "1.2.0"
+preference = "1.2.1"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "androidxActivity" }
