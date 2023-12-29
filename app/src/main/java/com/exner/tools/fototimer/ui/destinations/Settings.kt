@@ -46,7 +46,6 @@ fun Settings(
 
     val expertMode by settingsViewModel.expertMode.observeAsState()
     val nightMode by settingsViewModel.nightMode.observeAsState()
-    val useDynamicColour by settingsViewModel.useDynamicColour.observeAsState()
     val defaultKeepScreenOn by settingsViewModel.defaultKeepScreenOn.observeAsState()
     val stopIsEverywhere by settingsViewModel.stopIsEverywhere.observeAsState()
     val defaultProcessTime by settingsViewModel.defaultProcessTime.observeAsState()
@@ -82,8 +81,6 @@ fun Settings(
                     .verticalScroll(rememberScrollState())
             ) {
                 StandardSettingsColumn(
-                    useDynamicColour,
-                    { settingsViewModel.updateUseDynamicColour(it) },
                     nightMode,
                     { settingsViewModel.updateNightMode(it) },
                     defaultKeepScreenOn,
@@ -255,8 +252,6 @@ private fun ExpertSettingsDefaultTimes(
 
 @Composable
 private fun StandardSettingsColumn(
-    dynamicColor: Boolean?,
-    updateDynamicColor: (Boolean) -> Unit,
     nightMode: Boolean?,
     updateNightMode: (Boolean) -> Unit,
     keepScreenOn: Boolean?,
@@ -267,13 +262,6 @@ private fun StandardSettingsColumn(
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        TextAndSwitch(
-            text = "Dynamic colours (needs a restart)",
-            checked = dynamicColor == true,
-            onCheckedChange = {
-                updateDynamicColor(it)
-            }
-        )
         TextAndSwitch(text = "Force night mode (needs a restart)", checked = nightMode == true) {
             updateNightMode(it)
         }

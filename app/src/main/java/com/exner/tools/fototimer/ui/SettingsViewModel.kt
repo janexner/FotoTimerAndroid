@@ -22,9 +22,6 @@ class SettingsViewModel @Inject constructor(
     private val _nightMode: MutableLiveData<Boolean> = MutableLiveData(false)
     val nightMode: LiveData<Boolean> = _nightMode
 
-    private val _useDynamicColour: MutableLiveData<Boolean> = MutableLiveData(true)
-    val useDynamicColour: LiveData<Boolean> = _useDynamicColour
-
     private val _defaultKeepScreenOn: MutableLiveData<Boolean> = MutableLiveData(true)
     val defaultKeepScreenOn: LiveData<Boolean> = _defaultKeepScreenOn
 
@@ -55,7 +52,6 @@ class SettingsViewModel @Inject constructor(
     init {
         _expertMode.value = sharedPreferences.getBoolean("preference_expert_mode", false)
         _nightMode.value = sharedPreferences.getBoolean("preference_night_mode", false)
-        _useDynamicColour.value = sharedPreferences.getBoolean("preference_dynamic_color", true)
         _defaultKeepScreenOn.value = sharedPreferences.getBoolean("preference_screen_on", true)
         _stopIsEverywhere.value = sharedPreferences.getBoolean("preference_stop_is_everywhere", false)
         _defaultProcessTime.value = sharedPreferences.getInt("preference_process_time", 30)
@@ -75,11 +71,6 @@ class SettingsViewModel @Inject constructor(
     fun updateNightMode(newNightMode: Boolean) {
         sharedPreferences.edit().putBoolean("preference_night_mode", newNightMode).apply()
         _nightMode.value = newNightMode
-    }
-
-    fun updateUseDynamicColour(newUseDynamicColour: Boolean) {
-        sharedPreferences.edit().putBoolean("preference_dynamic_color", newUseDynamicColour).apply()
-        _useDynamicColour.value = newUseDynamicColour
     }
 
     fun updateDefaultKeepScreenOn(newDefaultKeepScreenOn: Boolean) {
