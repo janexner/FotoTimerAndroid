@@ -1,7 +1,7 @@
 package com.exner.tools.fototimer
 
 import android.os.Bundle
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.exner.tools.fototimer.audio.SoundPoolHolder

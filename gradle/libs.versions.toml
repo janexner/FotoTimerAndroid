@@ -19,6 +19,7 @@ material = "1.11.0"
 room = "2.6.1"
 webkit = "1.9.0"
 composeDestinations = "1.9.56"
+preference = "1.2.0"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "androidxActivity" }
@@ -42,6 +43,7 @@ androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-webkit = { module = "androidx.webkit:webkit", version.ref = "webkit" }
 androidx-window-manager = { module = "androidx.window:window", version.ref = "androidxWindowManager" }
+androidx-preferences = { module = "androidx.preference:preference", version.ref = "preference" }
 dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltCompiler" }
 datastore-core = { module = "androidx.datastore:datastore-core", version.ref = "datastoreCore" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hiltCompiler" }

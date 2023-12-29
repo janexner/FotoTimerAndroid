@@ -72,17 +72,13 @@ dependencies {
     implementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
-//    implementation(libs.androidx.legacy.support.core.utils)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.viewModelCompose)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.common.java8)
-//    implementation(libs.androidx.navigation.compose)
-//    implementation(libs.androidx.navigation.fragment.ktx)
-//    implementation(libs.androidx.navigation.ui.ktx)
-//    implementation(libs.androidx.preference.ktx)
     implementation(libs.androidx.webkit)
     implementation(libs.androidx.window.manager)
+    implementation(libs.androidx.preferences)
 
     // hilt
     implementation(libs.hilt.android)
