@@ -1,7 +1,6 @@
 package com.exner.tools.fototimer.ui.destinations
 
 import android.content.res.Configuration
-import android.util.Log
 import android.view.ViewGroup
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -30,7 +29,6 @@ import com.ramcosta.composedestinations.annotation.Destination
 @Destination
 @Composable
 fun About() {
-    Log.d("AboutScreen", "entering composable...")
 
     // what's the orientation, right now?
     val configuration = LocalConfiguration.current
@@ -43,6 +41,7 @@ fun About() {
                     .padding(8.dp)
             ) { AboutScreenElements() }
         }
+
         else -> {
             // show
             Column(

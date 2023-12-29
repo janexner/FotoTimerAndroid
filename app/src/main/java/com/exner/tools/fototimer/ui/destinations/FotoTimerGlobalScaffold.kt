@@ -16,11 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.exner.tools.fototimer.ui.destinations.destinations.AboutDestination
 import com.exner.tools.fototimer.ui.destinations.destinations.Destination
-import com.exner.tools.fototimer.ui.destinations.destinations.ProcessDetailsDestination
 import com.exner.tools.fototimer.ui.destinations.destinations.ProcessListDestination
 import com.exner.tools.fototimer.ui.destinations.destinations.SettingsDestination
 import com.ramcosta.composedestinations.DestinationsNavHost
-import com.ramcosta.composedestinations.manualcomposablecalls.composable
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.rememberNavHostEngine
 

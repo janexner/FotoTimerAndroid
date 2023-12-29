@@ -1,6 +1,5 @@
 package com.exner.tools.fototimer.ui.destinations
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,7 +11,6 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -36,7 +34,6 @@ fun ProcessDelete(
     processDeleteViewModel: ProcessDeleteViewModel = hiltViewModel(),
     navigator: DestinationsNavigator
 ) {
-    Log.d("ProcessDeleteScreen", "entering composable...")
 
     val processName by processDeleteViewModel.processName.observeAsState()
     val processIsTarget by processDeleteViewModel.processIsTarget.observeAsState()
@@ -63,7 +60,7 @@ fun ProcessDelete(
                 if (processIsTarget == true && dependantProcesses != null) {
                     Text(text = "Other processes link to this one!")
                     if (dependantProcesses!!.isNotEmpty()) {
-                        dependantProcesses!!.forEach { 
+                        dependantProcesses!!.forEach {
                             Text(text = "${it.uid}: ${it.name}")
                         }
                     }
@@ -91,7 +88,10 @@ fun FotoTimerDeleteBottomBar(
             ExtendedFloatingActionButton(
                 text = { Text(text = "Delete") },
                 icon = {
-                    Icon(imageVector = Icons.Filled.Delete, contentDescription = "Delete the process")
+                    Icon(
+                        imageVector = Icons.Filled.Delete,
+                        contentDescription = "Delete the process"
+                    )
                 },
                 onClick = {
                     deleteAction()

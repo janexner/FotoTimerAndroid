@@ -1,6 +1,5 @@
 package com.exner.tools.fototimer.ui.destinations
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -40,7 +39,6 @@ fun ProcessRun(
     settingsViewModel: SettingsViewModel = hiltViewModel(),
     navigator: DestinationsNavigator
 ) {
-    Log.d("ProcessRunScreen", "entering composable...")
 
     val displayAction by processRunViewModel.displayAction.observeAsState()
     val numberOfSteps by processRunViewModel.numberOfSteps.observeAsState()

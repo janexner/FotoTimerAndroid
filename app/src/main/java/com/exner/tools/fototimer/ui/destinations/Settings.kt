@@ -1,7 +1,6 @@
 package com.exner.tools.fototimer.ui.destinations
 
 import android.content.pm.ActivityInfo
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,7 +43,6 @@ sealed class SettingsTabs(val name: String) {
 fun Settings(
     settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
-    Log.d("SettingsScreen", "entering composable...")
 
     val expertMode by settingsViewModel.expertMode.observeAsState()
     val nightMode by settingsViewModel.nightMode.observeAsState()

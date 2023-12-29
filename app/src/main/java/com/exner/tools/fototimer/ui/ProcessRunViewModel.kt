@@ -1,6 +1,5 @@
 package com.exner.tools.fototimer.ui
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -59,8 +58,6 @@ class ProcessRunViewModel @Inject constructor(
     @OptIn(DelicateCoroutinesApi::class)
     fun initialiseRun(processId: Long, numberOfPreBeeps: Int) {
         val result = mutableListOf<List<ProcessStepAction>>()
-
-        Log.d("ProcessRunVM", "init...")
 
         if (!isRunning) {
             isRunning = true
@@ -147,14 +144,9 @@ class ProcessRunViewModel @Inject constructor(
                     while (isActive) {
                         val step: Int = currentStepNumber.value?.toInt() ?: 0
                         if (step >= result.size) {
-                            Log.d("ProcessRunVM", "Step $step, job done, quitting...")
                             break
                         } else {
                             val elapsed = System.currentTimeMillis() - startTime
-                            Log.d(
-                                "ProcessRunVM",
-                                "$elapsed: Now doing step $step/$actualStep of ${numberOfSteps.value}..."
-                            )
                             // update display action and do sounds
                             val actionsList = result[step]
                             actionsList.forEach { action ->
@@ -164,14 +156,12 @@ class ProcessRunViewModel @Inject constructor(
                                     }
 
                                     is ProcessJumpbackAction -> {
-                                        Log.d("ProcessRunVM", "Jump back to ${action.stepNumber}...")
                                         _currentStepNumber.value = action.stepNumber - 1 // aim left
                                         // bcs 4 lines down, we count up by one
                                     }
 
                                     is ProcessSoundAction -> {
                                         SoundPoolHolder.playSound(action.soundId)
-                                        // TODO debug this
                                     }
                                 }
                             }
