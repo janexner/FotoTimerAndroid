@@ -49,8 +49,12 @@ class SettingsViewModel @Inject constructor(
     private val _numberOfPreBeeps: MutableLiveData<Int> = MutableLiveData(4)
     val numberOfPreBeeps: LiveData<Int> = _numberOfPreBeeps
 
+    private val _intervalTimeIsCentral: MutableLiveData<Boolean> = MutableLiveData(false)
+    val interValTimeIsCentral: LiveData<Boolean> = _intervalTimeIsCentral
+
     init {
         _expertMode.value = sharedPreferences.getBoolean("preference_expert_mode", false)
+        _nightMode.value = sharedPreferences.getBoolean("preference_night_mode", false)
         _useDynamicColour.value = sharedPreferences.getBoolean("preference_dynamic_color", true)
         _defaultKeepScreenOn.value = sharedPreferences.getBoolean("preference_screen_on", true)
         _stopIsEverywhere.value = sharedPreferences.getBoolean("preference_stop_is_everywhere", false)
@@ -60,11 +64,17 @@ class SettingsViewModel @Inject constructor(
         _defaultPauseTime.value = sharedPreferences.getInt("preference_pause_time", 0)
         _pauseBeatsLeadIn.value = sharedPreferences.getBoolean("preference_pause_beats_lead_in", true)
         _numberOfPreBeeps.value = sharedPreferences.getInt("preference_pre_beeps", 4)
+        _intervalTimeIsCentral.value = sharedPreferences.getBoolean("preference_interval_time_is_central", false)
     }
 
     fun updateExpertMode(newExpertMode: Boolean) {
         sharedPreferences.edit().putBoolean("preference_expert_mode", newExpertMode).apply()
         _expertMode.value = newExpertMode
+    }
+
+    fun updateNightMode(newNightMode: Boolean) {
+        sharedPreferences.edit().putBoolean("preference_night_mode", newNightMode).apply()
+        _nightMode.value = newNightMode
     }
 
     fun updateUseDynamicColour(newUseDynamicColour: Boolean) {
@@ -110,5 +120,10 @@ class SettingsViewModel @Inject constructor(
     fun updateNumberOfPreBeeps(newNumberOfPreBeeps: Int) {
         sharedPreferences.edit().putInt("preference_pre_beeps", newNumberOfPreBeeps).apply()
         _numberOfPreBeeps.value = newNumberOfPreBeeps
+    }
+
+    fun updateIntervalTimeIsCentral(newIntervalTimeIsCentral: Boolean) {
+        sharedPreferences.edit().putBoolean("preference_interval_time_is_central", newIntervalTimeIsCentral).apply()
+        _intervalTimeIsCentral.value = newIntervalTimeIsCentral
     }
 }

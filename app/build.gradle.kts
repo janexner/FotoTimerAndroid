@@ -86,9 +86,6 @@ dependencies {
 
     // hilt
     implementation(libs.hilt.android)
-    implementation(libs.datastore.core)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.livedata.ktx)
     ksp(libs.dagger.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
@@ -99,7 +96,8 @@ dependencies {
 
     // others
 //    implementation(libs.kotlinx.serialization.json)
-//    implementation(libs.material)
+    implementation(libs.datastore.core)
+    implementation(libs.material)
 
     // compose destinations
     implementation(libs.compose.destinations.core)

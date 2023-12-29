@@ -24,7 +24,7 @@ navigationUiKtx = "2.7.6"
 preferenceKtx = "1.2.1"
 room = "2.6.1"
 webkit = "1.9.0"
-composeDestinations = "1.9.55"
+composeDestinations = "1.9.56"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "androidxActivity" }

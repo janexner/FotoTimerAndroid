@@ -47,6 +47,7 @@ fun Settings(
     Log.d("SettingsScreen", "entering composable...")
 
     val expertMode by settingsViewModel.expertMode.observeAsState()
+    val nightMode by settingsViewModel.nightMode.observeAsState()
     val useDynamicColour by settingsViewModel.useDynamicColour.observeAsState()
     val defaultKeepScreenOn by settingsViewModel.defaultKeepScreenOn.observeAsState()
     val stopIsEverywhere by settingsViewModel.stopIsEverywhere.observeAsState()
@@ -56,6 +57,7 @@ fun Settings(
     val defaultPauseTime by settingsViewModel.defaultPauseTime.observeAsState()
     val pauseBeatsLeadIn by settingsViewModel.pauseBeatsLeadIn.observeAsState()
     val numberOfPreBeeps by settingsViewModel.numberOfPreBeeps.observeAsState()
+    val intervalTimeIsCentral by settingsViewModel.interValTimeIsCentral.observeAsState()
 
     // unlock screen rotation
     LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR)
@@ -84,8 +86,12 @@ fun Settings(
                 StandardSettingsColumn(
                     useDynamicColour,
                     { settingsViewModel.updateUseDynamicColour(it) },
+                    nightMode,
+                    { settingsViewModel.updateNightMode(it) },
                     defaultKeepScreenOn,
                     { settingsViewModel.updateDefaultKeepScreenOn(it) },
+                    intervalTimeIsCentral,
+                    { settingsViewModel.updateIntervalTimeIsCentral(it) }
                 )
                 TextAndSwitch(
                     text = "Expert mode (more options everywhere)",
@@ -99,6 +105,7 @@ fun Settings(
                     ) { settingsViewModel.updateStopIsEverywhere(it) }
                 }
             }
+
             1 -> Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -109,11 +116,16 @@ fun Settings(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         ExpertSettingsDefaultTimes(
-                            defaultProcessTime, { settingsViewModel.updateDefaultProcessTime(it) },
-                            defaultIntervalTime, { settingsViewModel.updateDefaultIntervalTime(it) },
-                            defaultLeadInTime, { settingsViewModel.updateDefaultLeadInTime(it) },
-                            defaultPauseTime, { settingsViewModel.updateDefaultPauseTime(it) },
-                            pauseBeatsLeadIn, { settingsViewModel.updatePauseBeatsLeadIn(it) }
+                            defaultProcessTime,
+                            { settingsViewModel.updateDefaultProcessTime(it) },
+                            defaultIntervalTime,
+                            { settingsViewModel.updateDefaultIntervalTime(it) },
+                            defaultLeadInTime,
+                            { settingsViewModel.updateDefaultLeadInTime(it) },
+                            defaultPauseTime,
+                            { settingsViewModel.updateDefaultPauseTime(it) },
+                            pauseBeatsLeadIn,
+                            { settingsViewModel.updatePauseBeatsLeadIn(it) }
                         )
                     }
                 }
@@ -124,6 +136,7 @@ fun Settings(
                     settingsViewModel.updateExpertMode(it)
                 }
             }
+
             2 -> Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -212,7 +225,7 @@ private fun ExpertSettingsDefaultTimes(
             }
         ) { Text(text = "30") }
         TextFieldForTimes(
-            value = intervalTime?: 10,
+            value = intervalTime ?: 10,
             label = { Text(text = "Default Interval time") },
             onValueChange = {
                 setIntervalTime(it)
@@ -246,8 +259,12 @@ private fun ExpertSettingsDefaultTimes(
 private fun StandardSettingsColumn(
     dynamicColor: Boolean?,
     updateDynamicColor: (Boolean) -> Unit,
+    nightMode: Boolean?,
+    updateNightMode: (Boolean) -> Unit,
     keepScreenOn: Boolean?,
     updateKeepScreenOn: (Boolean) -> Unit,
+    intervalTimeIsCentral: Boolean?,
+    updateIntervalTimeIsCentral: (Boolean) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -259,11 +276,20 @@ private fun StandardSettingsColumn(
                 updateDynamicColor(it)
             }
         )
+        TextAndSwitch(text = "Force night mode (needs a restart)", checked = nightMode == true) {
+            updateNightMode(it)
+        }
         TextAndSwitch(
             text = "Default to keep screen on while counting",
             checked = keepScreenOn == true
         ) {
             updateKeepScreenOn(it)
+        }
+        TextAndSwitch(
+            text = "Use current interval time as central display, rather than current process time",
+            checked = intervalTimeIsCentral == true
+        ) {
+            updateIntervalTimeIsCentral(it)
         }
     }
 }

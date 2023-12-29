@@ -50,6 +50,7 @@ fun ProcessRun(
     val hasHours by processRunViewModel.hasHours.observeAsState()
 
     val numberOfPreBeeps by settingsViewModel.numberOfPreBeeps.observeAsState()
+    val intervalTimeIsCentral by settingsViewModel.interValTimeIsCentral.observeAsState()
 
     processRunViewModel.initialiseRun(processId, numberOfPreBeeps ?: 0)
 
@@ -96,11 +97,11 @@ fun ProcessRun(
                         val pdAction = (displayAction as ProcessDisplayStepAction)
                         Text(text = pdAction.processName + " - " + pdAction.processParameters + " - running")
                         BigTimerText(
-                            duration = pdAction.currentProcessTime.seconds,
+                            duration = if (intervalTimeIsCentral == true) pdAction.currentIntervalTime.seconds else pdAction.currentProcessTime.seconds,
                             withHours = hasHours == true
                         )
                         MediumTimerAndIntervalText(
-                            duration = pdAction.currentIntervalTime.seconds,
+                            duration = if (intervalTimeIsCentral == true) pdAction.currentProcessTime.seconds else pdAction.currentIntervalTime.seconds,
                             withHours = hasHours == true,
                             intervalText = "${pdAction.currentRound} of ${pdAction.totalRounds}"
                         )

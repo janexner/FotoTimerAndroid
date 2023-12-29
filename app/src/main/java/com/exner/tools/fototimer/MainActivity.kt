@@ -1,6 +1,7 @@
 package com.exner.tools.fototimer
 
 import android.os.Bundle
+import android.preference.PreferenceManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.exner.tools.fototimer.audio.SoundPoolHolder
@@ -14,8 +15,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val sharedSettings = PreferenceManager.getDefaultSharedPreferences(this)
+        val forceNightMode = sharedSettings.getBoolean("preference_night_mode", false)
+
         setContent {
-            FotoTimerTheme {
+            FotoTimerTheme(
+                darkTheme = forceNightMode
+            ) {
                 FotoTimerGlobalScaffold()
             }
         }
