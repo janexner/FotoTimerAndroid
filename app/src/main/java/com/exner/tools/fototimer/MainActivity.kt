@@ -1,13 +1,14 @@
 package com.exner.tools.fototimer
 
 import android.os.Bundle
-import androidx.preference.PreferenceManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.preference.PreferenceManager
 import com.exner.tools.fototimer.audio.SoundPoolHolder
 import com.exner.tools.fototimer.ui.destinations.FotoTimerGlobalScaffold
 import com.exner.tools.fototimer.ui.theme.FotoTimerTheme
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

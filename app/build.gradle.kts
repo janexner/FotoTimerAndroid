@@ -91,7 +91,6 @@ dependencies {
     implementation(libs.room.ktx)
 
     // others
-//    implementation(libs.kotlinx.serialization.json)
     implementation(libs.material)
 
     // compose destinations
