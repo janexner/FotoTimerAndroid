@@ -92,12 +92,14 @@ dependencies {
 
     // others
 //    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.datastore.core)
     implementation(libs.material)
 
     // compose destinations
     implementation(libs.compose.destinations.core)
     ksp(libs.compose.destinations.ksp)
+
+    // testing
+    testImplementation(libs.junit)
 }
 
 hilt {
