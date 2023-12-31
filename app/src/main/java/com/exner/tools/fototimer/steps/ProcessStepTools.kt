@@ -4,7 +4,7 @@ import com.exner.tools.fototimer.audio.SoundIDs
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcess
 import kotlin.math.ceil
 
-const val STEP_LENGTH_IN_MILLISECONDS = 500
+const val STEP_LENGTH_IN_MILLISECONDS = 1000
 
 fun getProcessStepListForOneProcess(
     process: FotoTimerProcess,

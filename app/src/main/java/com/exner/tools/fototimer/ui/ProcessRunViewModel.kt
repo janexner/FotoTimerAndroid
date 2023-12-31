@@ -1,5 +1,6 @@
 package com.exner.tools.fototimer.ui
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -146,6 +147,7 @@ class ProcessRunViewModel @Inject constructor(
                         if (step >= result.size) {
                             break
                         } else {
+                            Log.d("ProcessRunVM", "${System.currentTimeMillis() - startTime}: step")
                             // update display action and do sounds
                             val actionsList = result[step]
                             actionsList.forEach { action ->
