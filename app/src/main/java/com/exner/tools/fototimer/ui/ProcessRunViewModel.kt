@@ -147,7 +147,7 @@ class ProcessRunViewModel @Inject constructor(
                         if (step >= result.size) {
                             break
                         } else {
-                            Log.d("ProcessRunVM", "${System.currentTimeMillis() - startTime}: step")
+                            Log.d("ProcessRunVM", "${System.currentTimeMillis() - startTime}: step $step")
                             // update display action and do sounds
                             val actionsList = result[step]
                             actionsList.forEach { action ->

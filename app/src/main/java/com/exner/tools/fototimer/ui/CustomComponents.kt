@@ -177,9 +177,10 @@ fun BigTimerText(duration: Duration, withHours: Boolean, modifier: Modifier = Mo
 fun MediumTimerAndIntervalText(
     duration: Duration,
     withHours: Boolean,
-    intervalText: String
+    intervalText: String,
+    modifier: Modifier = Modifier
 ) {
-    Row(modifier = Modifier) {
+    Row(modifier = modifier) {
         Text(
             text = durationToAnnotatedString(duration, withHours),
             style = MaterialTheme.typography.headlineLarge,

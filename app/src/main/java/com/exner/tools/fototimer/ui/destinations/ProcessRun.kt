@@ -1,6 +1,8 @@
 package com.exner.tools.fototimer.ui.destinations
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -17,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.exner.tools.fototimer.steps.ProcessDisplayStepAction
@@ -62,6 +65,7 @@ fun ProcessRun(
 
     Scaffold(
         content = { innerPadding ->
+            val configuration = LocalConfiguration.current
             Column(
                 modifier = Modifier
                     .padding(innerPadding)
@@ -75,6 +79,10 @@ fun ProcessRun(
                     LinearProgressIndicator(
                         progress = currentProgress,
                         modifier = Modifier.fillMaxWidth(),
+                    )
+                } else {
+                    LinearProgressIndicator(
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
 
@@ -94,15 +102,33 @@ fun ProcessRun(
                         // TODO
                         val pdAction = (displayAction as ProcessDisplayStepAction)
                         Text(text = pdAction.processName + " - " + pdAction.processParameters + " - running")
-                        BigTimerText(
-                            duration = if (intervalTimeIsCentral == true) pdAction.currentIntervalTime.seconds else pdAction.currentProcessTime.seconds,
-                            withHours = hasHours == true
-                        )
-                        MediumTimerAndIntervalText(
-                            duration = if (intervalTimeIsCentral == true) pdAction.currentProcessTime.seconds else pdAction.currentIntervalTime.seconds,
-                            withHours = hasHours == true,
-                            intervalText = "${pdAction.currentRound} of ${pdAction.totalRounds}"
-                        )
+                        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                BigTimerText(
+                                    duration = if (intervalTimeIsCentral == true) pdAction.currentIntervalTime.seconds else pdAction.currentProcessTime.seconds,
+                                    withHours = hasHours == true,
+                                    modifier = Modifier.fillMaxWidth(0.5f).alignByBaseline()
+                                )
+                                MediumTimerAndIntervalText(
+                                    duration = if (intervalTimeIsCentral == true) pdAction.currentProcessTime.seconds else pdAction.currentIntervalTime.seconds,
+                                    withHours = hasHours == true,
+                                    intervalText = "${pdAction.currentRound} of ${pdAction.totalRounds}",
+                                    modifier = Modifier.alignByBaseline()
+                                )
+                            }
+                        } else {
+                            BigTimerText(
+                                duration = if (intervalTimeIsCentral == true) pdAction.currentIntervalTime.seconds else pdAction.currentProcessTime.seconds,
+                                withHours = hasHours == true
+                            )
+                            MediumTimerAndIntervalText(
+                                duration = if (intervalTimeIsCentral == true) pdAction.currentProcessTime.seconds else pdAction.currentIntervalTime.seconds,
+                                withHours = hasHours == true,
+                                intervalText = "${pdAction.currentRound} of ${pdAction.totalRounds}"
+                            )
+                        }
                     }
 
                     is ProcessPauseDisplayStepAction -> {
