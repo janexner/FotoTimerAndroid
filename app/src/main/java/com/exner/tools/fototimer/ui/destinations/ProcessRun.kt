@@ -101,7 +101,7 @@ fun ProcessRun(
                     is ProcessDisplayStepAction -> {
                         // TODO
                         val pdAction = (displayAction as ProcessDisplayStepAction)
-                        Text(text = pdAction.processName + " - " + pdAction.processParameters + " - running")
+                        Text(text = pdAction.processName + " | " + pdAction.processParameters + " | running")
                         if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                             Row(
                                 modifier = Modifier.fillMaxWidth()
@@ -134,7 +134,7 @@ fun ProcessRun(
                     is ProcessPauseDisplayStepAction -> {
                         // TODO
                         val ppAction = (displayAction as ProcessPauseDisplayStepAction)
-                        Text(text = ppAction.processName + " - " + ppAction.processParameters + " - pausing")
+                        Text(text = ppAction.processName + " | " + ppAction.processParameters + " | pausing")
                         BigTimerText(
                             duration = ppAction.currentPauseTime.seconds,
                             withHours = hasHours == true
