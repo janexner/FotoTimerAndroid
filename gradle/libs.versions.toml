@@ -20,6 +20,7 @@ webkit = "1.9.0"
 composeDestinations = "1.9.56"
 preference = "1.2.1"
 junit = "4.13.2"
+datastore = "1.0.0"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "androidxActivity" }
@@ -53,6 +54,7 @@ room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "
 compose-destinations-core = { group = "io.github.raamcosta.compose-destinations", name = "core", version.ref = "composeDestinations" }
 compose-destinations-ksp = { group = "io.github.raamcosta.compose-destinations", name = "ksp", version.ref = "composeDestinations" }
 junit = { module = "junit:junit", version.ref = "junit" }
+datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

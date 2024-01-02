@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.exner.tools.fototimer"
-        minSdk = 31
+        minSdk = 29
         targetSdk = 34
         versionCode = 2
         versionName = "1.0"
@@ -92,6 +92,7 @@ dependencies {
 
     // others
     implementation(libs.material)
+    implementation(libs.datastore.preferences)
 
     // compose destinations
     implementation(libs.compose.destinations.core)
