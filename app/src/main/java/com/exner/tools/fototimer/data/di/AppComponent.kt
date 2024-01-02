@@ -87,14 +87,14 @@ object AppComponent {
                     hasSoundInterval = true,
                     0,
                     hasSoundMetronome = false,
-                    hasLeadIn = false,
-                    0,
-                    hasAutoChain = false,
-                    hasPauseBeforeChain = false,
-                    0,
-                    -1L,
-                    keepsScreenOn = false,
-                    hasPreBeeps = false,
+                    hasLeadIn = true,
+                    5,
+                    hasAutoChain = true,
+                    hasPauseBeforeChain = true,
+                    5,
+                    2L,
+                    keepsScreenOn = true,
+                    hasPreBeeps = true,
                 )
             provider.get().insert(fotoTimerProcess)
             fotoTimerProcess =

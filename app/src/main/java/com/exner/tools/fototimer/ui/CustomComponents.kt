@@ -128,7 +128,7 @@ fun TextFieldForTimes(
 }
 
 @Composable
-fun durationToAnnotatedString(duration: Duration, withHours: Boolean): AnnotatedString {
+fun durationToAnnotatedString(duration: Duration, withHours: Boolean, postText: String? = null): AnnotatedString {
     // convert seconds to "00:00" style string
     val output = duration.toComponents { hours, minutes, seconds, _ ->
         String.format("%02d:%02d:%02d", hours, minutes, seconds)
@@ -155,6 +155,9 @@ fun durationToAnnotatedString(duration: Duration, withHours: Boolean): Annotated
         }
         append(":")
         append(tmp[2])
+        if (postText !== null) {
+            append(postText)
+        }
     }
 
     return styledOutput
@@ -181,21 +184,16 @@ fun MediumTimerAndIntervalText(
     modifier: Modifier = Modifier
 ) {
     Row(modifier = modifier) {
-        Text(
-            text = durationToAnnotatedString(duration, withHours),
-            style = MaterialTheme.typography.headlineLarge,
-            fontSize = 44.dp.toTextDp(),
-            textAlign = TextAlign.Center,
-            modifier = Modifier.alignByBaseline()
-        )
-        Spacer(modifier = Modifier.weight(0.05f))
-        Text(
-            text = "Round $intervalText",
-            style = MaterialTheme.typography.headlineLarge,
-            fontSize = 44.dp.toTextDp(),
-            textAlign = TextAlign.Center,
-            modifier = Modifier.alignByBaseline()
-        )
+        val completeText = durationToAnnotatedString(duration, withHours, " | Round $intervalText")
+        BoxWithConstraints {
+            AutoSizeText(
+                text = completeText,
+                style = MaterialTheme.typography.headlineLarge,
+                textAlign = TextAlign.Center,
+                fontSize = 48.dp.toTextDp(),
+                constraints = constraints
+            )
+        }
     }
 }
 
