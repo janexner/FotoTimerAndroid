@@ -1,5 +1,6 @@
 package com.exner.tools.fototimer.ui.theme
 
+import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -75,18 +76,14 @@ private val RealDarkColors = darkColorScheme(
 
 @Composable
 fun FotoTimerTheme(
-    dynamicColor: Boolean = true,
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    // now set the appropriate colour scheme, based on system and user settings
-    val context = LocalContext.current
+    // Dynamic color is available on Android 12+
+    val dynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
     val colorScheme = when {
-        dynamicColor -> {
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(
-                context
-            )
-        }
+        dynamicColor && darkTheme -> dynamicDarkColorScheme(LocalContext.current)
+        dynamicColor && !darkTheme -> dynamicLightColorScheme(LocalContext.current)
         darkTheme -> RealDarkColors
         else -> LightColors
     }
