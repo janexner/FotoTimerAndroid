@@ -3,7 +3,9 @@ package com.exner.tools.fototimer.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.exner.tools.fototimer.data.persistence.FotoTimerChainingDependencies
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcessIdAndName
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcessRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,10 +23,8 @@ class ProcessDeleteViewModel @Inject constructor(
     private val _processIsTarget: MutableLiveData<Boolean> = MutableLiveData(false)
     val processIsTarget: LiveData<Boolean> = _processIsTarget
 
-    private val _dependantProcesses: MutableLiveData<List<FotoTimerProcessIdAndName>> = MutableLiveData(
-        emptyList()
-    )
-    val dependantProcesses: LiveData<List<FotoTimerProcessIdAndName>> = _dependantProcesses
+    private val _processChainingDependencies: MutableLiveData<FotoTimerChainingDependencies> = MutableLiveData(null)
+    val processChainingDependencies: LiveData<FotoTimerChainingDependencies> = _processChainingDependencies
 
     fun checkProcess(processId: Long) {
         if (processId != -1L) {
@@ -32,8 +32,10 @@ class ProcessDeleteViewModel @Inject constructor(
                 val process = repository.loadProcessById(processId)
                 if (process != null) {
                     _processName.value = process.name
-                    val newDependantProcesses = repository.getIdsAndNamesOfDependentProcesses(process)
-                    _dependantProcesses.value = newDependantProcesses
+                    val newDependentProcesses = repository.getIdsAndNamesOfDependentProcesses(process)
+                    val chainingDependencies = FotoTimerChainingDependencies(true, newDependentProcesses)
+                    _processChainingDependencies.value = chainingDependencies
+                    _processIsTarget.value = true
                 }
             }
         }

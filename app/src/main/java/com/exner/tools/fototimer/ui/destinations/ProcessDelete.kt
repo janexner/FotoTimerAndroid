@@ -1,7 +1,9 @@
 package com.exner.tools.fototimer.ui.destinations
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -37,7 +39,7 @@ fun ProcessDelete(
 
     val processName by processDeleteViewModel.processName.observeAsState()
     val processIsTarget by processDeleteViewModel.processIsTarget.observeAsState()
-    val dependantProcesses by processDeleteViewModel.dependantProcesses.observeAsState()
+    val dependantProcesses by processDeleteViewModel.processChainingDependencies.observeAsState()
 
     processDeleteViewModel.checkProcess(processId)
 
@@ -57,14 +59,19 @@ fun ProcessDelete(
                 )
                 Text(text = "'$processName'.")
                 // double-check in case there are chains that contain this
-                if (processIsTarget == true && dependantProcesses != null) {
-                    Text(text = "Other processes link to this one!")
-                    if (dependantProcesses!!.isNotEmpty()) {
-                        dependantProcesses!!.forEach {
-                            Text(text = "${it.uid}: ${it.name}")
+                if (processIsTarget == true) {
+                    if (dependantProcesses != null) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = "Other processes link to this one!")
+                        Spacer(modifier = Modifier.height(8.dp))
+                        if (dependantProcesses!!.dependentProcessIdsAndNames.isNotEmpty()) {
+                            dependantProcesses!!.dependentProcessIdsAndNames.forEach {
+                                Text(text = "${it.uid}: ${it.name}")
+                            }
                         }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = "If you delete this process, those others will no longer be able to link to it, meaning they will stop when they try to.")
                     }
-                    Text(text = "If you delete this process, those others will no longer be able to link to it, meaning they will stop when they try to.")
                 }
             }
         },
