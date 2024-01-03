@@ -37,9 +37,6 @@ class SettingsViewModel @Inject constructor(
     private val _defaultPauseTime: MutableLiveData<Int> = MutableLiveData(0)
     val defaultPauseTime: LiveData<Int> = _defaultPauseTime
 
-    private val _pauseBeatsLeadIn: MutableLiveData<Boolean> = MutableLiveData(true)
-    val pauseBeatsLeadIn: LiveData<Boolean> = _pauseBeatsLeadIn
-
     private val _numberOfPreBeeps: MutableLiveData<Int> = MutableLiveData(4)
     val numberOfPreBeeps: LiveData<Int> = _numberOfPreBeeps
 
@@ -54,7 +51,6 @@ class SettingsViewModel @Inject constructor(
         _defaultIntervalTime.value = sharedPreferences.getInt("preference_interval_time", 10)
         _defaultLeadInTime.value = sharedPreferences.getInt("preference_lead_in_time", 0)
         _defaultPauseTime.value = sharedPreferences.getInt("preference_pause_time", 0)
-        _pauseBeatsLeadIn.value = sharedPreferences.getBoolean("preference_pause_beats_lead_in", true)
         _numberOfPreBeeps.value = sharedPreferences.getInt("preference_pre_beeps", 4)
         _intervalTimeIsCentral.value = sharedPreferences.getBoolean("preference_interval_time_is_central", false)
     }
@@ -92,11 +88,6 @@ class SettingsViewModel @Inject constructor(
     fun updateDefaultPauseTime(newDefaultPauseTime: Int) {
         sharedPreferences.edit().putInt("preference_pause_time", newDefaultPauseTime).apply()
         _defaultPauseTime.value = newDefaultPauseTime
-    }
-
-    fun updatePauseBeatsLeadIn(newPauseBeatsLeadIn: Boolean) {
-        sharedPreferences.edit().putBoolean("preference_pause_beats_lead_in", newPauseBeatsLeadIn).apply()
-        _pauseBeatsLeadIn.value = newPauseBeatsLeadIn
     }
 
     fun updateNumberOfPreBeeps(newNumberOfPreBeeps: Int) {

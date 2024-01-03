@@ -51,7 +51,6 @@ fun Settings(
     val defaultIntervalTime by settingsViewModel.defaultIntervalTime.observeAsState()
     val defaultLeadInTime by settingsViewModel.defaultLeadInTime.observeAsState()
     val defaultPauseTime by settingsViewModel.defaultPauseTime.observeAsState()
-    val pauseBeatsLeadIn by settingsViewModel.pauseBeatsLeadIn.observeAsState()
     val numberOfPreBeeps by settingsViewModel.numberOfPreBeeps.observeAsState()
     val intervalTimeIsCentral by settingsViewModel.interValTimeIsCentral.observeAsState()
 
@@ -113,8 +112,6 @@ fun Settings(
                             { settingsViewModel.updateDefaultLeadInTime(it) },
                             defaultPauseTime,
                             { settingsViewModel.updateDefaultPauseTime(it) },
-                            pauseBeatsLeadIn,
-                            { settingsViewModel.updatePauseBeatsLeadIn(it) }
                         )
                     }
                 }
@@ -185,7 +182,6 @@ private fun ExpertSettingsDefaultTimes(
     intervalTime: Int?, setIntervalTime: (Int) -> Unit,
     leadInTime: Int?, setLeadInTime: (Int) -> Unit,
     pauseTime: Int?, setPauseTime: (Int) -> Unit,
-    pauseBeatsLeadIn: Boolean?, setPauseBeatsLeadIn: (Boolean) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -218,13 +214,6 @@ private fun ExpertSettingsDefaultTimes(
                 setPauseTime(it)
             },
         ) { Text(text = "4") }
-        TextAndSwitch(
-            text = "Pause 'beats' Lead-in",
-            checked = pauseBeatsLeadIn == true,
-            onCheckedChange = {
-                setPauseBeatsLeadIn(it)
-            }
-        )
     }
 }
 
