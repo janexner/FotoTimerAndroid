@@ -157,22 +157,6 @@ fun Settings(
 }
 
 @Composable
-private fun ExpertSettingsUI(
-    stopIsEverywhere: Boolean?, updateStopIsEverywhere: (Boolean) -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        TextAndSwitch(
-            text = "Running timer can be stopped by tapping anywhere on the screen",
-            checked = stopIsEverywhere == true
-        ) {
-            updateStopIsEverywhere(it)
-        }
-    }
-}
-
-@Composable
 private fun ExpertSettingsSound(
     preBeeps: Int?, setPreBeeps: (Int) -> Unit
 ) {
