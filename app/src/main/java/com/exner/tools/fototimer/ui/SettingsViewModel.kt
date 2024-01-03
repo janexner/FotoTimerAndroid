@@ -25,9 +25,6 @@ class SettingsViewModel @Inject constructor(
     private val _defaultKeepScreenOn: MutableLiveData<Boolean> = MutableLiveData(true)
     val defaultKeepScreenOn: LiveData<Boolean> = _defaultKeepScreenOn
 
-    private val _stopIsEverywhere: MutableLiveData<Boolean> = MutableLiveData(false)
-    val stopIsEverywhere: LiveData<Boolean> = _stopIsEverywhere
-
     private val _defaultProcessTime: MutableLiveData<Int> = MutableLiveData(30)
     val defaultProcessTime: LiveData<Int> = _defaultProcessTime
 
@@ -53,7 +50,6 @@ class SettingsViewModel @Inject constructor(
         _expertMode.value = sharedPreferences.getBoolean("preference_expert_mode", false)
         _nightMode.value = sharedPreferences.getBoolean("preference_night_mode", false)
         _defaultKeepScreenOn.value = sharedPreferences.getBoolean("preference_screen_on", true)
-        _stopIsEverywhere.value = sharedPreferences.getBoolean("preference_stop_is_everywhere", false)
         _defaultProcessTime.value = sharedPreferences.getInt("preference_process_time", 30)
         _defaultIntervalTime.value = sharedPreferences.getInt("preference_interval_time", 10)
         _defaultLeadInTime.value = sharedPreferences.getInt("preference_lead_in_time", 0)
@@ -76,11 +72,6 @@ class SettingsViewModel @Inject constructor(
     fun updateDefaultKeepScreenOn(newDefaultKeepScreenOn: Boolean) {
         sharedPreferences.edit().putBoolean("preference_screen_on", newDefaultKeepScreenOn).apply()
         _defaultKeepScreenOn.value = newDefaultKeepScreenOn
-    }
-
-    fun updateStopIsEverywhere(newStopIsEverywhere: Boolean) {
-        sharedPreferences.edit().putBoolean("preference_stop_is_everywhere", newStopIsEverywhere).apply()
-        _stopIsEverywhere.value = newStopIsEverywhere
     }
 
     fun updateDefaultProcessTime(newDefaultProcessTime: Int) {

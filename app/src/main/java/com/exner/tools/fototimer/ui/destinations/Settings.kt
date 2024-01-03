@@ -47,7 +47,6 @@ fun Settings(
     val expertMode by settingsViewModel.expertMode.observeAsState()
     val nightMode by settingsViewModel.nightMode.observeAsState()
     val defaultKeepScreenOn by settingsViewModel.defaultKeepScreenOn.observeAsState()
-    val stopIsEverywhere by settingsViewModel.stopIsEverywhere.observeAsState()
     val defaultProcessTime by settingsViewModel.defaultProcessTime.observeAsState()
     val defaultIntervalTime by settingsViewModel.defaultIntervalTime.observeAsState()
     val defaultLeadInTime by settingsViewModel.defaultLeadInTime.observeAsState()
@@ -93,11 +92,6 @@ fun Settings(
                     checked = expertMode == true
                 ) {
                     settingsViewModel.updateExpertMode(it)
-                }
-                AnimatedVisibility(visible = expertMode == true) {
-                    ExpertSettingsUI(
-                        stopIsEverywhere
-                    ) { settingsViewModel.updateStopIsEverywhere(it) }
                 }
             }
 
