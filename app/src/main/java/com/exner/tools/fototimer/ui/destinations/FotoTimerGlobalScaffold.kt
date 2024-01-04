@@ -17,6 +17,7 @@ import androidx.navigation.NavHostController
 import com.exner.tools.fototimer.ui.destinations.destinations.AboutDestination
 import com.exner.tools.fototimer.ui.destinations.destinations.Destination
 import com.exner.tools.fototimer.ui.destinations.destinations.ProcessListDestination
+import com.exner.tools.fototimer.ui.destinations.destinations.ProcessRunDestination
 import com.exner.tools.fototimer.ui.destinations.destinations.SettingsDestination
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.navigation.navigate
@@ -55,6 +56,10 @@ private fun FotoTimerTopBar(
             when (destination) {
                 ProcessListDestination -> {
                     // no back button here
+                }
+
+                ProcessRunDestination -> {
+                    // none here, either
                 }
 
                 else -> {

@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.exner.tools.fototimer.audio.SoundPoolHolder
+import com.exner.tools.fototimer.audio.VibratorHolder
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcessRepository
 import com.exner.tools.fototimer.steps.ProcessDisplayStepAction
 import com.exner.tools.fototimer.steps.ProcessGotoAction
@@ -57,7 +58,7 @@ class ProcessRunViewModel @Inject constructor(
     private var doneEventHandler: () -> Unit = {}
 
     @OptIn(DelicateCoroutinesApi::class)
-    fun initialiseRun(processId: Long, numberOfPreBeeps: Int) {
+    fun initialiseRun(processId: Long, numberOfPreBeeps: Int, vibrateEnabled: Boolean) {
         val result = mutableListOf<List<ProcessStepAction>>()
 
         if (!isRunning) {
@@ -163,6 +164,9 @@ class ProcessRunViewModel @Inject constructor(
 
                                     is ProcessSoundAction -> {
                                         SoundPoolHolder.playSound(action.soundId)
+                                        if (vibrateEnabled) {
+                                            VibratorHolder.vibrate(action.soundId)
+                                        }
                                     }
                                 }
                             }

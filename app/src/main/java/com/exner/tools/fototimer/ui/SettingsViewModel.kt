@@ -43,6 +43,9 @@ class SettingsViewModel @Inject constructor(
     private val _intervalTimeIsCentral: MutableLiveData<Boolean> = MutableLiveData(false)
     val interValTimeIsCentral: LiveData<Boolean> = _intervalTimeIsCentral
 
+    private val _vibrateEnabled: MutableLiveData<Boolean> = MutableLiveData(false)
+    val vibrateEnabled: LiveData<Boolean> = _vibrateEnabled
+
     init {
         _expertMode.value = sharedPreferences.getBoolean("preference_expert_mode", false)
         _nightMode.value = sharedPreferences.getBoolean("preference_night_mode", false)
@@ -53,6 +56,7 @@ class SettingsViewModel @Inject constructor(
         _defaultPauseTime.value = sharedPreferences.getInt("preference_pause_time", 0)
         _numberOfPreBeeps.value = sharedPreferences.getInt("preference_pre_beeps", 4)
         _intervalTimeIsCentral.value = sharedPreferences.getBoolean("preference_interval_time_is_central", false)
+        _vibrateEnabled.value = sharedPreferences.getBoolean("preference_vibrate_enabled", false)
     }
 
     fun updateExpertMode(newExpertMode: Boolean) {
@@ -98,5 +102,10 @@ class SettingsViewModel @Inject constructor(
     fun updateIntervalTimeIsCentral(newIntervalTimeIsCentral: Boolean) {
         sharedPreferences.edit().putBoolean("preference_interval_time_is_central", newIntervalTimeIsCentral).apply()
         _intervalTimeIsCentral.value = newIntervalTimeIsCentral
+    }
+
+    fun updateVibrateEnabled(newVibrateEnabled: Boolean) {
+        sharedPreferences.edit().putBoolean("preference_vibrate_enabled", newVibrateEnabled).apply()
+        _vibrateEnabled.value = newVibrateEnabled
     }
 }

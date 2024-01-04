@@ -53,6 +53,7 @@ fun Settings(
     val defaultPauseTime by settingsViewModel.defaultPauseTime.observeAsState()
     val numberOfPreBeeps by settingsViewModel.numberOfPreBeeps.observeAsState()
     val intervalTimeIsCentral by settingsViewModel.interValTimeIsCentral.observeAsState()
+    val vibrateEnabled by settingsViewModel.vibrateEnabled.observeAsState()
 
     // unlock screen rotation
     LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR)
@@ -133,8 +134,11 @@ fun Settings(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         ExpertSettingsSound(
-                            numberOfPreBeeps
-                        ) { settingsViewModel.updateNumberOfPreBeeps(it) }
+                            numberOfPreBeeps,
+                            { settingsViewModel.updateNumberOfPreBeeps(it) },
+                            vibrateEnabled,
+                            { settingsViewModel.updateVibrateEnabled(it) }
+                        )
                     }
                 }
                 TextAndSwitch(
@@ -155,7 +159,8 @@ fun Settings(
 
 @Composable
 private fun ExpertSettingsSound(
-    preBeeps: Int?, setPreBeeps: (Int) -> Unit
+    preBeeps: Int?, setPreBeeps: (Int) -> Unit,
+    vibrate: Boolean?, setVibrate: (Boolean) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -173,6 +178,12 @@ private fun ExpertSettingsSound(
             placeholder = { Text(text = "4") },
             textStyle = MaterialTheme.typography.bodyLarge
         )
+        TextAndSwitch(
+            text = "Vibrate when playing sounds",
+            checked = vibrate ?: false
+        ) {
+            setVibrate(it)
+        }
     }
 }
 

@@ -52,8 +52,9 @@ fun ProcessRun(
 
     val numberOfPreBeeps by settingsViewModel.numberOfPreBeeps.observeAsState()
     val intervalTimeIsCentral by settingsViewModel.interValTimeIsCentral.observeAsState()
+    val vibrateEnabled by settingsViewModel.vibrateEnabled.observeAsState()
 
-    processRunViewModel.initialiseRun(processId, numberOfPreBeeps ?: 0)
+    processRunViewModel.initialiseRun(processId, numberOfPreBeeps ?: 0, vibrateEnabled ?: false)
 
     processRunViewModel.setDoneEventHandler {
         navigator.navigateUp()
@@ -109,7 +110,9 @@ fun ProcessRun(
                                 BigTimerText(
                                     duration = if (intervalTimeIsCentral == true) pdAction.currentIntervalTime.seconds else pdAction.currentProcessTime.seconds,
                                     withHours = hasHours == true,
-                                    modifier = Modifier.fillMaxWidth(0.5f).alignByBaseline()
+                                    modifier = Modifier
+                                        .fillMaxWidth(0.5f)
+                                        .alignByBaseline()
                                 )
                                 MediumTimerAndIntervalText(
                                     duration = if (intervalTimeIsCentral == true) pdAction.currentProcessTime.seconds else pdAction.currentIntervalTime.seconds,
