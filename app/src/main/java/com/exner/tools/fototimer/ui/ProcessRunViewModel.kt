@@ -88,7 +88,7 @@ class ProcessRunViewModel @Inject constructor(
                         _hasHours.value = hasHours.value == true || process.processTime > 3600
                         // prepare for the next iteration
                         firstRound = false
-                        if (process.gotoId != null && process.gotoId != -1L) {
+                        if (process.gotoId != null && process.gotoId != -1L && repository.doesProcessWithIdExist(process.gotoId)) {
                             currentID = process.gotoId
                             if (processIdList.contains(currentID)) {
                                 noLoopDetectedSoFar = false // LOOP!

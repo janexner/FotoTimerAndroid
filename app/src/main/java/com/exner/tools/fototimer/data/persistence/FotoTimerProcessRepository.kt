@@ -29,6 +29,11 @@ class FotoTimerProcessRepository @Inject constructor(private val fotoTimerProces
     }
 
     @WorkerThread
+    suspend fun doesProcessWithIdExist(id: Long): Boolean {
+        return (fotoTimerProcessDAO.getFotoTimerProcess(id) !== null)
+    }
+
+    @WorkerThread
     suspend fun insert(fotoTimerProcess: FotoTimerProcess) {
         fotoTimerProcessDAO.insert(fotoTimerProcess)
     }

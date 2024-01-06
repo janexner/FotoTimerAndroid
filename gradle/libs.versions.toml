@@ -1,5 +1,5 @@
 [versions]
-androidGradlePlugin = "8.4.0-alpha02"
+androidGradlePlugin = "8.4.0-alpha03"
 androidxActivity = "1.8.2"
 androidxAppCompat = "1.6.1"
 androidxComposeBom = "2023.10.01"
@@ -17,7 +17,7 @@ lifecycleViewmodelKtx = "2.6.2"
 material = "1.11.0"
 room = "2.6.1"
 webkit = "1.9.0"
-composeDestinations = "1.9.56"
+composeDestinations = "1.9.57"
 preference = "1.2.1"
 junit = "4.13.2"
 
