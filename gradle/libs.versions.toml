@@ -10,10 +10,8 @@ androidxWindowManager = "1.2.0"
 foundation = "1.5.4"
 foundationLayout = "1.5.4"
 hiltCompiler = "2.50"
-kotlin = "1.9.21"
-ksp = "1.9.21-1.0.16"
-lifecycleCommonJava8 = "2.6.2"
-lifecycleViewmodelKtx = "2.6.2"
+kotlin = "1.9.22"
+ksp = "1.9.22-1.0.16"
 material = "1.11.0"
 room = "2.6.1"
 webkit = "1.9.0"
@@ -31,9 +29,9 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
 androidx-foundation-layout = { module = "androidx.compose.foundation:foundation-layout", version.ref = "foundationLayout" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
-androidx-lifecycle-common-java8 = { module = "androidx.lifecycle:lifecycle-common-java8", version.ref = "lifecycleCommonJava8" }
+androidx-lifecycle-common-java8 = { module = "androidx.lifecycle:lifecycle-common-java8", version.ref = "androidxLifecycle" }
 androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "androidxLifecycle" }
-androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidxLifecycle" }
 androidx-lifecycle-viewModelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
 androidx-material-icons-core = { module = "androidx.compose.material:material-icons-core" }
 androidx-runtime = { module = "androidx.compose.runtime:runtime" }
