@@ -15,7 +15,7 @@ ksp = "1.9.22-1.0.16"
 material = "1.11.0"
 room = "2.6.1"
 webkit = "1.9.0"
-composeDestinations = "1.9.57"
+composeDestinations = "1.9.59"
 preference = "1.2.1"
 junit = "4.13.2"
 
