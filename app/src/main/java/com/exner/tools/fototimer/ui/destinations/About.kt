@@ -70,7 +70,7 @@ fun AboutScreenElements() {
     val payload = BuildConfig.APPLICATION_ID
     val url = "https://www.jan-exner.de/software/android/fototimer/about.html?$payload"
     // second URL that reflects how kirby maps the above URL (sigh)
-    val url2 = "https://www.jan-exner.de/content/5-software/android/fototimer/about.html?$payload"
+    val url2 = "https://www.jan-exner.de/content/5-software/android/fototimer/about.html"
     val uriHandler = LocalUriHandler.current
     AndroidView(factory = { context ->
         WebView(context).apply {
