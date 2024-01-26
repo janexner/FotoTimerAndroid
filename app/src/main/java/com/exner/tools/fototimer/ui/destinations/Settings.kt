@@ -159,8 +159,8 @@ fun Settings(
 
 @Composable
 private fun ExpertSettingsSound(
-    preBeeps: Int?, setPreBeeps: (Int) -> Unit,
-    vibrate: Boolean?, setVibrate: (Boolean) -> Unit
+    preBeeps: Int, setPreBeeps: (Int) -> Unit,
+    vibrate: Boolean, setVibrate: (Boolean) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -180,7 +180,7 @@ private fun ExpertSettingsSound(
         )
         TextAndSwitch(
             text = "Vibrate when playing sounds",
-            checked = vibrate ?: false
+            checked = vibrate
         ) {
             setVibrate(it)
         }
@@ -189,69 +189,69 @@ private fun ExpertSettingsSound(
 
 @Composable
 private fun ExpertSettingsDefaultTimes(
-    processTime: Int?, setProcessTime: (Int) -> Unit,
-    intervalTime: Int?, setIntervalTime: (Int) -> Unit,
-    leadInTime: Int?, setLeadInTime: (Int) -> Unit,
-    pauseTime: Int?, setPauseTime: (Int) -> Unit,
+    processTime: Int, setProcessTime: (Int) -> Unit,
+    intervalTime: Int, setIntervalTime: (Int) -> Unit,
+    leadInTime: Int, setLeadInTime: (Int) -> Unit,
+    pauseTime: Int, setPauseTime: (Int) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         TextFieldForTimes(
-            value = processTime ?: 30,
+            value = processTime,
             label = { Text(text = "Default Process time") },
             onValueChange = {
                 setProcessTime(it)
             }
         ) { Text(text = "30") }
         TextFieldForTimes(
-            value = intervalTime ?: 10,
+            value = intervalTime,
             label = { Text(text = "Default Interval time") },
             onValueChange = {
                 setIntervalTime(it)
             },
         ) { Text(text = "10") }
         TextFieldForTimes(
-            value = leadInTime ?: 5,
+            value = leadInTime,
             label = { Text(text = "Default Lead-in time") },
             onValueChange = {
                 setLeadInTime(it)
             },
         ) { Text(text = "0") }
         TextFieldForTimes(
-            value = pauseTime ?: 5,
+            value = pauseTime,
             label = { Text(text = "Default Pause time") },
             onValueChange = {
                 setPauseTime(it)
             },
-        ) { Text(text = "4") }
+        ) { Text(text = "5") }
     }
 }
 
 @Composable
 private fun StandardSettingsColumn(
-    nightMode: Boolean?,
+    nightMode: Boolean,
     updateNightMode: (Boolean) -> Unit,
-    keepScreenOn: Boolean?,
+    keepScreenOn: Boolean,
     updateKeepScreenOn: (Boolean) -> Unit,
-    intervalTimeIsCentral: Boolean?,
+    intervalTimeIsCentral: Boolean,
     updateIntervalTimeIsCentral: (Boolean) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        TextAndSwitch(text = "Force night mode (needs a restart)", checked = nightMode == true) {
+        TextAndSwitch(text = "Force night mode (needs a restart)", checked = nightMode) {
             updateNightMode(it)
         }
         TextAndSwitch(
             text = "Default to keep screen on while counting",
-            checked = keepScreenOn == true
+            checked = keepScreenOn
         ) {
             updateKeepScreenOn(it)
         }
         TextAndSwitch(
             text = "Use current interval time as central display, rather than current process time",
-            checked = intervalTimeIsCentral == true
+            checked = intervalTimeIsCentral
         ) {
             updateIntervalTimeIsCentral(it)
         }

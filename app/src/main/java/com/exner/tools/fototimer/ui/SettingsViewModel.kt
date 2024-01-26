@@ -39,12 +39,12 @@ class SettingsViewModel @Inject constructor(
     val defaultIntervalTime: StateFlow<Int> = userPreferencesManager.defaultIntervalTime().stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(),
-        5
+        10
     )
     val defaultLeadInTime: StateFlow<Int> = userPreferencesManager.defaultLeadInTime().stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(),
-        5
+        0
     )
     val defaultPauseTime: StateFlow<Int> = userPreferencesManager.defaultPauseTime().stateIn(
         viewModelScope,
