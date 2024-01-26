@@ -77,7 +77,7 @@ fun ProcessRun(
                     val currentProgress =
                         if (numberOfSteps != null && numberOfSteps != 0) currentStepNumber!!.toFloat() / numberOfSteps!! else 0.0f
                     LinearProgressIndicator(
-                        progress = currentProgress,
+                        progress = { currentProgress },
                         modifier = Modifier.fillMaxWidth(),
                     )
                 } else {

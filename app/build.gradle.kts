@@ -92,6 +92,7 @@ dependencies {
 
     // others
     implementation(libs.material)
+    implementation(libs.androidx.material3.android)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.lifecycle.runtime.compose)
