@@ -36,8 +36,7 @@ class ProcessPauseDisplayStepAction(
 ) : ProcessStepAction(processName)
 
 class ProcessGotoAction(
-    processName: String,
-    val gotoId: Long
+    processName: String
 ): ProcessStepAction(processName)
 
 class ProcessJumpbackAction(

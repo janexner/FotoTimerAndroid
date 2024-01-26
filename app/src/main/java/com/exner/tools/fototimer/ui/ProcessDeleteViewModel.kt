@@ -3,10 +3,8 @@ package com.exner.tools.fototimer.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.exner.tools.fototimer.data.persistence.FotoTimerChainingDependencies
-import com.exner.tools.fototimer.data.persistence.FotoTimerProcessIdAndName
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcessRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -33,7 +31,7 @@ class ProcessDeleteViewModel @Inject constructor(
                 if (process != null) {
                     _processName.value = process.name
                     val newDependentProcesses = repository.getIdsAndNamesOfDependentProcesses(process)
-                    val chainingDependencies = FotoTimerChainingDependencies(true, newDependentProcesses)
+                    val chainingDependencies = FotoTimerChainingDependencies(newDependentProcesses)
                     _processChainingDependencies.value = chainingDependencies
                     _processIsTarget.value = true
                 }

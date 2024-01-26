@@ -131,8 +131,7 @@ fun getProcessStepListForOneProcess(
                 actionsList.add(ftppdAction)
                 if (i == howManyPauseSteps) {
                     val ftpchainAction = ProcessGotoAction(
-                        process.name,
-                        process.gotoId
+                        process.name
                     )
                     actionsList.add(ftpchainAction)
                 }
@@ -141,8 +140,7 @@ fun getProcessStepListForOneProcess(
         } else {
             val actionsList = mutableListOf<ProcessStepAction>()
             val ftpchainAction = ProcessGotoAction(
-                process.name,
-                process.gotoId
+                process.name
             )
             actionsList.add(ftpchainAction)
             result.add(actionsList)
