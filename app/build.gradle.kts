@@ -96,6 +96,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.google.material)
 
     // compose destinations
     implementation(libs.compose.destinations.core)

@@ -7,12 +7,9 @@ androidxCore = "1.12.0"
 androidxHiltNavigationCompose = "1.1.0"
 androidxLifecycle = "2.7.0"
 androidxWindowManager = "1.2.0"
-foundation = "1.6.0"
-foundationLayout = "1.6.0"
 hiltCompiler = "2.50"
 kotlin = "1.9.22"
 ksp = "1.9.22-1.0.17"
-material = "1.11.0"
 room = "2.6.1"
 webkit = "1.10.0"
 composeDestinations = "1.9.62"
@@ -21,6 +18,7 @@ datastorePreferences = "1.0.0"
 kotlinxCoroutinesAndroid = "1.7.3"
 lifecycleRuntimeCompose = "2.7.0"
 material3 = "1.2.0-rc01"
+material = "1.11.0"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "androidxActivity" }
@@ -29,8 +27,8 @@ androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", versi
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-compose-material3-windowSizeClass = { group = "androidx.compose.material3", name = "material3-window-size-class" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
-androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
-androidx-foundation-layout = { module = "androidx.compose.foundation:foundation-layout", version.ref = "foundationLayout" }
+androidx-foundation = { module = "androidx.compose.foundation:foundation" }
+androidx-foundation-layout = { module = "androidx.compose.foundation:foundation-layout" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
 androidx-lifecycle-common-java8 = { module = "androidx.lifecycle:lifecycle-common-java8", version.ref = "androidxLifecycle" }
 androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "androidxLifecycle" }
@@ -47,7 +45,7 @@ androidx-window-manager = { module = "androidx.window:window", version.ref = "an
 dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltCompiler" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hiltCompiler" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
-material = { module = "com.google.android.material:material", version.ref = "material" }
+material = { module = "androidx.compose.material:material" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
@@ -56,7 +54,9 @@ compose-destinations-ksp = { group = "io.github.raamcosta.compose-destinations",
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
 junit = { module = "junit:junit", version.ref = "junit" }
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntimeCompose" }
+
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3" }
+google-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
