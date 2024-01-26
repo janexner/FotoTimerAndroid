@@ -7,26 +7,29 @@ import android.os.Vibrator
 import android.os.VibratorManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.preference.PreferenceManager
 import com.exner.tools.fototimer.audio.SoundPoolHolder
 import com.exner.tools.fototimer.audio.VibratorHolder
+import com.exner.tools.fototimer.data.preferences.FotoTimerPreferencesManager
 import com.exner.tools.fototimer.ui.destinations.FotoTimerGlobalScaffold
 import com.exner.tools.fototimer.ui.theme.FotoTimerTheme
 import dagger.hilt.android.AndroidEntryPoint
-
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @Inject lateinit var userPreferencesManager: FotoTimerPreferencesManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val sharedSettings = PreferenceManager.getDefaultSharedPreferences(this)
-        val forceNightMode = sharedSettings.getBoolean("preference_night_mode", false)
+        val forceNightMode = userPreferencesManager.nightMode()
 
         setContent {
             FotoTimerTheme(
-                darkTheme = forceNightMode
+                darkTheme = runBlocking { forceNightMode.first() }
             ) {
                 FotoTimerGlobalScaffold()
             }

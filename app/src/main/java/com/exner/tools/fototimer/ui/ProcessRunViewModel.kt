@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.exner.tools.fototimer.audio.SoundPoolHolder
 import com.exner.tools.fototimer.audio.VibratorHolder
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcessRepository
+import com.exner.tools.fototimer.data.preferences.FotoTimerPreferencesManager
 import com.exner.tools.fototimer.steps.ProcessDisplayStepAction
 import com.exner.tools.fototimer.steps.ProcessGotoAction
 import com.exner.tools.fototimer.steps.ProcessJumpbackAction
@@ -24,13 +25,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ProcessRunViewModel @Inject constructor(
-    private val repository: FotoTimerProcessRepository
+    private val repository: FotoTimerProcessRepository,
+    private val userPreferencesManager: FotoTimerPreferencesManager
 ) : ViewModel() {
 
     private val _displayAction: MutableLiveData<ProcessStepAction> = MutableLiveData(null)
@@ -58,7 +61,7 @@ class ProcessRunViewModel @Inject constructor(
     private var doneEventHandler: () -> Unit = {}
 
     @OptIn(DelicateCoroutinesApi::class)
-    fun initialiseRun(processId: Long, numberOfPreBeeps: Int, vibrateEnabled: Boolean) {
+    fun initialiseRun(processId: Long) {
         val result = mutableListOf<List<ProcessStepAction>>()
 
         if (!isRunning) {
@@ -78,7 +81,7 @@ class ProcessRunViewModel @Inject constructor(
                     val process = repository.loadProcessById(currentID)
                     if (process != null) {
                         val partialResult =
-                            getProcessStepListForOneProcess(process, firstRound, numberOfPreBeeps)
+                            getProcessStepListForOneProcess(process, firstRound, userPreferencesManager.numberOfPreBeeps().firstOrNull() ?: 5)
                         partialResult.forEach { actionList ->
                             result.add(actionList)
                         }
@@ -164,7 +167,7 @@ class ProcessRunViewModel @Inject constructor(
 
                                     is ProcessSoundAction -> {
                                         SoundPoolHolder.playSound(action.soundId)
-                                        if (vibrateEnabled) {
+                                        if (userPreferencesManager.vibrateEnabled().firstOrNull() == true) {
                                             VibratorHolder.vibrate(action.soundId)
                                         }
                                     }

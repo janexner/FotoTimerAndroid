@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.exner.tools.fototimer.ui.HeaderText
 import com.exner.tools.fototimer.ui.ProcessEditViewModel
 import com.exner.tools.fototimer.ui.SettingsViewModel
@@ -72,14 +73,14 @@ fun ProcessEdit(
     // if this is a new process, the keepScreenOn property has to be set
     // this is necessary because there is a setting for that
     if (processId == -1L) {
-        val defaultKeepsScreenOn by settingsViewModel.defaultKeepScreenOn.observeAsState()
-        processEditViewModel.updateKeepsScreenOn(defaultKeepsScreenOn == true)
+        val defaultKeepsScreenOn by settingsViewModel.defaultKeepScreenOn.collectAsStateWithLifecycle()
+        processEditViewModel.updateKeepsScreenOn(defaultKeepsScreenOn)
     }
     processEditViewModel.getProcessIdsAndNames()
 
     var modified by remember { mutableStateOf(false) }
 
-    val expertMode by settingsViewModel.expertMode.observeAsState()
+    val expertMode by settingsViewModel.expertMode.collectAsStateWithLifecycle()
 
     Scaffold(
         content = { innerPadding ->
@@ -122,7 +123,7 @@ fun ProcessEdit(
                     },
                 )
                 HeaderText(text = "During the process")
-                if (expertMode == true) {
+                if (expertMode) {
                     TextAndSwitch(
                         text = "Keep the screen on",
                         checked = keepsScreenOn == true,
@@ -180,7 +181,7 @@ fun ProcessEdit(
                         modified = true
                     }
                 }
-                AnimatedVisibility(visible = expertMode == true) {
+                AnimatedVisibility(visible = expertMode) {
                     Column(
                         modifier = Modifier.fillMaxWidth()
                     ) {

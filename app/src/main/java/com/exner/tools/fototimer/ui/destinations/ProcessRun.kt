@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.exner.tools.fototimer.steps.ProcessDisplayStepAction
 import com.exner.tools.fototimer.steps.ProcessLeadInDisplayStepAction
 import com.exner.tools.fototimer.steps.ProcessPauseDisplayStepAction
@@ -50,11 +51,9 @@ fun ProcessRun(
     val hasLoop by processRunViewModel.hasLoop.observeAsState()
     val hasHours by processRunViewModel.hasHours.observeAsState()
 
-    val numberOfPreBeeps by settingsViewModel.numberOfPreBeeps.observeAsState()
-    val intervalTimeIsCentral by settingsViewModel.interValTimeIsCentral.observeAsState()
-    val vibrateEnabled by settingsViewModel.vibrateEnabled.observeAsState()
+    val intervalTimeIsCentral by settingsViewModel.interValTimeIsCentral.collectAsStateWithLifecycle()
 
-    processRunViewModel.initialiseRun(processId, numberOfPreBeeps ?: 0, vibrateEnabled ?: false)
+    processRunViewModel.initialiseRun(processId)
 
     processRunViewModel.setDoneEventHandler {
         navigator.navigateUp()
@@ -108,14 +107,14 @@ fun ProcessRun(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 BigTimerText(
-                                    duration = if (intervalTimeIsCentral == true) pdAction.currentIntervalTime.seconds else pdAction.currentProcessTime.seconds,
+                                    duration = if (intervalTimeIsCentral) pdAction.currentIntervalTime.seconds else pdAction.currentProcessTime.seconds,
                                     withHours = hasHours == true,
                                     modifier = Modifier
                                         .fillMaxWidth(0.5f)
                                         .alignByBaseline()
                                 )
                                 MediumTimerAndIntervalText(
-                                    duration = if (intervalTimeIsCentral == true) pdAction.currentProcessTime.seconds else pdAction.currentIntervalTime.seconds,
+                                    duration = if (intervalTimeIsCentral) pdAction.currentProcessTime.seconds else pdAction.currentIntervalTime.seconds,
                                     withHours = hasHours == true,
                                     intervalText = "${pdAction.currentRound} of ${pdAction.totalRounds}",
                                     modifier = Modifier.alignByBaseline()
@@ -123,11 +122,11 @@ fun ProcessRun(
                             }
                         } else {
                             BigTimerText(
-                                duration = if (intervalTimeIsCentral == true) pdAction.currentIntervalTime.seconds else pdAction.currentProcessTime.seconds,
+                                duration = if (intervalTimeIsCentral) pdAction.currentIntervalTime.seconds else pdAction.currentProcessTime.seconds,
                                 withHours = hasHours == true
                             )
                             MediumTimerAndIntervalText(
-                                duration = if (intervalTimeIsCentral == true) pdAction.currentProcessTime.seconds else pdAction.currentIntervalTime.seconds,
+                                duration = if (intervalTimeIsCentral) pdAction.currentProcessTime.seconds else pdAction.currentIntervalTime.seconds,
                                 withHours = hasHours == true,
                                 intervalText = "${pdAction.currentRound} of ${pdAction.totalRounds}"
                             )

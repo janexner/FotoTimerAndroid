@@ -79,7 +79,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.common.java8)
     implementation(libs.androidx.webkit)
     implementation(libs.androidx.window.manager)
-    implementation(libs.androidx.preferences)
 
     // hilt
     implementation(libs.hilt.android)
@@ -93,6 +92,9 @@ dependencies {
 
     // others
     implementation(libs.material)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.lifecycle.runtime.compose)
 
     // compose destinations
     implementation(libs.compose.destinations.core)

@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.exner.tools.fototimer.R
 import com.exner.tools.fototimer.ui.BodyText
 import com.exner.tools.fototimer.ui.HeaderText
@@ -69,7 +70,7 @@ fun ProcessDetails(
 
     processDetailsViewModel.getProcess(processId)
 
-    val expertMode by settingsViewModel.expertMode.observeAsState()
+    val expertMode by settingsViewModel.expertMode.collectAsStateWithLifecycle()
 
     Scaffold(
         content = { innerPadding ->
@@ -86,7 +87,7 @@ fun ProcessDetails(
                     processTime,
                     intervalTime,
                 )
-                if (keepsScreenOn == true && expertMode == true) {
+                if (keepsScreenOn == true && expertMode) {
                     ListItem(
                         headlineContent = { SmallBodyText(text = "UI") },
                         supportingContent = { BodyText(text = "Screen will stay on") },

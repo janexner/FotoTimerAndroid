@@ -15,7 +15,6 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -24,6 +23,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.exner.tools.fototimer.ui.BodyText
 import com.exner.tools.fototimer.ui.LockScreenOrientation
 import com.exner.tools.fototimer.ui.SettingsViewModel
@@ -44,16 +44,16 @@ fun Settings(
     settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
 
-    val expertMode by settingsViewModel.expertMode.observeAsState()
-    val nightMode by settingsViewModel.nightMode.observeAsState()
-    val defaultKeepScreenOn by settingsViewModel.defaultKeepScreenOn.observeAsState()
-    val defaultProcessTime by settingsViewModel.defaultProcessTime.observeAsState()
-    val defaultIntervalTime by settingsViewModel.defaultIntervalTime.observeAsState()
-    val defaultLeadInTime by settingsViewModel.defaultLeadInTime.observeAsState()
-    val defaultPauseTime by settingsViewModel.defaultPauseTime.observeAsState()
-    val numberOfPreBeeps by settingsViewModel.numberOfPreBeeps.observeAsState()
-    val intervalTimeIsCentral by settingsViewModel.interValTimeIsCentral.observeAsState()
-    val vibrateEnabled by settingsViewModel.vibrateEnabled.observeAsState()
+    val expertMode by settingsViewModel.expertMode.collectAsStateWithLifecycle()
+    val nightMode by settingsViewModel.nightMode.collectAsStateWithLifecycle()
+    val defaultKeepScreenOn by settingsViewModel.defaultKeepScreenOn.collectAsStateWithLifecycle()
+    val defaultProcessTime by settingsViewModel.defaultProcessTime.collectAsStateWithLifecycle()
+    val defaultIntervalTime by settingsViewModel.defaultIntervalTime.collectAsStateWithLifecycle()
+    val defaultLeadInTime by settingsViewModel.defaultLeadInTime.collectAsStateWithLifecycle()
+    val defaultPauseTime by settingsViewModel.defaultPauseTime.collectAsStateWithLifecycle()
+    val numberOfPreBeeps by settingsViewModel.numberOfPreBeeps.collectAsStateWithLifecycle()
+    val intervalTimeIsCentral by settingsViewModel.interValTimeIsCentral.collectAsStateWithLifecycle()
+    val vibrateEnabled by settingsViewModel.vibrateEnabled.collectAsStateWithLifecycle()
 
     // unlock screen rotation
     LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR)
@@ -89,7 +89,7 @@ fun Settings(
                 )
                 TextAndSwitch(
                     text = "Expert mode (more options everywhere)",
-                    checked = expertMode == true
+                    checked = expertMode
                 ) {
                     settingsViewModel.updateExpertMode(it)
                 }
@@ -100,7 +100,7 @@ fun Settings(
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
             ) {
-                AnimatedVisibility(visible = expertMode == true) {
+                AnimatedVisibility(visible = expertMode) {
                     Column(
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -118,7 +118,7 @@ fun Settings(
                 }
                 TextAndSwitch(
                     text = "Expert mode (more options everywhere)",
-                    checked = expertMode == true
+                    checked = expertMode
                 ) {
                     settingsViewModel.updateExpertMode(it)
                 }
@@ -129,7 +129,7 @@ fun Settings(
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
             ) {
-                AnimatedVisibility(visible = expertMode == true) {
+                AnimatedVisibility(visible = expertMode) {
                     Column(
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -143,7 +143,7 @@ fun Settings(
                 }
                 TextAndSwitch(
                     text = "Expert mode (more options everywhere)",
-                    checked = expertMode == true
+                    checked = expertMode
                 ) {
                     settingsViewModel.updateExpertMode(it)
                 }
