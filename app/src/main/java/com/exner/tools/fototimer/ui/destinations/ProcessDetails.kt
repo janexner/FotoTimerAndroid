@@ -12,9 +12,9 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -82,7 +82,7 @@ fun ProcessDetails(
             ) {
                 // top - process information
                 ProcessName(name, modifier = Modifier.padding(8.dp))
-                Divider(modifier = Modifier.padding(8.dp))
+                HorizontalDivider(modifier = Modifier.padding(8.dp))
                 ProcessTimerData(
                     processTime,
                     intervalTime,
