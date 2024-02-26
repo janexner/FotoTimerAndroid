@@ -1,6 +1,9 @@
 package com.exner.tools.fototimer.ui.destinations
 
+import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,15 +13,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
 import com.exner.tools.fototimer.BuildConfig
 import com.exner.tools.fototimer.ui.theme.FotoTimerTheme
 import com.ramcosta.composedestinations.annotation.Destination
@@ -37,6 +43,8 @@ fun About() {
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(8.dp)
         )
+        val localContext = LocalContext.current
+        Spacer(modifier = Modifier.width(8.dp))
         // what's the orientation, right now?
         val configuration = LocalConfiguration.current
         when (configuration.orientation) {
@@ -47,11 +55,7 @@ fun About() {
                         .fillMaxSize()
                         .padding(8.dp)
                 ) {
-                    Text(
-                        text = "Foto Timer ${BuildConfig.VERSION_NAME}",
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(8.dp)
-                    )
+                    AboutVersionAndButton(localContext)
                     Spacer(modifier = Modifier.width(8.dp))
                     AboutText()
                 }
@@ -64,15 +68,33 @@ fun About() {
                         .fillMaxSize()
                         .padding(8.dp)
                 ) {
-                    Text(
-                        text = "Foto Timer ${BuildConfig.VERSION_NAME}",
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(8.dp)
-                    )
+                    AboutVersionAndButton(localContext)
                     Spacer(modifier = Modifier.height(8.dp))
                     AboutText()
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun AboutVersionAndButton(localContext: Context) {
+    Column() {
+        Text(
+            text = "Foto Timer ${BuildConfig.VERSION_NAME}",
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(8.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Button(
+            onClick = {
+                val webpage: Uri =
+                    Uri.parse("https://jan-exner.de/software/android/meditationtimer/")
+                val intent = Intent(Intent.ACTION_VIEW, webpage)
+                startActivity(localContext, intent, null)
+            },
+        ) {
+            Text(text = "Visit the Foto Timer web site")
         }
     }
 }
