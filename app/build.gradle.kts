@@ -77,7 +77,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewModelCompose)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.common.java8)
-    implementation(libs.androidx.webkit)
     implementation(libs.androidx.window.manager)
 
     // hilt
