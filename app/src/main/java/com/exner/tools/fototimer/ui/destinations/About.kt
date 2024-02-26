@@ -89,7 +89,7 @@ private fun AboutVersionAndButton(localContext: Context) {
         Button(
             onClick = {
                 val webpage: Uri =
-                    Uri.parse("https://jan-exner.de/software/android/meditationtimer/")
+                    Uri.parse("https://jan-exner.de/software/android/fototimer/")
                 val intent = Intent(Intent.ACTION_VIEW, webpage)
                 startActivity(localContext, intent, null)
             },
