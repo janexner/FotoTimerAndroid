@@ -10,12 +10,15 @@ import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
 import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.exner.tools.fototimer.audio.SoundPoolHolder
 import com.exner.tools.fototimer.audio.VibratorHolder
 import com.exner.tools.fototimer.data.preferences.FotoTimerPreferencesManager
+import com.exner.tools.fototimer.ui.MainViewModel
 import com.exner.tools.fototimer.ui.destinations.FotoTimerGlobalScaffold
 import com.exner.tools.fototimer.ui.theme.FotoTimerTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,10 +33,10 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var userPreferencesManager: FotoTimerPreferencesManager
 
+    private val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val forceNightMode = userPreferencesManager.nightMode()
 
         // clear FLAG_TRANSLUCENT_STATUS flag:
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
@@ -53,13 +56,10 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            // Update the edge to edge configuration to match the theme
-            // This is the same parameters as the default enableEdgeToEdge call, but we manually
-            // resolve whether or not to show dark theme using uiState, since it can be different
-            // than the configuration's dark theme value based on the user preference.
-            val darkMode = runBlocking { forceNightMode.first() }
+            val nightModeState = viewModel.nightModeState.collectAsState()
+
             FotoTimerTheme(
-                darkTheme = darkMode
+                darkTheme = nightModeState.value
             ) {
                 FotoTimerGlobalScaffold()
             }
