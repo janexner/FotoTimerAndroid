@@ -240,7 +240,7 @@ private fun StandardSettingsColumn(
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        TextAndSwitch(text = "Force night mode (needs a restart)", checked = nightMode) {
+        TextAndSwitch(text = "Force night mode", checked = nightMode) {
             updateNightMode(it)
         }
         TextAndSwitch(
