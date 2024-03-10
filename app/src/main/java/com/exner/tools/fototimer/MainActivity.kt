@@ -22,8 +22,6 @@ import com.exner.tools.fototimer.ui.MainViewModel
 import com.exner.tools.fototimer.ui.destinations.FotoTimerGlobalScaffold
 import com.exner.tools.fototimer.ui.theme.FotoTimerTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 
