@@ -1,6 +1,7 @@
 package com.exner.tools.fototimer.ui.destinations
 
 import android.content.pm.ActivityInfo
+import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -178,11 +179,13 @@ private fun ExpertSettingsSound(
             placeholder = { Text(text = "4") },
             textStyle = MaterialTheme.typography.bodyLarge
         )
-        TextAndSwitch(
-            text = "Vibrate when playing sounds",
-            checked = vibrate
-        ) {
-            setVibrate(it)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            TextAndSwitch(
+                text = "Vibrate when playing sounds",
+                checked = vibrate
+            ) {
+                setVibrate(it)
+            }
         }
     }
 }
