@@ -96,6 +96,17 @@ private fun AboutVersionAndButton(localContext: Context) {
         ) {
             Text(text = "Visit the Foto Timer web site")
         }
+        Spacer(modifier = Modifier.width(8.dp))
+        Button(
+            onClick = {
+                val webpage: Uri =
+                    Uri.parse("https://jan-exner.de/software/android/fototimer/manual/")
+                val intent = Intent(Intent.ACTION_VIEW, webpage)
+                startActivity(localContext, intent, null)
+            },
+        ) {
+            Text(text = "Peruse the Foto Timer manual")
+        }
     }
 }
 
@@ -107,7 +118,7 @@ fun AboutText() {
             .verticalScroll(rememberScrollState())
     ) {
         Text(
-            text = "Foto Timer is a flexible timer application that can be used for timed tasks, simple or complex.\n",
+            text = "Foto Timer is a flexible timer application that can be used for timed tasks, simple or complex.",
             modifier = Modifier.padding(8.dp)
         )
         Text(
