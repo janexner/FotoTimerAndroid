@@ -25,12 +25,6 @@ class SettingsViewModel @Inject constructor(
         SharingStarted.WhileSubscribed(),
         false
     )
-    val defaultKeepScreenOn: StateFlow<Boolean> =
-        userPreferencesManager.defaultKeepScreenOn().stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(),
-            false
-        )
     val defaultProcessTime: StateFlow<Int> = userPreferencesManager.defaultProcessTime().stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(),
@@ -77,12 +71,6 @@ class SettingsViewModel @Inject constructor(
     fun updateNightMode(newNightMode: Boolean) {
         viewModelScope.launch {
             userPreferencesManager.setNightMode(newNightMode)
-        }
-    }
-
-    fun updateDefaultKeepScreenOn(newDefaultKeepScreenOn: Boolean) {
-        viewModelScope.launch {
-            userPreferencesManager.setDefaultKeepScreenOn(newDefaultKeepScreenOn)
         }
     }
 

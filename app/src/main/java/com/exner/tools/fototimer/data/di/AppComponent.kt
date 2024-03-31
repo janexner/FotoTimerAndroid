@@ -40,7 +40,8 @@ object AppComponent {
             FotoTimerProcessRoomDatabase::class.java,
             "foto_timer_process_database"
         ).addCallback(ProcessDatabaseCallback(provider))
-            .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5).build()
+            .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
+            .build()
 
     private val MIGRATION_2_3 = object : Migration(2, 3) {
         override fun migrate(db: SupportSQLiteDatabase) {
@@ -57,6 +58,12 @@ object AppComponent {
     private val MIGRATION_4_5 = object : Migration(4, 5) {
         override fun migrate(db: SupportSQLiteDatabase) {
             db.execSQL("ALTER TABLE FotoTimerProcess ADD COLUMN has_lead_in_sound INTEGER NOT NULL DEFAULT FALSE;")
+        }
+    }
+
+    private val MIGRATION_5_6 = object : Migration(5, 6) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE FotoTimerProcess DROP COLUMN keeps_screen_on;")
         }
     }
 
@@ -93,7 +100,6 @@ object AppComponent {
                     hasPauseBeforeChain = true,
                     5,
                     2L,
-                    keepsScreenOn = true,
                     hasPreBeeps = true,
                 )
             provider.get().insert(fotoTimerProcess)
@@ -115,7 +121,6 @@ object AppComponent {
                     hasPauseBeforeChain = false,
                     0,
                     -1L,
-                    keepsScreenOn = true,
                     hasPreBeeps = false,
                 )
             provider.get().insert(fotoTimerProcess)

@@ -53,7 +53,6 @@ fun ProcessEdit(
     val name by processEditViewModel.name.observeAsState()
     val processTime by processEditViewModel.processTime.observeAsState()
     val intervalTime by processEditViewModel.intervalTime.observeAsState()
-    val keepsScreenOn by processEditViewModel.keepsScreenOn.observeAsState()
     val hasSoundStart by processEditViewModel.hasSoundStart.observeAsState()
     val hasSoundEnd by processEditViewModel.hasSoundEnd.observeAsState()
     val hasSoundInterval by processEditViewModel.hasSoundInterval.observeAsState()
@@ -70,12 +69,6 @@ fun ProcessEdit(
     val processIdsAndNames by processEditViewModel.processIdsAndNames.observeAsState()
 
     processEditViewModel.getProcess(processId)
-    // if this is a new process, the keepScreenOn property has to be set
-    // this is necessary because there is a setting for that
-    if (processId == -1L) {
-        val defaultKeepsScreenOn by settingsViewModel.defaultKeepScreenOn.collectAsStateWithLifecycle()
-        processEditViewModel.updateKeepsScreenOn(defaultKeepsScreenOn)
-    }
     processEditViewModel.getProcessIdsAndNames()
 
     var modified by remember { mutableStateOf(false) }
@@ -124,13 +117,6 @@ fun ProcessEdit(
                 )
                 HeaderText(text = "During the process")
                 if (expertMode) {
-                    TextAndSwitch(
-                        text = "Keep the screen on",
-                        checked = keepsScreenOn == true,
-                    ) {
-                        processEditViewModel.updateKeepsScreenOn(it)
-                        modified = true
-                    }
                     Text(
                         text = "Play sounds:",
                         modifier = Modifier.fillMaxWidth()

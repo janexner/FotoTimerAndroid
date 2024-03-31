@@ -47,7 +47,6 @@ fun ProcessRun(
     val displayAction by processRunViewModel.displayAction.observeAsState()
     val numberOfSteps by processRunViewModel.numberOfSteps.observeAsState()
     val currentStepNumber by processRunViewModel.currentStepNumber.observeAsState()
-    val keepScreenOn by processRunViewModel.keepScreenOn.observeAsState()
     val hasLoop by processRunViewModel.hasLoop.observeAsState()
     val hasHours by processRunViewModel.hasHours.observeAsState()
 
@@ -59,9 +58,9 @@ fun ProcessRun(
         navigator.navigateUp()
     }
 
-    if (keepScreenOn == true) {
-        KeepScreenOn()
-    }
+    // Keeping the screen on while counting, bcs otherwise the phone may switch off.
+    // this is now default for everything.
+    KeepScreenOn()
 
     Scaffold(
         content = { innerPadding ->

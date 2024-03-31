@@ -64,9 +64,6 @@ fun ProcessList(
                                 },
                         ) {
                             var supText = "${ftProcess.processTime}/${ftProcess.intervalTime}"
-                            if (ftProcess.keepsScreenOn) {
-                                supText += " keeps screen on"
-                            }
                             if (ftProcess.hasAutoChain && null != ftProcess.gotoId && ftProcess.gotoId >= 0) {
                                 supText += ". Next: ${ftProcess.gotoId}"
                             }

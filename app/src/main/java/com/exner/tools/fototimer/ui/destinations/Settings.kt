@@ -47,7 +47,6 @@ fun Settings(
 
     val expertMode by settingsViewModel.expertMode.collectAsStateWithLifecycle()
     val nightMode by settingsViewModel.nightMode.collectAsStateWithLifecycle()
-    val defaultKeepScreenOn by settingsViewModel.defaultKeepScreenOn.collectAsStateWithLifecycle()
     val defaultProcessTime by settingsViewModel.defaultProcessTime.collectAsStateWithLifecycle()
     val defaultIntervalTime by settingsViewModel.defaultIntervalTime.collectAsStateWithLifecycle()
     val defaultLeadInTime by settingsViewModel.defaultLeadInTime.collectAsStateWithLifecycle()
@@ -83,8 +82,6 @@ fun Settings(
                 StandardSettingsColumn(
                     nightMode,
                     { settingsViewModel.updateNightMode(it) },
-                    defaultKeepScreenOn,
-                    { settingsViewModel.updateDefaultKeepScreenOn(it) },
                     intervalTimeIsCentral,
                     { settingsViewModel.updateIntervalTimeIsCentral(it) }
                 )
@@ -235,8 +232,6 @@ private fun ExpertSettingsDefaultTimes(
 private fun StandardSettingsColumn(
     nightMode: Boolean,
     updateNightMode: (Boolean) -> Unit,
-    keepScreenOn: Boolean,
-    updateKeepScreenOn: (Boolean) -> Unit,
     intervalTimeIsCentral: Boolean,
     updateIntervalTimeIsCentral: (Boolean) -> Unit,
 ) {
@@ -245,12 +240,6 @@ private fun StandardSettingsColumn(
     ) {
         TextAndSwitch(text = "Force night mode", checked = nightMode) {
             updateNightMode(it)
-        }
-        TextAndSwitch(
-            text = "Default to keep screen on while counting",
-            checked = keepScreenOn
-        ) {
-            updateKeepScreenOn(it)
         }
         TextAndSwitch(
             text = "Use current interval time as central display, rather than current process time",

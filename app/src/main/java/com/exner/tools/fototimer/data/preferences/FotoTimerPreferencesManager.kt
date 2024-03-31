@@ -49,20 +49,6 @@ class FotoTimerPreferencesManager @Inject constructor(
         }
     }
 
-    fun defaultKeepScreenOn(): Flow<Boolean> {
-        return userDataStorePreferences.data.catch {
-            emit(emptyPreferences())
-        }.map { preferences ->
-            preferences[KEY_DEFAULT_KEEP_SCREEN_ON] ?: false
-        }
-    }
-
-    suspend fun setDefaultKeepScreenOn(newDefaultKeepScreenOn: Boolean) {
-        userDataStorePreferences.edit { preferences ->
-            preferences[KEY_DEFAULT_KEEP_SCREEN_ON] = newDefaultKeepScreenOn
-        }
-    }
-
     fun defaultProcessTime(): Flow<Int> {
         return userDataStorePreferences.data.catch {
             emit(emptyPreferences())

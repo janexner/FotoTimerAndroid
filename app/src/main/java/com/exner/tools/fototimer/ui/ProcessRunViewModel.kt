@@ -45,9 +45,6 @@ class ProcessRunViewModel @Inject constructor(
     private val _currentStepNumber: MutableLiveData<Int> = MutableLiveData(0)
     val currentStepNumber: LiveData<Int> = _currentStepNumber
 
-    private val _keepScreenOn: MutableLiveData<Boolean> = MutableLiveData(false)
-    val keepScreenOn: LiveData<Boolean> = _keepScreenOn
-
     private val _hasLoop: MutableLiveData<Boolean> = MutableLiveData(false)
     val hasLoop: LiveData<Boolean> = _hasLoop
 
@@ -74,7 +71,6 @@ class ProcessRunViewModel @Inject constructor(
                 var currentID = processId
                 var noLoopDetectedSoFar = true
                 var firstRound = true
-                var keepScreenOnAcrossList = false
 
                 while (currentID >= 0 && noLoopDetectedSoFar) {
                     processIdList.add(currentID)
@@ -85,8 +81,6 @@ class ProcessRunViewModel @Inject constructor(
                         partialResult.forEach { actionList ->
                             result.add(actionList)
                         }
-                        // screen on?
-                        keepScreenOnAcrossList = keepScreenOnAcrossList || process.keepsScreenOn
                         // do we need hours in the display?
                         _hasHours.value = hasHours.value == true || process.processTime > 3600
                         // prepare for the next iteration
@@ -139,8 +133,6 @@ class ProcessRunViewModel @Inject constructor(
                 }
                 // this is where the list is ready
                 _numberOfSteps.value = result.size
-
-                _keepScreenOn.value = keepScreenOnAcrossList
 
                 // go into a loop, but in a coroutine
                 job = GlobalScope.launch(Dispatchers.Main) {

@@ -28,10 +28,6 @@ class ProcessEditViewModel @Inject constructor(
     private val _intervalTime: MutableLiveData<Int> = MutableLiveData(10)
     val intervalTime: LiveData<Int> = _intervalTime
 
-    // TODO this one should not have a static default. There is a preference!
-    private val _keepsScreenOn: MutableLiveData<Boolean> = MutableLiveData(true)
-    val keepsScreenOn: LiveData<Boolean> = _keepsScreenOn
-
     private val _hasSoundStart: MutableLiveData<Boolean> = MutableLiveData(true)
     val hasSoundStart: LiveData<Boolean> = _hasSoundStart
 
@@ -84,7 +80,6 @@ class ProcessEditViewModel @Inject constructor(
                     _name.value = process.name
                     _processTime.value = process.processTime
                     _intervalTime.value = process.intervalTime
-                    _keepsScreenOn.value = process.keepsScreenOn
                     _hasLeadIn.value = process.hasLeadIn
                     _leadInSeconds.value = process.leadInSeconds
                     _hasPreBeeps.value = process.hasPreBeeps
@@ -123,7 +118,6 @@ class ProcessEditViewModel @Inject constructor(
                     name = _name.value.toString(),
                     processTime = if (_processTime.value != null) _processTime.value!!.toInt() else 30,
                     intervalTime = if (_intervalTime.value != null) _intervalTime.value!!.toInt() else 10,
-                    keepsScreenOn = _keepsScreenOn.value == true,
                     hasLeadIn = _hasLeadIn.value == true,
                     leadInSeconds = if (_leadInSeconds.value != null) _leadInSeconds.value!!.toInt() else null,
                     hasPreBeeps = _hasPreBeeps.value == true,
@@ -161,10 +155,6 @@ class ProcessEditViewModel @Inject constructor(
 
     fun updateIntervalTime(intervalTime: Int) {
         _intervalTime.value = intervalTime
-    }
-
-    fun updateKeepsScreenOn(keepsScreenOn: Boolean) {
-        _keepsScreenOn.value = keepsScreenOn
     }
 
     fun updateHasLeadIn(hasLeadIn: Boolean) {

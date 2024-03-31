@@ -52,7 +52,6 @@ fun ProcessDetails(
     val name by processDetailsViewModel.name.observeAsState()
     val processTime by processDetailsViewModel.processTime.observeAsState()
     val intervalTime by processDetailsViewModel.intervalTime.observeAsState()
-    val keepsScreenOn by processDetailsViewModel.keepsScreenOn.observeAsState()
     val hasSoundStart by processDetailsViewModel.hasSoundStart.observeAsState()
     val hasSoundEnd by processDetailsViewModel.hasSoundEnd.observeAsState()
     val hasSoundInterval by processDetailsViewModel.hasSoundInterval.observeAsState()
@@ -87,18 +86,6 @@ fun ProcessDetails(
                     processTime,
                     intervalTime,
                 )
-                if (keepsScreenOn == true && expertMode) {
-                    ListItem(
-                        headlineContent = { SmallBodyText(text = "UI") },
-                        supportingContent = { BodyText(text = "Screen will stay on") },
-                        leadingContent = {
-                            Icon(
-                                painterResource(id = R.drawable.baseline_light_mode_24),
-                                contentDescription = "UI",
-                            )
-                        }
-                    )
-                }
                 ProcessAudioData(
                     hasSoundStart,
                     hasSoundEnd,

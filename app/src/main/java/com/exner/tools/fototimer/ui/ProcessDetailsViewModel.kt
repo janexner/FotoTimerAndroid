@@ -26,9 +26,6 @@ class ProcessDetailsViewModel @Inject constructor(
     private val _intervalTime: MutableLiveData<String> = MutableLiveData("10")
     val intervalTime: LiveData<String> = _intervalTime
 
-    private val _keepsScreenOn: MutableLiveData<Boolean> = MutableLiveData(false)
-    val keepsScreenOn: LiveData<Boolean> = _keepsScreenOn
-
     private val _hasSoundStart: MutableLiveData<Boolean> = MutableLiveData(true)
     val hasSoundStart: LiveData<Boolean> = _hasSoundStart
 
@@ -77,7 +74,6 @@ class ProcessDetailsViewModel @Inject constructor(
                     _name.value = process.name
                     _processTime.value = process.processTime.toString()
                     _intervalTime.value = process.intervalTime.toString()
-                    _keepsScreenOn.value = process.keepsScreenOn
                     _hasLeadIn.value = process.hasLeadIn
                     _leadInSeconds.value = process.leadInSeconds.toString()
                     _hasPreBeeps.value = process.hasPreBeeps

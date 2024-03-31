@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [FotoTimerProcess::class],
-    version = 5,
+    version = 6,
     exportSchema = false
 )
 abstract class FotoTimerProcessRoomDatabase : RoomDatabase() {
