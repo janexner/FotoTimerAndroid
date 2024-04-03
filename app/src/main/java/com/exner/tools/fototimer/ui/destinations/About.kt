@@ -84,7 +84,7 @@ fun About() {
 
 @Composable
 private fun AboutVersionAndButton(localContext: Context) {
-    Column() {
+    Column {
         Text(
             text = "Foto Timer ${BuildConfig.VERSION_NAME}",
             fontWeight = FontWeight.Bold,
