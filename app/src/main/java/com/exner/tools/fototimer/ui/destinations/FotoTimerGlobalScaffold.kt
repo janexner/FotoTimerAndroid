@@ -1,5 +1,9 @@
 package com.exner.tools.fototimer.ui.destinations
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -13,6 +17,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.exner.tools.fototimer.ui.destinations.destinations.AboutDestination
 import com.exner.tools.fototimer.ui.destinations.destinations.Destination
@@ -34,10 +40,18 @@ fun FotoTimerGlobalScaffold() {
             FotoTimerTopBar(destination, navController)
         },
         content = { innerPadding ->
+            val newPadding = PaddingValues.Absolute(
+                innerPadding.calculateLeftPadding(LayoutDirection.Ltr),
+                innerPadding.calculateTopPadding(),
+                innerPadding.calculateRightPadding(LayoutDirection.Ltr),
+                0.dp
+            )
             DestinationsNavHost(
                 navController = navController,
                 navGraph = NavGraphs.root,
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier.fillMaxSize()
+                    .consumeWindowInsets(newPadding)
+                    .padding(newPadding)
             ) {
             }
         }

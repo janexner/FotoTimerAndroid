@@ -31,9 +31,12 @@ class ProcessDeleteViewModel @Inject constructor(
                 if (process != null) {
                     _processName.value = process.name
                     val newDependentProcesses = repository.getIdsAndNamesOfDependentProcesses(process)
-                    val chainingDependencies = FotoTimerChainingDependencies(newDependentProcesses)
-                    _processChainingDependencies.value = chainingDependencies
-                    _processIsTarget.value = true
+                    if (newDependentProcesses.isNotEmpty()) {
+                        val chainingDependencies =
+                            FotoTimerChainingDependencies(newDependentProcesses)
+                        _processChainingDependencies.value = chainingDependencies
+                        _processIsTarget.value = true
+                    }
                 }
             }
         }

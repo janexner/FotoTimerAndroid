@@ -3,7 +3,9 @@ package com.exner.tools.fototimer.ui.destinations
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -67,8 +69,10 @@ fun ProcessRun(
             val configuration = LocalConfiguration.current
             Column(
                 modifier = Modifier
+                    .consumeWindowInsets(innerPadding)
                     .padding(innerPadding)
                     .padding(8.dp)
+                    .imePadding()
                     .fillMaxWidth()
             ) {
                 // first, a nice process indicator (if possible)

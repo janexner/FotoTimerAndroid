@@ -2,8 +2,10 @@ package com.exner.tools.fototimer.ui.destinations
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -48,8 +50,10 @@ fun ProcessDelete(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .consumeWindowInsets(innerPadding)
                     .padding(innerPadding)
                     .padding(8.dp)
+                    .imePadding()
                     .verticalScroll(rememberScrollState())
             ) {
                 HeaderText(text = "Delete Process")
@@ -89,6 +93,7 @@ fun FotoTimerDeleteBottomBar(
     deleteAction: () -> Unit,
 ) {
     BottomAppBar(
+        modifier = Modifier.imePadding(),
         actions = {},
         floatingActionButton = {
             ExtendedFloatingActionButton(

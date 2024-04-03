@@ -3,7 +3,9 @@ package com.exner.tools.fototimer.ui.destinations
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
@@ -80,9 +82,11 @@ fun ProcessEdit(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .consumeWindowInsets(innerPadding)
                     .padding(8.dp)
                     .wrapContentHeight()
                     .padding(innerPadding)
+                    .imePadding()
                     .verticalScroll(rememberScrollState())
             ) {
                 // top - fields
