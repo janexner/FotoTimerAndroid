@@ -1,6 +1,7 @@
 package com.exner.tools.fototimer.data.di
 
 import android.content.Context
+import android.os.Build
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
@@ -63,7 +64,12 @@ object AppComponent {
 
     private val MIGRATION_5_6 = object : Migration(5, 6) {
         override fun migrate(db: SupportSQLiteDatabase) {
-            db.execSQL("ALTER TABLE FotoTimerProcess DROP COLUMN keeps_screen_on;")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                // this does not work on Pixel 4 XL, and likely other Android 13 devices or older!
+                db.execSQL("ALTER TABLE FotoTimerProcess DROP COLUMN keeps_screen_on;")
+            } else {
+                // TODO - must be fixed!
+            }
         }
     }
 
