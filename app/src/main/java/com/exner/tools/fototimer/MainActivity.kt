@@ -21,6 +21,7 @@ import com.exner.tools.fototimer.data.preferences.FotoTimerPreferencesManager
 import com.exner.tools.fototimer.ui.MainViewModel
 import com.exner.tools.fototimer.ui.destinations.FotoTimerGlobalScaffold
 import com.exner.tools.fototimer.ui.theme.FotoTimerTheme
+import com.google.android.material.elevation.SurfaceColors
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -51,7 +52,7 @@ class MainActivity : ComponentActivity() {
                 window.insetsController?.setSystemBarsAppearance(0,
                     APPEARANCE_LIGHT_NAVIGATION_BARS)
             } else {
-                window.navigationBarColor = Color(0xFFFFFFFF).toArgb()
+                window.navigationBarColor = SurfaceColors.SURFACE_2.getColor(this)
                 window.insetsController?.setSystemBarsAppearance(APPEARANCE_LIGHT_NAVIGATION_BARS,
                     APPEARANCE_LIGHT_NAVIGATION_BARS)
             }
