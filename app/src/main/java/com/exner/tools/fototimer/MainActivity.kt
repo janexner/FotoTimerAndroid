@@ -5,12 +5,16 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Vibrator
 import android.os.VibratorManager
+import android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import com.exner.tools.fototimer.audio.SoundPoolHolder
 import com.exner.tools.fototimer.audio.VibratorHolder
 import com.exner.tools.fototimer.data.preferences.FotoTimerPreferencesManager
@@ -32,12 +36,25 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        enableEdgeToEdge()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            enableEdgeToEdge()
+        }
 
         setContent {
             val nightModeState = viewModel.nightModeState.collectAsState()
+
+            @RequiresApi(Build.VERSION_CODES.R)
+            if (nightModeState.value) {
+                window.navigationBarColor = Color(0xFF000000).toArgb()
+                window.insetsController?.setSystemBarsAppearance(0,
+                    APPEARANCE_LIGHT_NAVIGATION_BARS)
+            } else {
+                window.navigationBarColor = Color(0xFFFFFFFF).toArgb()
+                window.insetsController?.setSystemBarsAppearance(APPEARANCE_LIGHT_NAVIGATION_BARS,
+                    APPEARANCE_LIGHT_NAVIGATION_BARS)
+            }
 
             FotoTimerTheme(
                 darkTheme = nightModeState.value
