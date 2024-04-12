@@ -65,6 +65,7 @@ fun ProcessRun(
     KeepScreenOn()
 
     Scaffold(
+        modifier = Modifier.imePadding(),
         content = { innerPadding ->
             val configuration = LocalConfiguration.current
             Column(
@@ -72,7 +73,6 @@ fun ProcessRun(
                     .consumeWindowInsets(innerPadding)
                     .padding(innerPadding)
                     .padding(8.dp)
-                    .imePadding()
                     .fillMaxWidth()
             ) {
                 // first, a nice process indicator (if possible)

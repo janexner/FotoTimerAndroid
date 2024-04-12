@@ -49,6 +49,7 @@ fun ProcessList(
     val processes by processListViewModel.allProcesses.observeAsState()
 
     Scaffold(
+        modifier = Modifier.imePadding(),
         content = { innerPadding ->
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = 250.dp),
@@ -57,7 +58,6 @@ fun ProcessList(
                 modifier = Modifier
                     .consumeWindowInsets(innerPadding)
                     .padding(innerPadding)
-                    .imePadding()
             ) {
                 processes?.let {
                     items(count = it.size) { fotoTimerProcess ->

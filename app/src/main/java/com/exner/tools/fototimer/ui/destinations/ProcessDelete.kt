@@ -46,6 +46,7 @@ fun ProcessDelete(
     processDeleteViewModel.checkProcess(processId)
 
     Scaffold(
+        modifier = Modifier.imePadding(),
         content = { innerPadding ->
             Column(
                 modifier = Modifier
@@ -53,7 +54,6 @@ fun ProcessDelete(
                     .consumeWindowInsets(innerPadding)
                     .padding(innerPadding)
                     .padding(8.dp)
-                    .imePadding()
                     .verticalScroll(rememberScrollState())
             ) {
                 HeaderText(text = "Delete Process")

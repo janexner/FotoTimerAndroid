@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.exner.tools.fototimer"
-    compileSdk = 34
+    compileSdkPreview = "VanillaIceCream"
 
     defaultConfig {
         applicationId = "com.exner.tools.fototimer"
@@ -40,7 +40,7 @@ android {
         kotlinCompilerExtensionVersion = "1.5.11"
         // see https://developer.android.com/jetpack/androidx/releases/compose-kotlin
     }
-    buildToolsVersion = "34.0.0"
+    buildToolsVersion = "35.0.0 rc3"
 
 }
 

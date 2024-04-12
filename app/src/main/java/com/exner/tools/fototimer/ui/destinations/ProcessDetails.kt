@@ -74,13 +74,13 @@ fun ProcessDetails(
     val expertMode by settingsViewModel.expertMode.collectAsStateWithLifecycle()
 
     Scaffold(
+        modifier = Modifier.imePadding(),
         content = { innerPadding ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .consumeWindowInsets(innerPadding)
                     .padding(innerPadding)
-                    .imePadding()
                     .verticalScroll(rememberScrollState())
             ) {
                 // top - process information
