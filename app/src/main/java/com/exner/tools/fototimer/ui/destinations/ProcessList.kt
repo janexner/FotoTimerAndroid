@@ -31,15 +31,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.exner.tools.fototimer.ui.BodyText
 import com.exner.tools.fototimer.ui.HeaderText
 import com.exner.tools.fototimer.ui.ProcessListViewModel
-import com.exner.tools.fototimer.ui.destinations.destinations.ProcessDetailsDestination
-import com.exner.tools.fototimer.ui.destinations.destinations.ProcessEditDestination
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.annotation.RootGraph
+import com.ramcosta.composedestinations.generated.destinations.ProcessDetailsDestination
+import com.ramcosta.composedestinations.generated.destinations.ProcessEditDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 
-@RootNavGraph(start = true)
-@Destination
+@Destination<RootGraph>(start = true)
 @Composable
 fun ProcessList(
     processListViewModel: ProcessListViewModel = hiltViewModel(),

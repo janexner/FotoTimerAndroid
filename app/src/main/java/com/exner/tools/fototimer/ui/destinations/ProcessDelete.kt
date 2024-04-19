@@ -27,11 +27,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.exner.tools.fototimer.ui.HeaderText
 import com.exner.tools.fototimer.ui.ProcessDeleteViewModel
-import com.exner.tools.fototimer.ui.destinations.destinations.ProcessListDestination
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootGraph
+import com.ramcosta.composedestinations.generated.destinations.ProcessListDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@Destination
+@Destination<RootGraph>
 @Composable
 fun ProcessDelete(
     processId: Long,

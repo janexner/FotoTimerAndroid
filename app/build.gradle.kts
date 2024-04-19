@@ -37,7 +37,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.11"
+        kotlinCompilerExtensionVersion = "1.5.12"
         // see https://developer.android.com/jetpack/androidx/releases/compose-kotlin
     }
     buildToolsVersion = "35.0.0 rc3"

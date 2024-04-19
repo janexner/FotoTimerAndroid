@@ -36,13 +36,14 @@ import com.exner.tools.fototimer.ui.HeaderText
 import com.exner.tools.fototimer.ui.ProcessDetailsViewModel
 import com.exner.tools.fototimer.ui.SettingsViewModel
 import com.exner.tools.fototimer.ui.SmallBodyText
-import com.exner.tools.fototimer.ui.destinations.destinations.ProcessDeleteDestination
-import com.exner.tools.fototimer.ui.destinations.destinations.ProcessEditDestination
-import com.exner.tools.fototimer.ui.destinations.destinations.ProcessRunDestination
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootGraph
+import com.ramcosta.composedestinations.generated.destinations.ProcessDeleteDestination
+import com.ramcosta.composedestinations.generated.destinations.ProcessEditDestination
+import com.ramcosta.composedestinations.generated.destinations.ProcessRunDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@Destination
+@Destination<RootGraph>
 @Composable
 fun ProcessDetails(
     processId: Long,

@@ -12,6 +12,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -34,6 +36,7 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -44,6 +47,9 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
+            // night mode has two possible triggers:
+            // - device may be in night mode
+            // - force night mode setting may be on
             val nightModeState = viewModel.nightModeState.collectAsState()
 
             @RequiresApi(Build.VERSION_CODES.R)
@@ -57,10 +63,13 @@ class MainActivity : ComponentActivity() {
                     APPEARANCE_LIGHT_NAVIGATION_BARS)
             }
 
+            // window size class
+            val windowSizeClass = calculateWindowSizeClass(this)
+
             FotoTimerTheme(
                 darkTheme = nightModeState.value
             ) {
-                FotoTimerGlobalScaffold()
+                FotoTimerGlobalScaffold(windowSizeClass)
             }
         }
 

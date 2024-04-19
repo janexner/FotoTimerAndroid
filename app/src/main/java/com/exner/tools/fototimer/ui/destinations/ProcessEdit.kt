@@ -45,10 +45,11 @@ import com.exner.tools.fototimer.ui.SettingsViewModel
 import com.exner.tools.fototimer.ui.TextAndSwitch
 import com.exner.tools.fototimer.ui.TextFieldForTimes
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Destination
+@Destination<RootGraph>
 @Composable
 fun ProcessEdit(
     processId: Long,

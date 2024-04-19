@@ -3,7 +3,6 @@ package com.exner.tools.fototimer.ui.destinations
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -15,25 +14,29 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.exner.tools.fototimer.ui.destinations.destinations.AboutDestination
-import com.exner.tools.fototimer.ui.destinations.destinations.Destination
-import com.exner.tools.fototimer.ui.destinations.destinations.ProcessListDestination
-import com.exner.tools.fototimer.ui.destinations.destinations.ProcessRunDestination
-import com.exner.tools.fototimer.ui.destinations.destinations.SettingsDestination
 import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.generated.NavGraphs
+import com.ramcosta.composedestinations.generated.destinations.AboutDestination
+import com.ramcosta.composedestinations.generated.destinations.ProcessListDestination
+import com.ramcosta.composedestinations.generated.destinations.ProcessRunDestination
+import com.ramcosta.composedestinations.generated.destinations.SettingsDestination
+import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.rememberNavHostEngine
+import com.ramcosta.composedestinations.spec.DestinationSpec
+import com.ramcosta.composedestinations.utils.currentDestinationAsState
 
 @Composable
-fun FotoTimerGlobalScaffold() {
+fun FotoTimerGlobalScaffold(windowSizeClass: WindowSizeClass) {
     val engine = rememberNavHostEngine()
     val navController = engine.rememberNavController()
-    val destination = navController.appCurrentDestinationAsState().value
+    val destination = navController.currentDestinationAsState().value
 
     Scaffold(
         topBar = {
@@ -49,6 +52,9 @@ fun FotoTimerGlobalScaffold() {
             DestinationsNavHost(
                 navController = navController,
                 navGraph = NavGraphs.root,
+                dependenciesContainerBuilder = {
+                    dependency(windowSizeClass)
+                },
                 modifier = Modifier.fillMaxSize()
                     .consumeWindowInsets(newPadding)
                     .padding(newPadding)
@@ -61,7 +67,7 @@ fun FotoTimerGlobalScaffold() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FotoTimerTopBar(
-    destination: Destination?,
+    destination: DestinationSpec?,
     navController: NavHostController
 ) {
     TopAppBar(

@@ -34,10 +34,11 @@ import com.exner.tools.fototimer.ui.MediumTimerAndIntervalText
 import com.exner.tools.fototimer.ui.ProcessRunViewModel
 import com.exner.tools.fototimer.ui.SettingsViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlin.time.Duration.Companion.seconds
 
-@Destination
+@Destination<RootGraph>
 @Composable
 fun ProcessRun(
     processId: Long,
