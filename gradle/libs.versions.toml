@@ -1,19 +1,19 @@
 [versions]
-androidGradlePlugin = "8.5.0-alpha06"
+androidGradlePlugin = "8.5.0-alpha07"
 androidxActivity = "1.9.0"
 androidxAppCompat = "1.6.1"
-androidxComposeBom = "2024.04.01"
-androidxCore = "1.13.0"
+androidxComposeBom = "2024.05.00"
+androidxCore = "1.13.1"
 androidxHiltNavigationCompose = "1.2.0"
 androidxLifecycle = "2.7.0"
 androidxWindowManager = "1.2.0"
 hiltCompiler = "2.51.1"
-kotlin = "1.9.23"
-ksp = "1.9.23-1.0.20"
+kotlin = "2.0.0-RC2"
+ksp = "2.0.0-RC2-1.0.20"
 room = "2.6.1"
 composeDestinations = "2.0.0-beta01"
 junit = "4.13.2"
-datastorePreferences = "1.1.0"
+datastorePreferences = "1.1.1"
 kotlinxCoroutinesAndroid = "1.8.0"
 lifecycleRuntimeCompose = "2.7.0"
 material3 = "1.2.1"
@@ -61,3 +61,4 @@ android-application = { id = "com.android.application", version.ref = "androidGr
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltCompiler" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

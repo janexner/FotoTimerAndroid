@@ -11,7 +11,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.collectAsState
@@ -52,15 +51,20 @@ class MainActivity : ComponentActivity() {
             // - force night mode setting may be on
             val nightModeState = viewModel.nightModeState.collectAsState()
 
-            @RequiresApi(Build.VERSION_CODES.R)
-            if (nightModeState.value) {
-                window.navigationBarColor = Color(0xFF000000).toArgb()
-                window.insetsController?.setSystemBarsAppearance(0,
-                    APPEARANCE_LIGHT_NAVIGATION_BARS)
-            } else {
-                window.navigationBarColor = SurfaceColors.SURFACE_2.getColor(this)
-                window.insetsController?.setSystemBarsAppearance(APPEARANCE_LIGHT_NAVIGATION_BARS,
-                    APPEARANCE_LIGHT_NAVIGATION_BARS)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                if (nightModeState.value) {
+                    window.navigationBarColor = Color(0xFF000000).toArgb()
+                    window.insetsController?.setSystemBarsAppearance(
+                        0,
+                        APPEARANCE_LIGHT_NAVIGATION_BARS
+                    )
+                } else {
+                    window.navigationBarColor = SurfaceColors.SURFACE_2.getColor(this)
+                    window.insetsController?.setSystemBarsAppearance(
+                        APPEARANCE_LIGHT_NAVIGATION_BARS,
+                        APPEARANCE_LIGHT_NAVIGATION_BARS
+                    )
+                }
             }
 
             // window size class
