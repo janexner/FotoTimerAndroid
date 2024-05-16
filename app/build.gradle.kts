@@ -37,7 +37,7 @@ android {
         compose = true
         buildConfig = true
     }
-    buildToolsVersion = "35.0.0 rc3"
+    buildToolsVersion = "35.0.0 rc4"
 
 }
 

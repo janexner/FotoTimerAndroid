@@ -1,5 +1,5 @@
 [versions]
-androidGradlePlugin = "8.5.0-alpha07"
+androidGradlePlugin = "8.6.0-alpha01"
 androidxActivity = "1.9.0"
 androidxAppCompat = "1.6.1"
 androidxComposeBom = "2024.05.00"
@@ -8,16 +8,16 @@ androidxHiltNavigationCompose = "1.2.0"
 androidxLifecycle = "2.7.0"
 androidxWindowManager = "1.2.0"
 hiltCompiler = "2.51.1"
-kotlin = "2.0.0-RC2"
-ksp = "2.0.0-RC2-1.0.20"
+kotlin = "2.0.0-RC3"
+ksp = "2.0.0-RC3-1.0.20"
 room = "2.6.1"
 composeDestinations = "2.0.0-beta01"
 junit = "4.13.2"
 datastorePreferences = "1.1.1"
-kotlinxCoroutinesAndroid = "1.8.0"
+kotlinxCoroutinesAndroid = "1.8.1"
 lifecycleRuntimeCompose = "2.7.0"
 material3 = "1.2.1"
-material = "1.11.0"
+material = "1.12.0"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "androidxActivity" }
