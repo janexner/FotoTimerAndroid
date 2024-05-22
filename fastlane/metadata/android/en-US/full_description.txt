@@ -1,0 +1,4 @@
+<p>Foto Timer for Android is a free, open source app that can count and beep. It helps with repeating tasks, such as at the gym. People also use it for developing analogue film, or for meditating.</p>
+<p>Foto Timer is working with &quot;processes&quot;, which define how Foto Timer counts, and how often it beeps. Processes can also be &quot;chained&quot; together, meaning that a process can automatically launch another. There is almost no limit to how complex your timers can be.</p>
+<p>If you want to see what Foto Timer looks like, take a look at the <a href="https://www.jan-exner.de/software/android/fototimer/./manual/">manual</a>. If you prefer a &quot;how to&quot; approach, learn <a href="https://www.jan-exner.de/software/android/fototimer/./howto/tabata/">how to use Foto Timer for Tabata exercises</a>.</p>
+<p>Foto Timer contains absolutely no AI whatsoever.</p>

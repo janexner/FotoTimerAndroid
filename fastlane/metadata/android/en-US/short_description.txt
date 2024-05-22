@@ -1,0 +1,1 @@
+Foto Timer for Android is an app that can count and beep. It helps with repeating tasks, such as at the gym. People also use it for developing analogue film, or for meditating.
