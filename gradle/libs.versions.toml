@@ -1,49 +1,87 @@
 [versions]
-androidGradlePlugin = "8.6.0-alpha01"
+androidGradlePlugin = "8.6.0-alpha02"
 androidxActivity = "1.9.0"
-androidxAppCompat = "1.6.1"
 androidxComposeBom = "2024.05.00"
-androidxCore = "1.13.1"
 androidxHiltNavigationCompose = "1.2.0"
-androidxLifecycle = "2.7.0"
-androidxWindowManager = "1.2.0"
+androidxLifecycle = "2.8.0"
+animation = "1.6.7"
+annotation = "1.8.0"
+core = "1.13.1"
+dagger = "2.51.1"
+datastoreCore = "1.1.1"
+datastorePreferencesCore = "1.1.1"
+fragment = "1.7.1"
 hiltCompiler = "2.51.1"
-kotlin = "2.0.0-RC3"
-ksp = "2.0.0-RC3-1.0.20"
+hiltCore = "2.51.1"
+javaxInject = "1"
+kotlin = "2.0.0"
+kotlinxCoroutinesCore = "1.8.1"
+ksp = "2.0.0-1.0.21"
+lifecycleCommon = "2.8.0"
+lifecycleLivedata = "2.8.0"
+lifecycleLivedataCore = "2.8.0"
+lifecycleViewmodel = "2.8.0"
+lifecycleViewmodelSavedstate = "2.8.0"
+navigationCommon = "2.7.7"
+navigationRuntime = "2.7.7"
 room = "2.6.1"
 composeDestinations = "2.0.0-beta01"
 junit = "4.13.2"
 datastorePreferences = "1.1.1"
 kotlinxCoroutinesAndroid = "1.8.1"
-lifecycleRuntimeCompose = "2.7.0"
+lifecycleRuntimeCompose = "2.8.0"
 material3 = "1.2.1"
 material = "1.12.0"
+roomCommon = "2.6.1"
+runtimeSaveable = "1.6.7"
+sqlite = "2.4.0"
+uiGraphics = "1.6.7"
+uiText = "1.6.7"
+uiUnit = "1.6.7"
 
 [libraries]
-androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "androidxActivity" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppCompat" }
+androidx-activity = { module = "androidx.activity:activity", version.ref = "androidxActivity" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidxActivity" }
+androidx-animation = { module = "androidx.compose.animation:animation", version.ref = "animation" }
+androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-compose-material3-windowSizeClass = { group = "androidx.compose.material3", name = "material3-window-size-class" }
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
+androidx-core = { module = "androidx.core:core", version.ref = "core" }
+androidx-datastore-core = { module = "androidx.datastore:datastore-core", version.ref = "datastoreCore" }
+androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastorePreferencesCore" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation" }
 androidx-foundation-layout = { module = "androidx.compose.foundation:foundation-layout" }
+androidx-fragment = { module = "androidx.fragment:fragment", version.ref = "fragment" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
+androidx-lifecycle-common = { module = "androidx.lifecycle:lifecycle-common", version.ref = "lifecycleCommon" }
 androidx-lifecycle-common-java8 = { module = "androidx.lifecycle:lifecycle-common-java8", version.ref = "androidxLifecycle" }
-androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "androidxLifecycle" }
-androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidxLifecycle" }
+androidx-lifecycle-livedata = { module = "androidx.lifecycle:lifecycle-livedata", version.ref = "lifecycleLivedata" }
+androidx-lifecycle-livedata-core = { module = "androidx.lifecycle:lifecycle-livedata-core", version.ref = "lifecycleLivedataCore" }
+androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycleViewmodel" }
+androidx-lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "lifecycleViewmodelSavedstate" }
 androidx-lifecycle-viewModelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
 androidx-material-icons-core = { module = "androidx.compose.material:material-icons-core" }
+androidx-navigation-common = { module = "androidx.navigation:navigation-common", version.ref = "navigationCommon" }
+androidx-navigation-runtime = { module = "androidx.navigation:navigation-runtime", version.ref = "navigationRuntime" }
+androidx-room-common = { module = "androidx.room:room-common", version.ref = "roomCommon" }
 androidx-runtime = { module = "androidx.compose.runtime:runtime" }
 androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata" }
+androidx-runtime-saveable = { module = "androidx.compose.runtime:runtime-saveable", version.ref = "runtimeSaveable" }
+androidx-sqlite = { module = "androidx.sqlite:sqlite", version.ref = "sqlite" }
 androidx-ui = { module = "androidx.compose.ui:ui" }
+androidx-ui-graphics = { module = "androidx.compose.ui:ui-graphics", version.ref = "uiGraphics" }
+androidx-ui-text = { module = "androidx.compose.ui:ui-text", version.ref = "uiText" }
 androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
-androidx-window-manager = { module = "androidx.window:window", version.ref = "androidxWindowManager" }
+androidx-ui-unit = { module = "androidx.compose.ui:ui-unit", version.ref = "uiUnit" }
+dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltCompiler" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hiltCompiler" }
+hilt-core = { module = "com.google.dagger:hilt-core", version.ref = "hiltCore" }
+javax-inject = { module = "javax.inject:javax.inject", version.ref = "javaxInject" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
-material = { module = "androidx.compose.material:material" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
