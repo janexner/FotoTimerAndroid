@@ -8,14 +8,14 @@ plugins {
 
 android {
     namespace = "com.exner.tools.fototimer"
-    compileSdkPreview = "VanillaIceCream"
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.exner.tools.fototimer"
         minSdk = 29
         targetSdk = 34
-        versionCode = 3
-        versionName = "1.0.1"
+        versionCode = 4
+        versionName = "1.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -28,6 +28,7 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             isDebuggable = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         debug {
             isDebuggable = true
@@ -37,14 +38,14 @@ android {
         compose = true
         buildConfig = true
     }
-    buildToolsVersion = "35.0.0 rc4"
+    buildToolsVersion = "34.0.0"
 
     applicationVariants.all {
         val variant = this
         variant.outputs
             .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
             .forEach { output ->
-                val outputFileName = "Foto_Timer_${variant.baseName}_v${variant.versionName}_${variant.versionCode}.apk"
+                val outputFileName = "Foto_Timer_${variant.baseName}_${variant.versionName}_${variant.versionCode}.apk"
                 println("OutputFileName: $outputFileName")
                 output.outputFileName = outputFileName
             }
