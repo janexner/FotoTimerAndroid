@@ -39,6 +39,17 @@ android {
     }
     buildToolsVersion = "35.0.0 rc4"
 
+    applicationVariants.all {
+        val variant = this
+        variant.outputs
+            .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
+            .forEach { output ->
+                val outputFileName = "Foto_Timer_${variant.baseName}_v${variant.versionName}_${variant.versionCode}.apk"
+                println("OutputFileName: $outputFileName")
+                output.outputFileName = outputFileName
+            }
+    }
+
 }
 
 kotlin {
