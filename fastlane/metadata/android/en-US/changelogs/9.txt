@@ -1,0 +1,1 @@
+Replaced "Force Night Mode" switch with three-way switch for "Auto", "Dark", and "Light"
