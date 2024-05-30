@@ -8,6 +8,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -48,6 +52,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.exner.tools.fototimer.ui.theme.FotoTimerTheme
+import com.exner.tools.fototimer.ui.theme.Theme
 import java.util.Locale
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -125,6 +130,46 @@ fun TextFieldForTimes(
         placeholder = placeholder,
         textStyle = MaterialTheme.typography.bodyLarge
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun themeSelector(
+    currentTheme: Theme,
+    updateTheme: (Theme) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded }) {
+        OutlinedTextField(
+            // The `menuAnchor` modifier must be passed to the text field for correctness.
+            modifier = Modifier
+                .menuAnchor()
+                .fillMaxWidth(),
+            readOnly = true,
+            value = currentTheme.name,
+            placeholder = { Text("Select a Theme") },
+            onValueChange = {},
+            label = { Text("Theme (Auto/Dark/Light") },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }) {
+            Theme.values().forEach { thisTheme ->
+                DropdownMenuItem(
+                    text = { Text(text = thisTheme.name) },
+                    onClick = {
+                        updateTheme(thisTheme)
+                        expanded = false
+                    },
+                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                )
+            }
+        }
+    }
+
 }
 
 @Composable

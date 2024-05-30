@@ -39,6 +39,8 @@ import com.exner.tools.fototimer.ui.LockScreenOrientation
 import com.exner.tools.fototimer.ui.SettingsViewModel
 import com.exner.tools.fototimer.ui.TextAndSwitch
 import com.exner.tools.fototimer.ui.TextFieldForTimes
+import com.exner.tools.fototimer.ui.theme.Theme
+import com.exner.tools.fototimer.ui.themeSelector
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 
@@ -56,7 +58,7 @@ fun Settings(
 ) {
 
     val expertMode by settingsViewModel.expertMode.collectAsStateWithLifecycle()
-    val nightMode by settingsViewModel.nightMode.collectAsStateWithLifecycle()
+    val userSelectedTheme by settingsViewModel.userSelectedTheme.collectAsStateWithLifecycle()
     val defaultProcessTime by settingsViewModel.defaultProcessTime.collectAsStateWithLifecycle()
     val defaultIntervalTime by settingsViewModel.defaultIntervalTime.collectAsStateWithLifecycle()
     val defaultLeadInTime by settingsViewModel.defaultLeadInTime.collectAsStateWithLifecycle()
@@ -96,8 +98,8 @@ fun Settings(
                         .verticalScroll(rememberScrollState())
                 ) {
                     StandardSettingsColumn(
-                        nightMode,
-                        { settingsViewModel.updateNightMode(it) },
+                        userSelectedTheme,
+                        { settingsViewModel.updateUserSelectedTheme(it) },
                         intervalTimeIsCentral,
                         { settingsViewModel.updateIntervalTimeIsCentral(it) }
                     )
@@ -182,9 +184,10 @@ fun Settings(
                 )
             }
             item {
-                TextAndSwitch(text = "Force night mode", checked = nightMode) {
-                    settingsViewModel.updateNightMode(it)
-                }
+                themeSelector(
+                    currentTheme = userSelectedTheme,
+                    updateTheme = { settingsViewModel.updateUserSelectedTheme(it) }
+                )
             }
             item {
                 TextAndSwitch(
@@ -396,17 +399,18 @@ private fun ExpertSettingsDefaultTimes(
 
 @Composable
 private fun StandardSettingsColumn(
-    nightMode: Boolean,
-    updateNightMode: (Boolean) -> Unit,
+    userSelectedTheme: Theme,
+    updateUserSelectedTheme: (Theme) -> Unit,
     intervalTimeIsCentral: Boolean,
     updateIntervalTimeIsCentral: (Boolean) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        TextAndSwitch(text = "Force night mode", checked = nightMode) {
-            updateNightMode(it)
-        }
+        themeSelector(
+            currentTheme = userSelectedTheme,
+            updateTheme = updateUserSelectedTheme
+        )
         TextAndSwitch(
             text = "Use current interval time as central display, rather than current process time",
             checked = intervalTimeIsCentral

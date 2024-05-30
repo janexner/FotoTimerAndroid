@@ -3,6 +3,7 @@ package com.exner.tools.fototimer.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.exner.tools.fototimer.data.preferences.FotoTimerPreferencesManager
+import com.exner.tools.fototimer.ui.theme.Theme
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -24,6 +25,11 @@ class SettingsViewModel @Inject constructor(
         viewModelScope,
         SharingStarted.WhileSubscribed(),
         false
+    )
+    val userSelectedTheme: StateFlow<Theme> = userPreferencesManager.theme().stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(),
+        Theme.Auto
     )
     val defaultProcessTime: StateFlow<Int> = userPreferencesManager.defaultProcessTime().stateIn(
         viewModelScope,
@@ -71,6 +77,12 @@ class SettingsViewModel @Inject constructor(
     fun updateNightMode(newNightMode: Boolean) {
         viewModelScope.launch {
             userPreferencesManager.setNightMode(newNightMode)
+        }
+    }
+
+    fun updateUserSelectedTheme(newTheme: Theme) {
+        viewModelScope.launch {
+            userPreferencesManager.setTheme(newTheme)
         }
     }
 

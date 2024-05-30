@@ -11,6 +11,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.collectAsState
@@ -22,6 +23,7 @@ import com.exner.tools.fototimer.data.preferences.FotoTimerPreferencesManager
 import com.exner.tools.fototimer.ui.MainViewModel
 import com.exner.tools.fototimer.ui.destinations.FotoTimerGlobalScaffold
 import com.exner.tools.fototimer.ui.theme.FotoTimerTheme
+import com.exner.tools.fototimer.ui.theme.Theme
 import com.google.android.material.elevation.SurfaceColors
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -49,10 +51,10 @@ class MainActivity : ComponentActivity() {
             // night mode has two possible triggers:
             // - device may be in night mode
             // - force night mode setting may be on
-            val nightModeState = viewModel.nightModeState.collectAsState()
+            val userTheme = viewModel.userSelectedTheme.collectAsState()
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                if (nightModeState.value) {
+                if (userTheme.value == Theme.Dark || (userTheme.value == Theme.Auto && isSystemInDarkTheme())) {
                     window.navigationBarColor = Color(0xFF000000).toArgb()
                     window.insetsController?.setSystemBarsAppearance(
                         0,
@@ -71,7 +73,7 @@ class MainActivity : ComponentActivity() {
             val windowSizeClass = calculateWindowSizeClass(this)
 
             FotoTimerTheme(
-                darkTheme = nightModeState.value
+                darkTheme = userTheme.value == Theme.Dark || (userTheme.value == Theme.Auto && isSystemInDarkTheme())
             ) {
                 FotoTimerGlobalScaffold(windowSizeClass)
             }
