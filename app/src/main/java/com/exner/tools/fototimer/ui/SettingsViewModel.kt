@@ -21,11 +21,6 @@ class SettingsViewModel @Inject constructor(
         SharingStarted.WhileSubscribed(),
         false
     )
-    val nightMode: StateFlow<Boolean> = userPreferencesManager.nightMode().stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(),
-        false
-    )
     val userSelectedTheme: StateFlow<Theme> = userPreferencesManager.theme().stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(),
@@ -71,12 +66,6 @@ class SettingsViewModel @Inject constructor(
     fun updateExpertMode(newExpertMode: Boolean) {
         viewModelScope.launch {
             userPreferencesManager.setExpertMode(newExpertMode)
-        }
-    }
-
-    fun updateNightMode(newNightMode: Boolean) {
-        viewModelScope.launch {
-            userPreferencesManager.setNightMode(newNightMode)
         }
     }
 

@@ -15,12 +15,6 @@ class MainViewModel @Inject constructor(
     userPreferencesManager: FotoTimerPreferencesManager
 ) : ViewModel() {
 
-    val nightModeState: StateFlow<Boolean> = userPreferencesManager.nightMode().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = false
-    )
-
     val userSelectedTheme: StateFlow<Theme> = userPreferencesManager.theme().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),

@@ -37,20 +37,6 @@ class FotoTimerPreferencesManager @Inject constructor(
         }
     }
 
-    fun nightMode(): Flow<Boolean> {
-        return userDataStorePreferences.data.catch {
-            emit(emptyPreferences())
-        }.map { preferences ->
-            preferences[KEY_NIGHT_MODE] ?: false
-        }
-    }
-
-    suspend fun setNightMode(newNightMode: Boolean) {
-        userDataStorePreferences.edit { preferences ->
-            preferences[KEY_NIGHT_MODE] = newNightMode
-        }
-    }
-
     fun theme(): Flow<Theme> {
         return userDataStorePreferences.data.catch {
             emit(emptyPreferences())

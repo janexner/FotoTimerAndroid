@@ -38,9 +38,9 @@ import com.exner.tools.fototimer.ui.BodyText
 import com.exner.tools.fototimer.ui.LockScreenOrientation
 import com.exner.tools.fototimer.ui.SettingsViewModel
 import com.exner.tools.fototimer.ui.TextAndSwitch
+import com.exner.tools.fototimer.ui.TextAndTriStateToggle
 import com.exner.tools.fototimer.ui.TextFieldForTimes
 import com.exner.tools.fototimer.ui.theme.Theme
-import com.exner.tools.fototimer.ui.themeSelector
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 
@@ -97,12 +97,25 @@ fun Settings(
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
                 ) {
-                    StandardSettingsColumn(
-                        userSelectedTheme,
-                        { settingsViewModel.updateUserSelectedTheme(it) },
-                        intervalTimeIsCentral,
-                        { settingsViewModel.updateIntervalTimeIsCentral(it) }
-                    )
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        TextAndTriStateToggle(
+                            text = "Theme",
+                            currentTheme = userSelectedTheme,
+                            updateTheme = { it: Theme ->
+                                settingsViewModel.updateUserSelectedTheme(
+                                    it
+                                )
+                            }
+                        )
+                        TextAndSwitch(
+                            text = "Use current interval time as central display, rather than current process time",
+                            checked = intervalTimeIsCentral
+                        ) {
+                            settingsViewModel.updateIntervalTimeIsCentral(it)
+                        }
+                    }
                     TextAndSwitch(
                         text = "Expert mode (more options everywhere)",
                         checked = expertMode
@@ -184,7 +197,8 @@ fun Settings(
                 )
             }
             item {
-                themeSelector(
+                TextAndTriStateToggle(
+                    text = "Theme",
                     currentTheme = userSelectedTheme,
                     updateTheme = { settingsViewModel.updateUserSelectedTheme(it) }
                 )
@@ -397,25 +411,3 @@ private fun ExpertSettingsDefaultTimes(
     }
 }
 
-@Composable
-private fun StandardSettingsColumn(
-    userSelectedTheme: Theme,
-    updateUserSelectedTheme: (Theme) -> Unit,
-    intervalTimeIsCentral: Boolean,
-    updateIntervalTimeIsCentral: (Boolean) -> Unit,
-) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        themeSelector(
-            currentTheme = userSelectedTheme,
-            updateTheme = updateUserSelectedTheme
-        )
-        TextAndSwitch(
-            text = "Use current interval time as central display, rather than current process time",
-            checked = intervalTimeIsCentral
-        ) {
-            updateIntervalTimeIsCentral(it)
-        }
-    }
-}
