@@ -5,7 +5,9 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.exner.tools.fototimer.ui.theme.Theme
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -35,17 +37,19 @@ class FotoTimerPreferencesManager @Inject constructor(
         }
     }
 
-    fun nightMode(): Flow<Boolean> {
+    fun theme(): Flow<Theme> {
         return userDataStorePreferences.data.catch {
             emit(emptyPreferences())
         }.map { preferences ->
-            preferences[KEY_NIGHT_MODE] ?: false
+            val wasDark = preferences[KEY_NIGHT_MODE] ?: false
+            val default = if (wasDark) Theme.Dark.name else Theme.Auto.name
+            Theme.valueOf(preferences[KEY_THEME] ?: default)
         }
     }
 
-    suspend fun setNightMode(newNightMode: Boolean) {
+    suspend fun setTheme(newTheme: Theme) {
         userDataStorePreferences.edit { preferences ->
-            preferences[KEY_NIGHT_MODE] = newNightMode
+            preferences[KEY_THEME] = newTheme.name
         }
     }
 
@@ -150,7 +154,6 @@ class FotoTimerPreferencesManager @Inject constructor(
     private companion object {
         val KEY_EXPERT_MODE = booleanPreferencesKey(name = "preference_expert_mode")
         val KEY_NIGHT_MODE = booleanPreferencesKey(name = "preference_night_mode")
-        val KEY_DEFAULT_KEEP_SCREEN_ON = booleanPreferencesKey(name = "preference_screen_on")
         val KEY_DEFAULT_PROCESS_TIME = intPreferencesKey(name = "preference_process_time")
         val KEY_DEFAULT_INTERVAL_TIME = intPreferencesKey(name = "preference_interval_time")
         val KEY_DEFAULT_LEAD_IN_TIME = intPreferencesKey(name = "preference_lead_in_time")
@@ -158,5 +161,6 @@ class FotoTimerPreferencesManager @Inject constructor(
         val KEY_NUMBER_OF_PRE_BEEPS = intPreferencesKey(name = "preference_pre_beeps")
         val KEY_INTERVAL_TIME_IS_CENTRAL = booleanPreferencesKey(name = "preference_interval_time_is_central")
         val KEY_VIBRATE_ENABLED = booleanPreferencesKey(name = "preference_vibrate_enabled")
+        val KEY_THEME = stringPreferencesKey(name = "preference_theme")
     }
 }

@@ -74,6 +74,12 @@ private val RealDarkColors = darkColorScheme(
     scrim = jexner_theme_dark_black,
 )
 
+enum class Theme {
+    Light,
+    Dark,
+    Auto
+}
+
 @Composable
 fun FotoTimerTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
