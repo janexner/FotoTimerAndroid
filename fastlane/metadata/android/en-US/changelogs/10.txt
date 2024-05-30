@@ -1,0 +1,1 @@
+Fixed padding issue on the Edit screen that meant that the bottom field was not visible.

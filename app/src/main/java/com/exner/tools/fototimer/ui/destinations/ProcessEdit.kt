@@ -85,14 +85,13 @@ fun ProcessEdit(
 
     Scaffold(
         modifier = Modifier
-            .fillMaxSize()
             .imePadding(),
         content = { innerPadding ->
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .consumeWindowInsets(innerPadding)
-                    .padding(8.dp)
+                    .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
             ) {
                 // top - fields
