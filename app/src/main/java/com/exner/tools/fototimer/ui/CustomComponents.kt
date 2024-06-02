@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.text.isDigitsOnly
 import com.exner.tools.fototimer.ui.theme.FotoTimerTheme
 import com.exner.tools.fototimer.ui.theme.Theme
 import java.util.Locale
@@ -127,8 +128,10 @@ fun TextFieldForTimes(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         onValueChange = { raw ->
             text = raw
-            val parsed = text.toIntOrNull() ?: 0
-            onValueChange(parsed)
+            if (raw.isNotEmpty() && raw.isDigitsOnly()) {
+                val parsed = text.toInt()
+                onValueChange(parsed)
+            }
         },
         placeholder = placeholder,
         textStyle = MaterialTheme.typography.bodyLarge

@@ -11,9 +11,9 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 9,
-      "versionName": "1.1.0",
-      "outputFile": "Foto_Timer_release_1.1.0_9.apk"
+      "versionCode": 10,
+      "versionName": "1.1.1",
+      "outputFile": "Foto_Timer_release_1.1.1_10.apk"
     }
   ],
   "elementType": "File",
@@ -22,14 +22,14 @@
       "minApi": 28,
       "maxApi": 30,
       "baselineProfiles": [
-        "baselineProfiles/1/Foto_Timer_release_1.1.0_9.dm"
+        "baselineProfiles/1/Foto_Timer_release_1.1.1_10.dm"
       ]
     },
     {
       "minApi": 31,
       "maxApi": 2147483647,
       "baselineProfiles": [
-        "baselineProfiles/0/Foto_Timer_release_1.1.0_9.dm"
+        "baselineProfiles/0/Foto_Timer_release_1.1.1_10.dm"
       ]
     }
   ],
