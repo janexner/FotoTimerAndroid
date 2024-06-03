@@ -16,10 +16,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -120,10 +120,12 @@ fun TextFieldForTimes(
     placeholder: @Composable (() -> Unit)? = null,
 ) {
     var text by remember(value) { mutableStateOf(value.toString()) }
-    OutlinedTextField(
+    TextField(
         value = text,
         label = label,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(0.dp, 0.dp, 0.dp, 8.dp),
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         onValueChange = { raw ->

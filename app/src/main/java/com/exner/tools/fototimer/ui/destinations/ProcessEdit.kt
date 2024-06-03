@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -26,9 +25,9 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -36,7 +35,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.exner.tools.fototimer.ui.HeaderText
@@ -96,7 +94,7 @@ fun ProcessEdit(
             ) {
                 // top - fields
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    OutlinedTextField(
+                    TextField(
                         value = name ?: "Name",
                         onValueChange = {
                             processEditViewModel.updateName(it)
@@ -223,7 +221,7 @@ fun ProcessEdit(
                         ExposedDropdownMenuBox(
                             expanded = expanded,
                             onExpandedChange = { expanded = !expanded }) {
-                            OutlinedTextField(
+                            TextField(
                                 // The `menuAnchor` modifier must be passed to the text field for correctness.
                                 modifier = Modifier
                                     .menuAnchor()

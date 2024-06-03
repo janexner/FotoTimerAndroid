@@ -17,10 +17,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -288,7 +288,7 @@ fun Settings(
 
             item {
                 AnimatedVisibility(visible = expertMode) {
-                    OutlinedTextField(
+                    TextField(
                         value = numberOfPreBeeps.toString(),
                         label = { Text(text = "Pre-beeps (small beeps before the interval)") },
                         modifier = Modifier.fillMaxWidth(),
@@ -346,10 +346,12 @@ private fun ExpertSettingsSound(
             .fillMaxWidth()
             .imePadding()
     ) {
-        OutlinedTextField(
+        TextField(
             value = preBeeps.toString(),
             label = { Text(text = "Pre-beeps (small beeps before the interval)") },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(0.dp, 0.dp, 0.dp, 8.dp),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             onValueChange = {
