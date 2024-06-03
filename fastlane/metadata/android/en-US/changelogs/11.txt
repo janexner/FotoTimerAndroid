@@ -1,0 +1,1 @@
+Changed text fields from outlined to normal bcs it looks better.
