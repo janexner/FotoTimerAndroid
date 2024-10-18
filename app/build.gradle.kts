@@ -8,14 +8,14 @@ plugins {
 
 android {
     namespace = "com.exner.tools.fototimer"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.exner.tools.fototimer"
         minSdk = 29
-        targetSdk = 34
-        versionCode = 11
-        versionName = "1.1.2"
+        targetSdk = 35
+        versionCode = 12
+        versionName = "1.1.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -39,7 +39,7 @@ android {
         compose = true
         buildConfig = true
     }
-    buildToolsVersion = "34.0.0"
+    buildToolsVersion = "35.0.0"
 
     applicationVariants.all {
         val variant = this
