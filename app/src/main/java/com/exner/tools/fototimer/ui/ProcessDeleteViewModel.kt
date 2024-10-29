@@ -6,12 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.exner.tools.fototimer.data.persistence.FotoTimerChainingDependencies
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcessRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class ProcessDeleteViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = ProcessDeleteViewModel.ProcessDeleteViewModelFactory::class)
+class ProcessDeleteViewModel @AssistedInject constructor(
+    @Assisted val processId: Long,
     private val repository: FotoTimerProcessRepository
 ): ViewModel() {
 
@@ -24,7 +27,7 @@ class ProcessDeleteViewModel @Inject constructor(
     private val _processChainingDependencies: MutableLiveData<FotoTimerChainingDependencies> = MutableLiveData(null)
     val processChainingDependencies: LiveData<FotoTimerChainingDependencies> = _processChainingDependencies
 
-    fun checkProcess(processId: Long) {
+    init {
         if (processId != -1L) {
             viewModelScope.launch {
                 val process = repository.loadProcessById(processId)
@@ -40,6 +43,11 @@ class ProcessDeleteViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    @AssistedFactory
+    interface ProcessDeleteViewModelFactory {
+        fun create(processId: Long): ProcessDeleteViewModel
     }
 
     fun deleteProcess(processId: Long) {

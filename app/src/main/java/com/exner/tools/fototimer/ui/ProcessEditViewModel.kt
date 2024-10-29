@@ -7,12 +7,15 @@ import androidx.lifecycle.viewModelScope
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcessIdAndName
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcessRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class ProcessEditViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = ProcessEditViewModel.ProcessEditViewModelFactory::class)
+class ProcessEditViewModel @AssistedInject constructor(
+    @Assisted val processId: Long,
     private val repository: FotoTimerProcessRepository,
 ): ViewModel() {
 
@@ -71,7 +74,7 @@ class ProcessEditViewModel @Inject constructor(
     )
     val processIdsAndNames: LiveData<List<FotoTimerProcessIdAndName>> = _processIdsAndNames
 
-    fun getProcess(processId: Long) {
+    init {
         if (processId != -1L) {
             _uid.value = processId
             viewModelScope.launch {
@@ -99,15 +102,16 @@ class ProcessEditViewModel @Inject constructor(
                         }
                     }
                 }
+                // get IDs and names for the "next process" drop down
+                val temp = repository.loadIdsAndNamesForAllProcesses()
+                _processIdsAndNames.value = temp
             }
         }
     }
 
-    fun getProcessIdsAndNames() {
-        viewModelScope.launch {
-            val temp = repository.loadIdsAndNamesForAllProcesses()
-            _processIdsAndNames.value = temp
-        }
+    @AssistedFactory
+    interface ProcessEditViewModelFactory {
+        fun create(processId: Long): ProcessEditViewModel
     }
 
     fun commitProcess() {

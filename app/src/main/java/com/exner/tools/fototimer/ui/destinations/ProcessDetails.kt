@@ -47,10 +47,13 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 fun ProcessDetails(
     processId: Long,
-    processDetailsViewModel: ProcessDetailsViewModel = hiltViewModel(),
     settingsViewModel: SettingsViewModel = hiltViewModel(),
     navigator: DestinationsNavigator
 ) {
+    val processDetailsViewModel =
+        hiltViewModel<ProcessDetailsViewModel, ProcessDetailsViewModel.ProcessDetailsViewModelFactory> { factory ->
+            factory.create(processId = processId)
+        }
 
     val name by processDetailsViewModel.name.observeAsState()
     val processTime by processDetailsViewModel.processTime.observeAsState()
@@ -69,8 +72,6 @@ fun ProcessDetails(
     val gotoId by processDetailsViewModel.gotoId.observeAsState()
     // this one is the odd one out
     val nextProcessesName by processDetailsViewModel.nextProcessesName.observeAsState()
-
-    processDetailsViewModel.getProcess(processId)
 
     val expertMode by settingsViewModel.expertMode.collectAsStateWithLifecycle()
 

@@ -42,10 +42,13 @@ import kotlin.time.Duration.Companion.seconds
 @Composable
 fun ProcessRun(
     processId: Long,
-    processRunViewModel: ProcessRunViewModel = hiltViewModel(),
     settingsViewModel: SettingsViewModel = hiltViewModel(),
     navigator: DestinationsNavigator
 ) {
+    val processRunViewModel =
+        hiltViewModel<ProcessRunViewModel, ProcessRunViewModel.ProcessRunViewModelFactory> { factory ->
+            factory.create(processId = processId) { navigator.navigateUp() }
+        }
 
     val displayAction by processRunViewModel.displayAction.observeAsState()
     val numberOfSteps by processRunViewModel.numberOfSteps.observeAsState()
@@ -54,12 +57,6 @@ fun ProcessRun(
     val hasHours by processRunViewModel.hasHours.observeAsState()
 
     val intervalTimeIsCentral by settingsViewModel.interValTimeIsCentral.collectAsStateWithLifecycle()
-
-    processRunViewModel.initialiseRun(processId)
-
-    processRunViewModel.setDoneEventHandler {
-        navigator.navigateUp()
-    }
 
     // Keeping the screen on while counting, bcs otherwise the phone may switch off.
     // this is now default for everything.

@@ -19,6 +19,9 @@ import com.exner.tools.fototimer.steps.ProcessStartAction
 import com.exner.tools.fototimer.steps.ProcessStepAction
 import com.exner.tools.fototimer.steps.STEP_LENGTH_IN_MILLISECONDS
 import com.exner.tools.fototimer.steps.getProcessStepListForOneProcess
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -28,10 +31,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class ProcessRunViewModel @Inject constructor(
+@OptIn(DelicateCoroutinesApi::class)
+@HiltViewModel(assistedFactory = ProcessRunViewModel.ProcessRunViewModelFactory::class)
+class ProcessRunViewModel @AssistedInject constructor(
+    @Assisted val processId: Long,
+    @Assisted val doneEventHandler: () -> Unit,
     private val repository: FotoTimerProcessRepository,
     private val userPreferencesManager: FotoTimerPreferencesManager
 ) : ViewModel() {
@@ -55,10 +60,7 @@ class ProcessRunViewModel @Inject constructor(
 
     private var isRunning: Boolean = false
 
-    private var doneEventHandler: () -> Unit = {}
-
-    @OptIn(DelicateCoroutinesApi::class)
-    fun initialiseRun(processId: Long) {
+    init {
         val result = mutableListOf<List<ProcessStepAction>>()
 
         if (!isRunning) {
@@ -109,7 +111,7 @@ class ProcessRunViewModel @Inject constructor(
                                     val lastAction = latestActionList[latestActionList.lastIndex]
                                     if (lastAction is ProcessGotoAction) { // it should be!
                                         // remove the action list, it is not mutable
-                                        result.removeLast() // remove the action list, bcs we need a new one
+                                        result.removeAt(result.lastIndex) // remove the action list, bcs we need a new one
                                         val newActionsList = mutableListOf<ProcessStepAction>()
                                         latestActionList.forEach { processStepAction ->
                                             if (processStepAction !is ProcessGotoAction) {
@@ -182,8 +184,9 @@ class ProcessRunViewModel @Inject constructor(
         }
     }
 
-    fun setDoneEventHandler(handler: () -> Unit) {
-        doneEventHandler = handler
+    @AssistedFactory
+    interface ProcessRunViewModelFactory {
+        fun create(processId: Long, doneEventHandler: () -> Unit): ProcessRunViewModel
     }
 
     fun cancel() {

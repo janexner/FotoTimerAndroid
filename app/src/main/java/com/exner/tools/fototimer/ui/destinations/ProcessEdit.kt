@@ -25,6 +25,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -51,10 +52,13 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 fun ProcessEdit(
     processId: Long,
-    processEditViewModel: ProcessEditViewModel = hiltViewModel(),
     settingsViewModel: SettingsViewModel = hiltViewModel(),
     navigator: DestinationsNavigator
 ) {
+    val processEditViewModel =
+        hiltViewModel<ProcessEditViewModel, ProcessEditViewModel.ProcessEditViewModelFactory> { factory ->
+            factory.create(processId = processId)
+        }
 
     val name by processEditViewModel.name.observeAsState()
     val processTime by processEditViewModel.processTime.observeAsState()
@@ -73,9 +77,6 @@ fun ProcessEdit(
     // some odd ones out
     val nextProcessesName by processEditViewModel.nextProcessesName.observeAsState()
     val processIdsAndNames by processEditViewModel.processIdsAndNames.observeAsState()
-
-    processEditViewModel.getProcess(processId)
-    processEditViewModel.getProcessIdsAndNames()
 
     var modified by remember { mutableStateOf(false) }
 
@@ -224,7 +225,7 @@ fun ProcessEdit(
                             TextField(
                                 // The `menuAnchor` modifier must be passed to the text field for correctness.
                                 modifier = Modifier
-                                    .menuAnchor()
+                                    .menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
                                     .fillMaxWidth(),
                                 readOnly = true,
                                 value = nextProcessesName ?: "",

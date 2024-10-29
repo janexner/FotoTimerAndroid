@@ -5,17 +5,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcessRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class ProcessDetailsViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = ProcessDetailsViewModel.ProcessDetailsViewModelFactory::class)
+class ProcessDetailsViewModel @AssistedInject constructor(
+    @Assisted val processId: Long,
     private val repository: FotoTimerProcessRepository
 ): ViewModel() {
-
-    private val _uid: MutableLiveData<Long> = MutableLiveData(-1L)
-    val uid: LiveData<Long> = _uid
 
     private val _name: MutableLiveData<String> = MutableLiveData("Name")
     val name: LiveData<String> = _name
@@ -65,9 +65,8 @@ class ProcessDetailsViewModel @Inject constructor(
     private val _nextProcessesName: MutableLiveData<String> = MutableLiveData("")
     val nextProcessesName: LiveData<String> = _nextProcessesName
 
-    fun getProcess(processId: Long) {
+    init {
         if (processId != -1L) {
-            _uid.value = processId
             viewModelScope.launch {
                 val process = repository.loadProcessById(processId)
                 if (process != null) {
@@ -95,5 +94,10 @@ class ProcessDetailsViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    @AssistedFactory
+    interface ProcessDetailsViewModelFactory {
+        fun create(processId: Long): ProcessDetailsViewModel
     }
 }

@@ -36,15 +36,16 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 fun ProcessDelete(
     processId: Long,
-    processDeleteViewModel: ProcessDeleteViewModel = hiltViewModel(),
     navigator: DestinationsNavigator
 ) {
+    val processDeleteViewModel =
+        hiltViewModel<ProcessDeleteViewModel, ProcessDeleteViewModel.ProcessDeleteViewModelFactory> { factory ->
+            factory.create(processId = processId)
+        }
 
     val processName by processDeleteViewModel.processName.observeAsState()
     val processIsTarget by processDeleteViewModel.processIsTarget.observeAsState()
     val dependantProcesses by processDeleteViewModel.processChainingDependencies.observeAsState()
-
-    processDeleteViewModel.checkProcess(processId)
 
     Scaffold(
         modifier = Modifier.imePadding(),
