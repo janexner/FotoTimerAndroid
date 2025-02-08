@@ -14,8 +14,8 @@ android {
         applicationId = "com.exner.tools.fototimer"
         minSdk = 29
         targetSdk = 35
-        versionCode = 12
-        versionName = "1.2.0"
+        versionCode = 13
+        versionName = "1.2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -130,6 +130,11 @@ dependencies {
     // compose destinations
     implementation(libs.compose.destinations.core)
     ksp(libs.compose.destinations.ksp)
+
+    // moshi
+    implementation(libs.moshi)
+    implementation(libs.moshi.kotlin)
+    ksp(libs.moshi.codegen)
 
     // testing
     testImplementation(libs.junit)

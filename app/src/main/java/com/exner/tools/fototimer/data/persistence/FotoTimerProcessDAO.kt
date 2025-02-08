@@ -1,6 +1,10 @@
 package com.exner.tools.fototimer.data.persistence
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -25,6 +29,9 @@ interface FotoTimerProcessDAO {
 
     @Query("SELECT count(uid) FROM fototimerprocess")
     suspend fun getNumberOfProcesses(): Int
+
+    @Query("SELECT * FROM fototimerprocess")
+    suspend fun getAllProcessesNow(): List<FotoTimerProcess>
 
     @Insert
     suspend fun insert(fotoTimerProcess: FotoTimerProcess)

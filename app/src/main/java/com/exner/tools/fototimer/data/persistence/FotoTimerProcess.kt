@@ -3,8 +3,10 @@ package com.exner.tools.fototimer.data.persistence
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.squareup.moshi.JsonClass
 
 @Entity
+@JsonClass(generateAdapter = true)
 data class FotoTimerProcess (
     @ColumnInfo(name = "name") val name : String,
     @ColumnInfo(name = "process_time") val processTime : Int = 30,

@@ -34,6 +34,11 @@ class FotoTimerProcessRepository @Inject constructor(private val fotoTimerProces
     }
 
     @WorkerThread
+    suspend fun getAllProcesses(): List<FotoTimerProcess> {
+        return fotoTimerProcessDAO.getAllProcessesNow()
+    }
+
+    @WorkerThread
     suspend fun insert(fotoTimerProcess: FotoTimerProcess) {
         fotoTimerProcessDAO.insert(fotoTimerProcess)
     }
