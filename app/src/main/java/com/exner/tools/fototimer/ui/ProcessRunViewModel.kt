@@ -59,6 +59,11 @@ class ProcessRunViewModel @AssistedInject constructor(
     private var job: Job? = null
 
     private var isRunning: Boolean = false
+    private var _isPaused: MutableLiveData<Boolean> = MutableLiveData(false)
+    var isPaused: LiveData<Boolean> = _isPaused
+    private val jumpTargetsForNext = mutableListOf(0) // the beginning is always a target
+    private var _maxJumpTarget = MutableLiveData(0)
+    val maxJumpTarget: LiveData<Int> = _maxJumpTarget
 
     init {
         val result = mutableListOf<List<ProcessStepAction>>()
@@ -75,11 +80,19 @@ class ProcessRunViewModel @AssistedInject constructor(
                 var firstRound = true
 
                 while (currentID >= 0 && noLoopDetectedSoFar) {
-                    processIdList.add(currentID)
+                    processIdList.add(currentID) // for loop detection further down
+                    if (result.isNotEmpty()) {
+                        jumpTargetsForNext.add(result.size - 1)
+                        _maxJumpTarget.value = result.size - 1
+                    }
                     val process = repository.loadProcessById(currentID)
                     if (process != null) {
                         val partialResult =
-                            getProcessStepListForOneProcess(process, firstRound, userPreferencesManager.numberOfPreBeeps().firstOrNull() ?: 5)
+                            getProcessStepListForOneProcess(
+                                process,
+                                firstRound,
+                                userPreferencesManager.numberOfPreBeeps().firstOrNull() ?: 5
+                            )
                         partialResult.forEach { actionList ->
                             result.add(actionList)
                         }
@@ -87,7 +100,10 @@ class ProcessRunViewModel @AssistedInject constructor(
                         _hasHours.value = hasHours.value == true || process.processTime > 3600
                         // prepare for the next iteration
                         firstRound = false
-                        if (process.gotoId != null && process.gotoId != -1L && repository.doesProcessWithIdExist(process.gotoId)) {
+                        if (process.gotoId != null && process.gotoId != -1L && repository.doesProcessWithIdExist(
+                                process.gotoId
+                            )
+                        ) {
                             currentID = process.gotoId
                             if (processIdList.contains(currentID)) {
                                 noLoopDetectedSoFar = false // LOOP!
@@ -133,6 +149,10 @@ class ProcessRunViewModel @AssistedInject constructor(
                         }
                     }
                 }
+                // let's report jump targets
+                jumpTargetsForNext.forEach {
+                    Log.d("ProcessRunVM", "  Next jump target: $it")
+                }
                 // this is where the list is ready
                 _numberOfSteps.value = result.size
 
@@ -145,7 +165,10 @@ class ProcessRunViewModel @AssistedInject constructor(
                         if (step >= result.size) {
                             break
                         } else {
-                            Log.d("ProcessRunVM", "${System.currentTimeMillis() - startTime}: step $step")
+                            Log.d(
+                                "ProcessRunVM",
+                                "${System.currentTimeMillis() - startTime}: step $step"
+                            )
                             // update display action and do sounds
                             val actionsList = result[step]
                             actionsList.forEach { action ->
@@ -160,15 +183,21 @@ class ProcessRunViewModel @AssistedInject constructor(
                                     }
 
                                     is ProcessSoundAction -> {
-                                        SoundPoolHolder.playSound(action.soundId)
-                                        if (userPreferencesManager.vibrateEnabled().firstOrNull() == true) {
-                                            VibratorHolder.vibrate(action.soundId)
+                                        if (!isPaused.value!!) {
+                                            SoundPoolHolder.playSound(action.soundId)
+                                            if (userPreferencesManager.vibrateEnabled()
+                                                    .firstOrNull() == true
+                                            ) {
+                                                VibratorHolder.vibrate(action.soundId)
+                                            }
                                         }
                                     }
                                 }
                             }
                             // count up
-                            _currentStepNumber.value = currentStepNumber.value!! + 1
+                            if (!isPaused.value!!) {
+                                _currentStepNumber.value = currentStepNumber.value!! + 1
+                            }
                             // sleep till next step
                             actualStep++
                             val targetTimeForNextStep =
@@ -190,6 +219,27 @@ class ProcessRunViewModel @AssistedInject constructor(
     }
 
     fun cancel() {
+        _isPaused.value = false
+
         job?.cancel()
+        Log.d("ProcessRunVM", "Cancelling job...")
+    }
+
+    fun setPaused(paused: Boolean) {
+        _isPaused.value = paused
+        Log.d("ProcessRunVM", "Toggle pause: $paused")
+    }
+
+    fun goToNextProcess() {
+        Log.d("ProcessRunVM", "'Next' pressed...")
+        var targetFound = false
+        jumpTargetsForNext
+            .forEach {
+                if (!targetFound && currentStepNumber.value != null && currentStepNumber.value!! < it) {
+                    Log.d("ProcessRunVM", "Target for next is step $it")
+                    _currentStepNumber.value = it
+                    targetFound = true
+                }
+            }
     }
 }

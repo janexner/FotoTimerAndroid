@@ -1,20 +1,26 @@
 package com.exner.tools.fototimer.ui.destinations
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -57,6 +63,9 @@ fun ProcessRun(
     val hasHours by processRunViewModel.hasHours.observeAsState()
 
     val intervalTimeIsCentral by settingsViewModel.interValTimeIsCentral.collectAsStateWithLifecycle()
+
+    val isPaused by processRunViewModel.isPaused.observeAsState()
+    val maxJumpTarget by processRunViewModel.maxJumpTarget.observeAsState()
 
     // Keeping the screen on while counting, bcs otherwise the phone may switch off.
     // this is now default for everything.
@@ -148,6 +157,51 @@ fun ProcessRun(
                         // nothing to do for us
                     }
                 }
+
+                Spacer(modifier = Modifier.weight(.5f))
+
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    val buttonColors = ButtonDefaults.buttonColors()
+                    Button(
+                        modifier = Modifier
+                            .weight(45f)
+                            .height(56.dp),
+                        onClick = {
+                            isPaused?.let { processRunViewModel.setPaused(it.not()) }
+                        },
+                        colors = if (isPaused == true) {
+                            buttonColors.copy(containerColor = MaterialTheme.colorScheme.onErrorContainer)
+                        } else {
+                            buttonColors
+                        }
+                    ) {
+                        if (isPaused == true) {
+                            Text(text = "Continue")
+                        } else {
+                            Text(text = "Pause")
+                        }
+                    }
+                    if (currentStepNumber != null && maxJumpTarget != null) {
+                        if (currentStepNumber!! < maxJumpTarget!!) {
+                            Spacer(modifier = Modifier.weight(10f))
+                            Button(
+                                modifier = Modifier
+                                    .weight(45f)
+                                    .height(56.dp),
+                                onClick = {
+                                    processRunViewModel.goToNextProcess()
+                                },
+                            ) {
+                                Text(text = "Next")
+                            }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
             }
         },
         bottomBar = {
