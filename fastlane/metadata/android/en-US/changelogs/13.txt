@@ -1,1 +1,1 @@
-Added JSON export of all processes
+Added JSON export of all processes, fixed UI flaw, and hopefully adapted to new F-Droid build rules.
