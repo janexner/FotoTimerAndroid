@@ -103,7 +103,7 @@ private fun FotoTimerTopBar(
                     AboutActionIconButton(navigator)
                 }
 
-                AboutDestination -> {
+                AboutDestination, ProcessRunDestination -> {
                     // no icons
                 }
 
