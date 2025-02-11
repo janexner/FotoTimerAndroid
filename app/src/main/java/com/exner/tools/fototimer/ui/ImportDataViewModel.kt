@@ -87,8 +87,8 @@ class ImportDataViewModel @Inject constructor(
                         repository.insert(process)
                     }
                 }
-                successCallback()
                 _importStateFlow.value = ImportState(ImportStateConstants.IMPORT_FINISHED)
+                successCallback()
             }
         }
     }

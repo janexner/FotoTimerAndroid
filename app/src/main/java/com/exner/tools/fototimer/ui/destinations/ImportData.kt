@@ -25,7 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -48,7 +47,7 @@ fun ImportData(
     importDataViewModel: ImportDataViewModel = hiltViewModel(),
     destinationsNavigator: DestinationsNavigator
 ) {
-    val context = LocalContext.current
+//    val context = LocalContext.current
 
     val importState by importDataViewModel.importStateFlow.collectAsStateWithLifecycle(
         ImportState()
@@ -236,7 +235,10 @@ fun ImportData(
                     }
                 },
                 floatingActionButton = {
-                    if (importState.state == ImportStateConstants.FILE_ANALYSED && (!hasOverlap || override) && listOfNewProcesses.isNotEmpty()) {
+                    if (importState.state == ImportStateConstants.FILE_ANALYSED
+                        && (!hasOverlap || override)
+                        && (listOfNewProcesses.isNotEmpty() || (override && listOfProcessesInFile.isNotEmpty()))
+                    ) {
                         ExtendedFloatingActionButton(
                             text = { Text(text = "Import") },
                             icon = {
@@ -250,6 +252,7 @@ fun ImportData(
 //                                    Toast.makeText(context, "Date imported", Toast.LENGTH_LONG)
 //                                        .show()
                                 }
+                                destinationsNavigator.navigateUp()
                             },
                             containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
                             elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
