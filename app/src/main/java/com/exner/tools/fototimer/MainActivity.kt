@@ -5,7 +5,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Vibrator
 import android.os.VibratorManager
-import android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,8 +14,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import com.exner.tools.fototimer.audio.SoundPoolHolder
 import com.exner.tools.fototimer.audio.VibratorHolder
 import com.exner.tools.fototimer.data.preferences.FotoTimerPreferencesManager
@@ -24,8 +21,8 @@ import com.exner.tools.fototimer.ui.MainViewModel
 import com.exner.tools.fototimer.ui.destinations.FotoTimerGlobalScaffold
 import com.exner.tools.fototimer.ui.theme.FotoTimerTheme
 import com.exner.tools.fototimer.ui.theme.Theme
-import com.google.android.material.elevation.SurfaceColors
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.vinceglb.filekit.core.FileKit
 import javax.inject.Inject
 
 
@@ -40,6 +37,7 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FileKit.init(this)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
@@ -52,22 +50,6 @@ class MainActivity : ComponentActivity() {
             // - device may be in night mode
             // - force night mode setting may be on
             val userTheme = viewModel.userSelectedTheme.collectAsState()
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                if (userTheme.value == Theme.Dark || (userTheme.value == Theme.Auto && isSystemInDarkTheme())) {
-                    window.navigationBarColor = Color(0xFF000000).toArgb()
-                    window.insetsController?.setSystemBarsAppearance(
-                        0,
-                        APPEARANCE_LIGHT_NAVIGATION_BARS
-                    )
-                } else {
-                    window.navigationBarColor = SurfaceColors.SURFACE_2.getColor(this)
-                    window.insetsController?.setSystemBarsAppearance(
-                        APPEARANCE_LIGHT_NAVIGATION_BARS,
-                        APPEARANCE_LIGHT_NAVIGATION_BARS
-                    )
-                }
-            }
 
             // window size class
             val windowSizeClass = calculateWindowSizeClass(this)

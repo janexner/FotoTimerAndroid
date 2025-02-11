@@ -26,6 +26,7 @@ runtimeSaveable = "1.7.7"
 sqlite = "2.4.0"
 ui = "1.7.7"
 moshi = "1.15.2"
+fileKit = "0.8.8"
 
 [libraries]
 androidx-activity = { module = "androidx.activity:activity", version.ref = "androidxActivity" }
@@ -83,6 +84,8 @@ google-material = { group = "com.google.android.material", name = "material", ve
 moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
 moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
 moshi-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshi" }
+filekit-core = { group = "io.github.vinceglb", name = "filekit-core", version.ref = "fileKit" }
+filekit-compose = { group = "io.github.vinceglb", name = "filekit-compose", version.ref = "fileKit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
