@@ -39,6 +39,11 @@ class FotoTimerProcessRepository @Inject constructor(private val fotoTimerProces
     }
 
     @WorkerThread
+    suspend fun deleteAllProcesses() {
+        fotoTimerProcessDAO.deleteAllProcesses()
+    }
+
+    @WorkerThread
     suspend fun insert(fotoTimerProcess: FotoTimerProcess) {
         fotoTimerProcessDAO.insert(fotoTimerProcess)
     }
