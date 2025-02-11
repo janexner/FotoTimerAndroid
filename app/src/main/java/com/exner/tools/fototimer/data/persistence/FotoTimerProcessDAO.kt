@@ -33,6 +33,9 @@ interface FotoTimerProcessDAO {
     @Query("SELECT * FROM fototimerprocess")
     suspend fun getAllProcessesNow(): List<FotoTimerProcess>
 
+    @Query("DELETE FROM fototimerprocess;")
+    suspend fun deleteAllProcesses()
+
     @Insert
     suspend fun insert(fotoTimerProcess: FotoTimerProcess)
 
