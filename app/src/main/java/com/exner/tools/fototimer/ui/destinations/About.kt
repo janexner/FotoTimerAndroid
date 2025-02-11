@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -89,6 +90,7 @@ private fun AboutVersionAndButton(localContext: Context) {
         )
         Spacer(modifier = Modifier.width(8.dp))
         Button(
+            modifier = Modifier.fillMaxWidth(),
             onClick = {
                 val webpage: Uri =
                     Uri.parse("https://jan-exner.de/software/android/fototimer/")
@@ -100,6 +102,7 @@ private fun AboutVersionAndButton(localContext: Context) {
         }
         Spacer(modifier = Modifier.width(8.dp))
         Button(
+            modifier = Modifier.fillMaxWidth(),
             onClick = {
                 val webpage: Uri =
                     Uri.parse("https://jan-exner.de/software/android/fototimer/manual/")
