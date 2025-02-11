@@ -24,12 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
 import com.exner.tools.fototimer.BuildConfig
-import com.exner.tools.fototimer.ui.theme.FotoTimerTheme
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 
@@ -97,7 +93,7 @@ private fun AboutVersionAndButton(localContext: Context) {
                 val webpage: Uri =
                     Uri.parse("https://jan-exner.de/software/android/fototimer/")
                 val intent = Intent(Intent.ACTION_VIEW, webpage)
-                startActivity(localContext, intent, null)
+                localContext.startActivity(intent)
             },
         ) {
             Text(text = "Visit the Foto Timer web site")
@@ -108,7 +104,7 @@ private fun AboutVersionAndButton(localContext: Context) {
                 val webpage: Uri =
                     Uri.parse("https://jan-exner.de/software/android/fototimer/manual/")
                 val intent = Intent(Intent.ACTION_VIEW, webpage)
-                startActivity(localContext, intent, null)
+                localContext.startActivity(intent)
             },
         ) {
             Text(text = "Peruse the Foto Timer manual")
@@ -163,24 +159,5 @@ fun AboutText() {
             text = "It runs on Android phones and tablets running Android 10 or later. I aim to support the latest 3 versions of Android.",
             modifier = Modifier.padding(8.dp)
         )
-    }
-}
-
-@Preview(
-    showSystemUi = true,
-    device = Devices.PHONE
-)
-@Preview(
-    showSystemUi = true,
-    device = Devices.NEXUS_5
-)
-@Preview(
-    showSystemUi = true,
-    device = Devices.TABLET
-)
-@Composable
-fun FTAPreview() {
-    FotoTimerTheme {
-        About()
     }
 }
