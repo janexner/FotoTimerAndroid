@@ -6,8 +6,8 @@ import android.os.Environment
 import android.provider.MediaStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.exner.tools.fototimer.data.persistence.FotoTimerProcess
 import com.exner.tools.fototimer.data.persistence.FotoTimerProcessRepository
+import com.exner.tools.fototimer.data.persistence.tools.RootData
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapter
@@ -25,14 +25,14 @@ class ExportDataViewModel @Inject constructor(
 
     @OptIn(ExperimentalStdlibApi::class)
     fun commitExport(context: Context) {
-        val moshi = Moshi.Builder()
-            .addLast(KotlinJsonAdapterFactory())
-            .build()
-        val jsonAdapter: JsonAdapter<List<FotoTimerProcess>> =
-            moshi.adapter<List<FotoTimerProcess>>()
         viewModelScope.launch {
-            val processes = repository.getAllProcesses()
-            val json: String = jsonAdapter.toJson(processes)
+            val moshi = Moshi.Builder()
+                .addLast(KotlinJsonAdapterFactory())
+                .build()
+            val jsonAdapter: JsonAdapter<RootData> =
+                moshi.adapter<RootData>()
+            val data = bundleData()
+            val json: String = jsonAdapter.toJson(data)
             val contentValues = ContentValues().apply {
                 put(MediaStore.MediaColumns.DISPLAY_NAME, "foto-timer-export")
                 put(MediaStore.MediaColumns.MIME_TYPE, "application/json")
@@ -46,5 +46,11 @@ class ExportDataViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private suspend fun bundleData(): RootData {
+        val processes = repository.getAllProcesses()
+        val data = RootData(processes)
+        return data
     }
 }
